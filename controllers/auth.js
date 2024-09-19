@@ -36,14 +36,18 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     const operador = require("../models/operadorModel");
-    const { email, senha } = req.body
+    const { email, senha } = req.body;
 
-    const verificarOperador = await operador.findOne({ where: {email: email, senha: senha} });
+    const verificarOperador = await operador.findOne({ where: { email: email, senha: senha } });
 
     if (verificarOperador) {
-        res.render("paginaContrato");
+        // Login bem-sucedido
+        res.json({ success: true });
     } else {
-        console.log("Usuário inválido!");
-        res.render("index");
+        // Usuário ou senha inválido
+        res.json({ success: false, message: "Usuário ou senha inválido!" });
     }
 }
+
+
+

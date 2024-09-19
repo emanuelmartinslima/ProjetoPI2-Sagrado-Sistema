@@ -10,20 +10,8 @@ router.get("/cadastro", (req, res) => {
     res.render("cadastro");
 });
 
-router.get("/cadastroModoEscuro", (req, res) => {
-    res.render("cadastroModoEscuro");
-});
-
 router.get("/emailConfirmacao", (req, res) => {
     res.render("emailConfirmacao");
-});
-
-router.get("/emailConfirmacaoModoEscuro", (req, res) => {
-    res.render("emailConfirmacaoModoEscuro");
-});
-
-router.get("/loginModoEscuro", (req, res) => {
-    res.render("LoginModoEscuro");
 });
 
 router.get("/paginaContrato", (req, res) => {
