@@ -21,5 +21,8 @@ router.get("/paginaContrato", (req, res) => {
 router.get("/paginaContratoModoEscuro", (req, res) => {
     res.render("paginaContratoModoEscuro");
 });
+router.get("/cadastrarCliente", (req, res) => {
+    res.render("cadastrarCliente");
+});
 
 module.exports = router;
