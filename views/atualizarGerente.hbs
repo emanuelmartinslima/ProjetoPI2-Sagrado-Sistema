@@ -8,32 +8,66 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Tema claro */
+        :root {
+            --background-color: rgb(192, 185, 216);
+            --text-color: aliceblue;
+            --navbar-background-color: rgb(49, 04, 59);
+        }
+
+        /* Tema escuro */
+        .dark-mode {
+            --background-color: rgb(29, 5, 33);
+            --text-color: #ffffff;
+            --navbar-background-color: rgb(49, 04, 59);
+            /* Mantém a cor do navbar */
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background-color: var(--navbar-background-color);
+        }
+
+        .btn-dark-mode {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+        }
+
+        .invalid-feedback {
+            display: block;
+            color: #dc3545;
+        }
+    </style>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg" style="background-color: rgb(49, 04, 59);">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <img src="Images/Logoextendido.png" width="150" height="40" alt="Logo">
+            <img src="/Logoextendido.png" width="150" height="40" alt="Logo">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <button class="btn btn-light">
+                    <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                         <i class="bi bi-moon-fill"></i>
                     </button>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown"
-                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Menu
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="">Dashboard</a></li>
-                            <li><a class="dropdown-item" href="">Editar Dados</a></li>
-                            <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="#">Cadastrar</a>
                     </li>
                 </ul>
             </div>
@@ -41,77 +75,62 @@
     </nav>
 
     <div class="flex-grow-1 d-flex align-items-center justify-content-center"
-        style="background-color: rgb(192, 185, 216); padding-top: 1em; padding-bottom: 1em;">
+        style="padding-top: 1em; padding-bottom: 1em;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-lg-6 d-flex align-items-center" style="min-height: 300px;">
-                    <div class="w-100 p-4 text-center" style="background-color: rgb(49, 04, 59); border-radius: 10px;">
-                        <p style="font-size: medium; color: aliceblue;">Bem-vindo ao Sagrado Sistema!</p>
-                        <img src="Images/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem"
-                            class="mb-3">
-                        <form style="width: 100%;">
-
+                    <div class="w-100 p-4 text-center"
+                        style="background-color: var(--navbar-background-color); border-radius: 10px;">
+                        <p style="font-size: medium; color: var(--text-color);">Bem-vindo ao Sagrado Sistema!</p>
+                        <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
+                        <form id="registrationForm" style="width: 100%;" action="/auth/register" method="post">
                             <!-- campo de nome -->
                             <div class="mb-3">
-                                <i class="bi bi-emoji-laughing" style="color: aliceblue; font-size: 1.5rem;"></i>
-                                <label for="validationNome" class="form-label" style="color: aliceblue;">Nome</label>
+                                <i class="bi bi-emoji-laughing"
+                                    style="color: var(--text-color); font-size: 1.5rem;"></i>
+                                <label for="validationNome" class="form-label"
+                                    style="color: var(--text-color);">Nome</label>
                                 <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationNome"
-                                        aria-describedby="inputGroupPrepend" required>
+                                    <input type="text" class="form-control" id="validationNome" name="nome">
                                 </div>
                             </div>
 
                             <!-- campo de cpf -->
                             <div class="mb-3">
-                                <i class="bi bi-file-person" style="color: aliceblue; font-size: 1.5rem;"></i>
-                                <label for="validationCPF" class="form-label" style="color: aliceblue;">CPF</label>
+                                <i class="bi bi-file-person" style="color: var(--text-color); font-size: 1.5rem;"></i>
+                                <label for="validationCPF" class="form-label"
+                                    style="color: var(--text-color);">CPF</label>
                                 <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationCPF"
-                                        aria-describedby="inputGroupPrepend" required>
+                                    <input type="text" class="form-control" id="validationCPF" name="cpf">
                                 </div>
                             </div>
 
-                            <!-- campo do CNPJ -->
+                            <!-- campo de email -->
                             <div class="mb-3">
-                                <i class="bi bi-file-person" style="color: aliceblue; font-size: 1.5rem;"></i>
-                                <label for="validationCNPJ" class="form-label" style="color: aliceblue;">CNPJ</label>
-                                <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationCNPJ"
-                                        aria-describedby="inputGroupPrepend">
-                                </div>
+                                <i class="bi bi-envelope-at me-2"
+                                    style="color: var(--text-color); font-size: 1.5rem;"></i>
+                                <label for="exampleInputEmail1" class="form-label"
+                                    style="color: var(--text-color);">E-mail</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" name="email">
                             </div>
 
-                            <!-- campo do email -->
+                            <!-- campo de senha -->
                             <div class="mb-3">
-                                <i class="bi bi-envelope-at me-2" style="color: aliceblue; font-size: 1.5rem;"></i>
-                                <label for="exampleInputEmail1" class="form-label" style="color: aliceblue;">E-mail</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1"
-                                    aria-describedby="emailHelp" required>
+                                <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>
+                                <label for="exampleInputPassword1" class="form-label"
+                                    style="color: var(--text-color);">Senha</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" name="senha">
                             </div>
 
-                            <!-- campo da senha -->
+                            <!-- campo de confirmar senha -->
                             <div class="mb-3">
-                                <i class="bi bi-lock me-2" style="color: aliceblue; font-size: 1.5rem;"></i>
-                                <label for="exampleInputPassword1" class="form-label" style="color: aliceblue;">Senha</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1">
-                            </div>
-                            <!-- confirmar senha -->
-                            <div class="mb-3">
-                                <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>    
+                                <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>
                                 <label for="confirmarSenha" class="form-label"
                                     style="color: var(--text-color);">Confirmar Senha</label>
                                 <input type="password" class="form-control" id="confirmarSenha" name="confirmarSenha">
                             </div>
 
-
-                            <!-- checkbox lembre me -->
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                <label class="form-check-label" for="exampleCheck1"
-                                    style="color: aliceblue; padding-left: 1em;">Lembre me</label>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">Atualizar</button>
+                            <button type="submit" class="btn btn-primary">Cadastrar</button>
                             <br><br>
                         </form>
                     </div>
@@ -120,7 +139,65 @@
         </div>
     </div>
 
-    <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">
+    <script>
+        // Recupera o estado do tema do armazenamento local
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('toggleTheme').innerHTML = '<i class="bi bi-brightness-high"></i>';
+            }
+        });
+
+        // Alterna o tema e salva a preferência
+        document.getElementById('toggleTheme').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            document.getElementById('toggleTheme').innerHTML = isDarkMode
+                ? '<i class="bi bi-brightness-high"></i>'
+                : '<i class="bi bi-moon-fill"></i>';
+        });
+
+        // Validação do formulário
+        document.getElementById('registrationForm').addEventListener('submit', function (event) {
+            let isValid = true;
+            const fields = [
+                'validationNome',
+                'validationCPF',
+                'exampleInputEmail1',
+                'exampleInputPassword1',
+                'confirmarSenha'
+            ];
+            let emptyFields = false;
+
+            fields.forEach(id => {
+                const input = document.getElementById(id);
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    emptyFields = true;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (document.getElementById('exampleInputPassword1').value !== document.getElementById('confirmarSenha').value && document.getElementById('exampleInputPassword1').value !== "" && document.getElementById('confirmarSenha').value !== "") {
+                alert('As senhas não coincidem.');
+                isValid = false;
+            }
+
+            if (emptyFields) {
+                alert('Por favor, preencha os campos obrigatórios.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Impede o envio do formulário se houver campos inválidos
+            }
+        });
+    </script>
+
+    <footer class="text-light text-center py-3" style="background-color: var(--navbar-background-color);">
         Todos os direitos reservados
     </footer>
 
