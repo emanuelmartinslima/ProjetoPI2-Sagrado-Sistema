@@ -9,12 +9,12 @@ exports.atualizar = async (req, res) => {
 
         if(!verificarOperador){
 
-            res.json("Operador não existente!");
+            return;
 
         } else{
 
             operador.update({nome: nome, email: email}, {where: {cpf: cpf}});
-            res.json({message: "Usuário alterado com sucesso!"});
+            res.render("telaInicialOp");
     
         }
                 
