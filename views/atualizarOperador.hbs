@@ -83,7 +83,7 @@
                         style="background-color: var(--navbar-background-color); border-radius: 10px;">
                         <p style="font-size: medium; color: var(--text-color);">Bem-vindo ao Sagrado Sistema!</p>
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
-                        <form id="registrationForm" style="width: 100%;" action="/auth/register" method="post">
+                        <form id="registrationForm" style="width: 100%;" action="/auth/atualizar" method="post">
                             <!-- campo de nome -->
                             <div class="mb-3">
                                 <i class="bi bi-emoji-laughing"
@@ -112,22 +112,6 @@
                                 <label for="exampleInputEmail1" class="form-label"
                                     style="color: var(--text-color);">E-mail</label>
                                 <input type="email" class="form-control" id="exampleInputEmail1" name="email">
-                            </div>
-
-                            <!-- campo de senha -->
-                            <div class="mb-3">
-                                <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                <label for="exampleInputPassword1" class="form-label"
-                                    style="color: var(--text-color);">Senha</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" name="senha">
-                            </div>
-
-                            <!-- campo de confirmar senha -->
-                            <div class="mb-3">
-                                <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                <label for="confirmarSenha" class="form-label"
-                                    style="color: var(--text-color);">Confirmar Senha</label>
-                                <input type="password" class="form-control" id="confirmarSenha" name="confirmarSenha">
                             </div>
 
                             <button type="submit" class="btn btn-primary">Cadastrar</button>
