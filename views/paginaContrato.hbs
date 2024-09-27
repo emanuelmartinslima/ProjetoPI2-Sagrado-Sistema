@@ -78,16 +78,21 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
-                        <button class="btn btn-light">
+                    
+                        <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                             <i class="bi bi-moon-fill"></i>
                         </button>
-
-                        <button class="btn btn-light" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" type="button" onclick="window.location.href='cadastrarCliente'">Cadastrar Clientes</button></li>
-                            <li><button class="dropdown-item" type="button">Sair</button></li>
+                            <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
+                            <li><a class="dropdown-item" href="/">Sair</a></li>
+
                         </ul>
                     </div>
                 </ul>
@@ -95,29 +100,36 @@
         </div>
     </nav>
 
-    <div class="flex-grow-1" style="background-color: rgb(192, 185, 216);">
+    <div class="flex-grow-1" style="background-color: --background-color;">
+
         <div class="container mt-4 content-spacing">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
                     <div class="form-container">
                         <h1 class="text-center title">Gerador de Contratos</h1>
-                        <form>
+
+                        <form id="formContrato">
                             <div class="mb-3 row">
                                 <label for="contratante" class="col-sm-4 col-form-label">Contratante:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="contratante" readonly>
+                                    <input type="text" class="form-control" id="contratante" readonly disabled>
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="cpfCnpj" class="col-sm-4 col-form-label">CPF ou CNPJ:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="cpfCnpj" readonly>
+                                
+                                    <input type="text" class="form-control" id="cpfCnpj" readonly disabled>
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="endereco" class="col-sm-4 col-form-label">Endereço:</label>
                                 <div class="col-sm-8">
-                                        <input type="text" class="form-control" id="endereco" readonly>
+
+                                        <input type="text" class="form-control" id="endereco" readonly disabled>
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -172,6 +184,22 @@
                                 <div class="col-sm-8" id="paymentDatesContainer"></div>
                             </div>
                             <div class="mb-3 row">
+                                <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data de Pagamento:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" class="form-control" id="dataPagamento">
+                                </div>
+                            </div>
+                            <div class="mb-3 row payment-details" id="pixParceladoDetails" style="display: none;">
+                                <label for="numParcelas" class="col-sm-4 col-form-label">Número de Parcelas:</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" id="numParcelas" oninput="updatePaymentDates()">
+                                </div>
+                            </div>
+                            <div class="mb-3 row payment-details" id="datasPagamentos" style="display: none;">
+                                <label for="datasPagamento" class="col-sm-4 col-form-label">Datas de Pagamento:</label>
+                                <div class="col-sm-8" id="paymentDatesContainer"></div>
+                            </div>
+                            <div class="mb-3 row">
                                 <label for="valorTotal" class="col-sm-4 col-form-label">Valor Total:</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="valorTotal">
@@ -186,10 +214,6 @@
             </div>
         </div>
     </div>
-
-    <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">
-        Todos os direitos reservados
-    </footer>
 
     <script>
         // Função para preencher os campos com os dados do cliente
@@ -208,14 +232,23 @@
             const pixParceladoDetails = document.getElementById("pixParceladoDetails");
             const datasPagamentos = document.getElementById("datasPagamentos");
 
+            const labelDatasPagamentos = document.getElementById("dataPagamentoLabel");
+
+
             if (formaPagamento === "pixParcelado") {
                 pixParceladoDetails.style.display = "flex";
                 datasPagamentos.style.display = "block";
                 dataPagamento.style.display = "none";
+
+                labelDatasPagamentos.style.display = "none";
+
             } else {
                 pixParceladoDetails.style.display = "none";
                 datasPagamentos.style.display = "none";
                 dataPagamento.style.display = "block"; // Mostra o campo único de data de pagamento
+
+                labelDatasPagamentos.style.display = "block";
+
                 document.getElementById("numParcelas").value = ""; // Limpa o campo ao mudar de opção
                 document.getElementById("paymentDatesContainer").innerHTML = ""; // Limpa as datas de pagamento
             }
@@ -238,6 +271,38 @@
             }
         }
 
+        // Validação do formulário
+        document.getElementById('formContrato').addEventListener('submit', function (event) {
+            let isValid = true;
+            const fields = [
+                'dataEvento',
+                'horarioMontagem',
+                'enderecoEvento',
+                'produtoEscolhido',
+                'valorTotal'
+            ];
+            let emptyFields = false;
+
+            fields.forEach(id => {
+                const input = document.getElementById(id);
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    emptyFields = true;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (emptyFields) {
+                alert('Por favor, preencha os campos obrigatórios.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Impede o envio do formulário se houver campos inválidos
+            }
+        });
+
         // Recupera o estado do tema do armazenamento local
         document.addEventListener('DOMContentLoaded', () => {
             const isDarkMode = localStorage.getItem('darkMode') === 'true';
@@ -257,12 +322,15 @@
                 : '<i class="bi bi-moon-fill"></i>';
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz4fnFO9gybBogGzGQw2jBXjsDoYwK8zKHu7K7p6/6E6ZU6pEI2P6VzTZr" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-6mxQFYs3j40hT1VWzW6xPciXp8wdt4cLr04MInSgH5CkmPz2MY6Dth/9f6i6wRRS" crossorigin="anonymous">
-    </script>
+
+    <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">
+        Todos os direitos reservados
+    </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
 </body>
 
 </html>

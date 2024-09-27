@@ -4,37 +4,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cadastrar Clientes - Sagrado Neon</title>
+    <title>Validar Clientes - Sagrado Neon</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-            .title {
-            color: white; 
-            margin-bottom: 20px;
-        }
-
-        .form-container {
-            background-color: rgb(49, 04, 59); 
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        .form-container input,
-        .form-container select {
-            margin-bottom: 10px;
-        }
-
-        .form-container label {
-            color: white;
-        }
-
-        .content-spacing {
-            margin-top: 40px; 
-            margin-bottom: 40px; 
-        }
-
-        ./* Tema claro */
+        /* Tema claro */
         :root {
             --background-color: rgb(192, 185, 216);
             --text-color: aliceblue;
@@ -62,6 +38,31 @@
             background-color: #ffffff;
             color: #000000;
         }
+        
+        .title {
+            color: white; 
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: rgb(49, 04, 59); 
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .form-container input,
+        .form-container select {
+            margin-bottom: 10px;
+        }
+
+        .form-container label {
+            color: white;
+        }
+
+        .content-spacing {
+            margin-top: 40px; 
+            margin-bottom: 40px; 
+        }
 
         .is-invalid {
             border-color: #dc3545;
@@ -87,16 +88,21 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
-                        <button class="btn btn-light">
+
+                        <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                             <i class="bi bi-moon-fill"></i>
                         </button>
-
-                        <button class="btn btn-light" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" type="button" onclick="window.location.href='cadastrarCliente">Gerar Contratos</button></li>
-                            <li><button class="dropdown-item" type="button">Sair</button></li>
+                            <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
+                            <li><a class="dropdown-item" href="/">Sair</a></li>
+
                         </ul>
                     </div>
                 </ul>
@@ -104,29 +110,38 @@
         </div>
     </nav>
 
-    <div class="flex-grow-1" style="background-color: rgb(192, 185, 216);">
+    <div class="flex-grow-1" style="background-color: --background-color;">
+
         <div class="container mt-4 content-spacing">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
                     <div class="form-container">
-                        <h1 class="text-center title">Cadastrar Clientes</h1>
+
+                        <h1 class="text-center title">Validar Clientes</h1>
+
                         <form id="cadastroForm" onsubmit="return cadastrarCliente(event)">
                             <div class="mb-3 row">
                                 <label for="cpfCnpj" class="col-sm-4 col-form-label">CPF ou CNPJ:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="cpfCnpj" required>
+
+                                    <input type="text" class="form-control" id="cpfCnpj">
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="contratante" class="col-sm-4 col-form-label">Contratante:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="contratante" required>
+
+                                    <input type="text" class="form-control" id="contratante">
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="endereco" class="col-sm-4 col-form-label">Endereço:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="endereco" required>
+
+                                    <input type="text" class="form-control" id="endereco">
+
                                 </div>
                             </div>
                             <div class="text-center">
@@ -148,9 +163,53 @@
         crossorigin="anonymous"></script>
 
     <script>
+
+            // Recupera o estado do tema do armazenamento local
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('toggleTheme').innerHTML = '<i class="bi bi-brightness-high"></i>';
+            }
+        });
+
+        // Alterna o tema e salva a preferência
+        document.getElementById('toggleTheme').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            document.getElementById('toggleTheme').innerHTML = isDarkMode
+                ? '<i class="bi bi-brightness-high"></i>'
+                : '<i class="bi bi-moon-fill"></i>';
+        });
+        
         function cadastrarCliente(event) {
             event.preventDefault(); // Evita o envio padrão do formulário
-            
+
+            let isValid = true;
+            const fields = [
+                'cpfCnpj',
+                'contratante',
+                'endereco'
+            ];
+            let emptyFields = false;
+
+            fields.forEach(id => {
+                const input = document.getElementById(id);
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    emptyFields = true;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+                if (emptyFields) {
+                alert('Por favor, preencha os campos obrigatórios.');
+                isValid = false;
+            }
+
+
             // Obtendo os valores dos campos
             const contratante = document.getElementById("contratante").value;
             const cpfCnpj = document.getElementById("cpfCnpj").value;
@@ -161,9 +220,41 @@
             localStorage.setItem("cpfCnpj", cpfCnpj);
             localStorage.setItem("endereco", endereco);
 
-            // Redirecionando para a página de "Gerar Contratos"
-            window.location.href = "/paginaContrato";
         }
+
+        document.getElementById('cadastroForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const cpfCnpj = document.getElementById('cpfCnpj');
+
+            let isValid = true;
+
+            cpfCnpj.classList.remove('is-invalid');
+
+            if (!cpfCnpj.value.trim()) {
+                cpfCnpj.classList.add('is-invalid');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            const response = await fetch('/auth/locate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({cpfCnpj: cpfCnpj.value.trim()})
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.href = "/paginaContrato";
+            } else {
+                alert(data.message);
+            }
+        });
+
     </script>
 </body>
 

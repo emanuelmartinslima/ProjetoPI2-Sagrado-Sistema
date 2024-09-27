@@ -47,5 +47,15 @@ exports.login = async (req, res) => {
     }
 }
 
+exports.locate = async (req, res) => {
+    const cliente = require("../models/clienteModel");
+    const { cpfCnpj } = req.body;
 
+    const verificarCliente = await cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
 
+    if (verificarCliente) {
+        res.json({ success : true });
+    } else {
+        res.json({ success: false, message: "Cliente não encontrado!" });
+    }
+}

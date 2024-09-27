@@ -12,4 +12,6 @@ router.post("/login", authController.login);
 
 router.post("/atualizar", operadorController.atualizar);
 
+router.post("/locate", authController.locate);
+
 module.exports = router;
