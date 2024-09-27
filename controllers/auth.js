@@ -16,7 +16,6 @@ exports.register = async (req, res) => {
 
     if (usuario) {
         console.log("Usuário já cadastrado");
-        res.render("cadastro");
     } else {
         operador.create({
             nome: nome,
@@ -29,7 +28,6 @@ exports.register = async (req, res) => {
             res.render("index");
         }).catch((error) => {
             console.log("Erro: ", error)
-            res.render("cadastro");
         });
     }
 }

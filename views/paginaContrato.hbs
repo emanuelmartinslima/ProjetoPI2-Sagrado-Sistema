@@ -68,9 +68,9 @@
 
 <body class="d-flex flex-column min-vh-100">
 
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(49, 04, 59);">
         <div class="container-fluid">
-            <img src="/Logoextendido.png" width="150" height="40" alt="Logo">
+            <img src="Images/Logoextendido.png" width="150" height="40" alt="Logo">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -78,6 +78,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
+                    
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                             <i class="bi bi-moon-fill"></i>
                         </button>
@@ -91,6 +92,7 @@
                             <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
                             <li><a class="dropdown-item" href="/">Sair</a></li>
+
                         </ul>
                     </div>
                 </ul>
@@ -99,28 +101,35 @@
     </nav>
 
     <div class="flex-grow-1" style="background-color: --background-color;">
+
         <div class="container mt-4 content-spacing">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
                     <div class="form-container">
                         <h1 class="text-center title">Gerador de Contratos</h1>
+
                         <form id="formContrato">
                             <div class="mb-3 row">
                                 <label for="contratante" class="col-sm-4 col-form-label">Contratante:</label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" id="contratante" readonly disabled>
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="cpfCnpj" class="col-sm-4 col-form-label">CPF ou CNPJ:</label>
                                 <div class="col-sm-8">
+                                
                                     <input type="text" class="form-control" id="cpfCnpj" readonly disabled>
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="endereco" class="col-sm-4 col-form-label">Endereço:</label>
                                 <div class="col-sm-8">
+
                                         <input type="text" class="form-control" id="endereco" readonly disabled>
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -130,8 +139,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da
-                                    Montagem:</label>
+                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da Montagem:</label>
                                 <div class="col-sm-8">
                                     <input type="time" class="form-control" id="horarioMontagem">
                                 </div>
@@ -149,11 +157,31 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="formaPagamento" class="col-sm-4 col-form-label">Forma de Pagamento
-                                    Escolhida:</label>
+                                <label for="formaPagamento" class="col-sm-4 col-form-label">Forma de Pagamento:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="formaPagamento">
+                                    <select class="form-control" id="formaPagamento" onchange="togglePaymentDetails()">
+                                        <option value="">Selecione uma opção</option>
+                                        <option value="pix">Pix</option>
+                                        <option value="pixParcelado">Pix Parcelado</option>
+                                        <option value="cartaoCredito">Cartão de Crédito</option>
+                                    </select>
                                 </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="dataPagamento" class="col-sm-4 col-form-label">Data de Pagamento:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" class="form-control" id="dataPagamento">
+                                </div>
+                            </div>
+                            <div class="mb-3 row payment-details" id="pixParceladoDetails">
+                                <label for="numParcelas" class="col-sm-4 col-form-label">Número de Parcelas:</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" id="numParcelas" oninput="updatePaymentDates()">
+                                </div>
+                            </div>
+                            <div class="mb-3 row payment-details" id="datasPagamentos">
+                                <label for="datasPagamento" class="col-sm-4 col-form-label">Datas de Pagamento:</label>
+                                <div class="col-sm-8" id="paymentDatesContainer"></div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data de Pagamento:</label>
@@ -203,18 +231,24 @@
             const dataPagamento = document.getElementById("dataPagamento");
             const pixParceladoDetails = document.getElementById("pixParceladoDetails");
             const datasPagamentos = document.getElementById("datasPagamentos");
+
             const labelDatasPagamentos = document.getElementById("dataPagamentoLabel");
+
 
             if (formaPagamento === "pixParcelado") {
                 pixParceladoDetails.style.display = "flex";
                 datasPagamentos.style.display = "block";
                 dataPagamento.style.display = "none";
+
                 labelDatasPagamentos.style.display = "none";
+
             } else {
                 pixParceladoDetails.style.display = "none";
                 datasPagamentos.style.display = "none";
                 dataPagamento.style.display = "block"; // Mostra o campo único de data de pagamento
+
                 labelDatasPagamentos.style.display = "block";
+
                 document.getElementById("numParcelas").value = ""; // Limpa o campo ao mudar de opção
                 document.getElementById("paymentDatesContainer").innerHTML = ""; // Limpa as datas de pagamento
             }
@@ -296,6 +330,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+
 </body>
 
 </html>
