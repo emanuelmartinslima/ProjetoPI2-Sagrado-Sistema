@@ -66,9 +66,6 @@
                     <li class="nav-item">
                         <a class="nav-link text-light" href="#">Login</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="/cadastro">Cadastrar</a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -174,7 +171,7 @@
 
             if (data.success) {
                 // Redireciona para a página de contrato ou onde for necessário
-                window.location.href = "/telaInicialOp";
+                window.location.href = data.redirect;;
             } else {
                 // Exibe o alerta de erro
                 alert(data.message);

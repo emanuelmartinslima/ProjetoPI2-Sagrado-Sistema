@@ -61,15 +61,24 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <button id="toggleTheme" class="btn btn-light btn-dark-mode">
-                        <i class="bi bi-moon-fill"></i>
-                    </button>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="/">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Cadastrar</a>
-                    </li>
+                    <div class="dropdown">
+
+                        <button id="toggleTheme" class="btn btn-light btn-dark-mode">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Menu
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
+                            <li><a class="dropdown-item" href="/">Sair</a></li>
+
+                        </ul>
+                    </div>
                 </ul>
             </div>
         </div>
@@ -82,27 +91,28 @@
                 <div class="col-12 col-md-8 col-lg-6 d-flex align-items-center" style="min-height: 300px;">
                     <div class="w-100 p-4 text-center"
                         style="background-color: var(--navbar-background-color); border-radius: 10px;">
-                        <p style="font-size: medium; color: var(--text-color);">Bem-vindo ao Sagrado Sistema!</p>
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
                         <form id="registrationForm" style="width: 100%;" action="/auth/atualizar" method="post">
+                           
+                           <!-- campo de cpf, será eliminado quando adicionarmos o token (CPF já será preenchido automaticamente) -->
+                            <div class="mb-3">
+                                <label for="validationCPF" class="form-label"
+                                    style="color: var(--text-color);">Digite seu CPF</label>
+                                <div class="input-group has-validation">
+                                    <input type="text" class="form-control" id="validationCPF" name="cpf">
+                                </div>
+                            </div>
+
+                            <p style="font-size: medium; color: var(--text-color);">Atualizar dados</p>
+                           
                             <!-- campo de nome -->
                             <div class="mb-3">
                                 <i class="bi bi-emoji-laughing"
                                     style="color: var(--text-color); font-size: 1.5rem;"></i>
                                 <label for="validationNome" class="form-label"
-                                    style="color: var(--text-color);">Nome</label>
+                                    style="color: var(--text-color);">Alterar nome</label>
                                 <div class="input-group has-validation">
                                     <input type="text" class="form-control" id="validationNome" name="nome">
-                                </div>
-                            </div>
-
-                            <!-- campo de cpf -->
-                            <div class="mb-3">
-                                <i class="bi bi-file-person" style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                <label for="validationCPF" class="form-label"
-                                    style="color: var(--text-color);">CPF</label>
-                                <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationCPF" name="cpf">
                                 </div>
                             </div>
 
@@ -111,11 +121,11 @@
                                 <i class="bi bi-envelope-at me-2"
                                     style="color: var(--text-color); font-size: 1.5rem;"></i>
                                 <label for="exampleInputEmail1" class="form-label"
-                                    style="color: var(--text-color);">E-mail</label>
+                                    style="color: var(--text-color);">Alterar e-mail</label>
                                 <input type="email" class="form-control" id="exampleInputEmail1" name="email">
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Cadastrar</button>
+                            <button type="submit" class="btn btn-primary">Atualizar dados</button>
                             <br><br>
                         </form>
                     </div>

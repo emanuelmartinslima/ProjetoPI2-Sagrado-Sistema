@@ -33,6 +33,6 @@ const Operadores = db.sequelize.define("operadores", {
     }
 });
 
-Operadores.sync({force: true});
+// Operadores.sync({force: true});
 
 module.exports = Operadores;

@@ -71,10 +71,11 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-
+                            
+                            <li><a class="dropdown-item" href="cadastro">Cadastrar Usuário</a></li>
                             <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
-                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
-                            <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="cadastrarClienteGerente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
                             <li><a class="dropdown-item" href="/">Sair</a></li>
 
@@ -92,9 +93,8 @@
                 <div class="col-12 col-md-8 col-lg-6 d-flex align-items-center" style="min-height: 300px;">
                     <div class="w-100 p-4 text-center"
                         style="background-color: var(--navbar-background-color); border-radius: 10px;">
-                        
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
-                        <form id="registrationForm" style="width: 100%;" action="/auth/registerCliente" method="post">
+                        <form id="registrationForm" style="width: 100%;" action="/auth/registerClienteGerente" method="post">
                             <p style="font-size: medium; color: var(--text-color);">Cadastrar novo cliente.</p>
                             <!-- campo de nome -->
                             <div class="mb-3">
