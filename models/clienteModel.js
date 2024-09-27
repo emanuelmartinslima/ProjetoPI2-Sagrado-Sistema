@@ -4,10 +4,13 @@ const Clientes = db.sequelize.define("clientes", {
     nome: {
         type: db.Sequelize.STRING
     },
-    cpf: {
+    cpfCnpj: {
         type: db.Sequelize.STRING
     },
-    cnpj:{
+    endereco: {
+        type: db.Sequelize.TEXT
+    },
+    contato: {
         type: db.Sequelize.STRING
     }
 });
