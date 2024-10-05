@@ -2,7 +2,8 @@ const db = require("./conexaoBanco.js");
 
 const Usuarios = db.sequelize.define("usuarios", {
     cargo: {
-        type: db.Sequelize.STRING
+        type: db.Sequelize.STRING,
+        defaultValue: "operador"
     },
     email:{
         type: db.Sequelize.STRING,

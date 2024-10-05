@@ -27,3 +27,21 @@ exports.atualizar = async (req, res) => {
         }
     });
 }
+
+exports.atualizarOperador = async(req, res) => {
+    try{
+        const {cpf, nome, email} = req.body;
+
+        const operador = Usuario.findOne({where: {cpf: cpf}});
+
+        if(!operador){
+            console.log("Operador não encontrado!");
+            res.redirect("telaInicial");
+        }
+
+        Usuario.update({nome: nome, email: email}, {where: {cpf: cpf}});
+        res.redirect("../telaInicial");
+    } catch(error){
+        console.log(error);
+    }
+}

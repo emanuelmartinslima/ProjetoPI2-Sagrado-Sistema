@@ -18,6 +18,8 @@ router.post("/atualizar", operadorController.atualizar);
 
 router.post("/atualizarGerente", operadorController.atualizar);
 
+router.post("/atualizarOperadorGerente", operadorController.atualizarOperador);
+
 router.post("/locate", clienteController.locate);
 
 router.post("/registrarCliente", clienteController.registerCliente);
