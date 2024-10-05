@@ -22,6 +22,7 @@ exports.registrar = async (req, res) => {
 
     if (verificarUsuario) {
         console.log("Usuário já cadastrado");
+        res.redirect("/");
     } else {
         const salt = await bcrypt.genSalt(12);
 
@@ -35,7 +36,7 @@ exports.registrar = async (req, res) => {
             senha: hashPassword
         }).then(() => {
             console.log("Dados cadastrados com sucesso!")
-            res.render("index");
+            res.redirect("/");
         }).catch((error) => {
             console.log("Erro: ", error)
         });
