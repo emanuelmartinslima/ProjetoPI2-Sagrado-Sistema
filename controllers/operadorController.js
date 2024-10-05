@@ -1,28 +1,29 @@
-const operador = require("../models/operadorModel");
+const Usuario = require("../models/usuarioModel");
+const jwt = require("jsonwebtoken");
 
 exports.atualizar = async (req, res) => {
-    const {nome, cpf, email} = req.body
+    const token = req.cookies.token;
+    const secret = process.env.SECRET;
 
-    try{
+    jwt.verify(token, secret, async (error, user) => {
+        const { nome, email } = req.body
 
-        const verificarOperador = await operador.findOne({where: {cpf: cpf}});
+        const usuario = await Usuario.findOne({ where: { id: user.id } });
 
-        if(!verificarOperador){
+        try {
+            const verificarUsuario = await Usuario.findOne({ where: { cpf: usuario.cpf } });
 
-            return;
+            if (!verificarUsuario) {
+                return;
+            } else {
+                usuario.update({ nome: nome, email: email }, { where: { cpf: usuario.cpf } });
 
-        } else{
+                res.redirect("/telaInicial");
+            }
 
-            operador.update({nome: nome, email: email}, {where: {cpf: cpf}});
-            res.render("telaInicialOp");
-    
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Erro no servidor" });
         }
-                
-    } catch(error){
-        
-        console.log(error);
-        res.status(500).json({message: "Erro no servidor"});
-    
-    }
-
+    });
 }

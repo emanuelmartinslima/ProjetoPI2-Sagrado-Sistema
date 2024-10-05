@@ -1,8 +1,8 @@
 const db = require("./conexaoBanco.js");
 
-const Operadores = db.sequelize.define("operadores", {
-    gerente: {
-        type: db.Sequelize.BOOLEAN
+const Usuarios = db.sequelize.define("usuarios", {
+    cargo: {
+        type: db.Sequelize.STRING
     },
     email:{
         type: db.Sequelize.STRING,
@@ -33,6 +33,6 @@ const Operadores = db.sequelize.define("operadores", {
     }
 });
 
-Operadores.sync({force: true});
+// Usuarios.sync({force: true});
 
-module.exports = Operadores;
+module.exports = Usuarios;

@@ -101,7 +101,7 @@
                             <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
-                            <li><a class="dropdown-item" href="/">Sair</a></li>
+                            <li><a class="dropdown-item" href="sair">Sair</a></li>
 
                         </ul>
                     </div>
@@ -110,14 +110,14 @@
         </div>
     </nav>
 
-    <div class="flex-grow-1" style="background-color: --background-color;">
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center" style="background-color: --background-color;">
 
         <div class="container mt-4 content-spacing">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
-                    <div class="form-container">
-
-                        <h1 class="text-center title">Validar Clientes</h1>
+                    <div class="form-container text-center">
+                        <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
+                        <p style="font-size: medium; color: var(--text-color);">Validar Clientes</p>
 
                         <form id="cadastroForm" onsubmit="return cadastrarCliente(event)">
                             <div class="mb-3 row">
@@ -252,6 +252,7 @@
                 window.location.href = "/paginaContrato";
             } else {
                 alert(data.message);
+                window.location.href = "/cadastroClienteForm";
             }
         });
 

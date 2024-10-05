@@ -1,28 +1,38 @@
-exports.register = async (req, res) => {
-    console.log(req.body);
-    const {Op} = require("sequelize");
-    const operador = require("../models/operadorModel");
+const Usuario = require("../models/usuarioModel");
+const Cliente = require("../models/clienteModel");
+const { Op } = require("sequelize");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const env = require("dotenv");
+
+env.config();
+
+exports.registrar = async (req, res) => {
     const { nome, cpf, cnpj, email, senha } = req.body;
 
-    const usuario = await operador
-    .findOne({
-         where: {
-         [Op.or] : [
-            {cpf: cpf},
-            {email: email}
-         ]    
-         }
-    });
+    const verificarUsuario = await Usuario
+        .findOne({
+            where: {
+                [Op.or]: [
+                    { cpf: cpf },
+                    { email: email }
+                ]
+            }
+        });
 
-    if (usuario) {
+    if (verificarUsuario) {
         console.log("Usuário já cadastrado");
     } else {
-        operador.create({
+        const salt = await bcrypt.genSalt(12);
+
+        const hashPassword = await bcrypt.hash(senha, salt);
+
+        Usuario.create({
             nome: nome,
             cpf: cpf,
             cnpj: cnpj,
             email: email,
-            senha: senha
+            senha: hashPassword
         }).then(() => {
             console.log("Dados cadastrados com sucesso!")
             res.render("index");
@@ -33,29 +43,84 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-    const operador = require("../models/operadorModel");
     const { email, senha } = req.body;
 
-    const verificarOperador = await operador.findOne({ where: { email: email, senha: senha } });
+    try {
+        const usuario = await Usuario.findOne({ where: { email: email } });
 
-    if (verificarOperador) {
-        // Login bem-sucedido
+        if (!usuario) {
+            res.json({ success: false, message: "Usuário ou senha inválido!" });
+        }
+
+        const verificarSenha = await bcrypt.compare(senha, usuario.senha);
+
+        if (!verificarSenha) {
+            res.json({ success: false, message: "Usuário ou senha inválido!" });
+        }
+
+        const secret = process.env.SECRET;
+
+        const token = jwt.sign(
+            {
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email,
+                cargo: usuario.cargo
+            },
+            secret
+        );
+
+        res.cookie('token', token, { httpOnly: true });
+
+        // console.log({ msg: "Usuário autenticado com sucesso!" }, token);
+
         res.json({ success: true });
-    } else {
-        // Usuário ou senha inválido
-        res.json({ success: false, message: "Usuário ou senha inválido!" });
+    } catch (error) {
+        console.log(error);
+        res.render("index");
+    }
+}
+
+exports.autenticarToken = (req, res, next) => {
+    try{
+        const token = req.cookies.token;
+
+        // console.log("Token: " + token);
+    
+        if (!token) {
+            console.log("Token não definido");
+            res.redirect("/");
+        }
+    
+        const secret = process.env.SECRET;
+    
+        jwt.verify(token, secret, (error, user) => {
+            // console.log(user);
+            req.user = user;
+    
+            next();
+        });
+    } catch(error){
+        console.log("Erro: " + error);
     }
 }
 
 exports.locate = async (req, res) => {
-    const cliente = require("../models/clienteModel");
     const { cpfCnpj } = req.body;
 
-    const verificarCliente = await cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
+    const verificarCliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
 
     if (verificarCliente) {
-        res.json({ success : true });
+        res.json({ success: true });
     } else {
         res.json({ success: false, message: "Cliente não encontrado!" });
     }
 }
+
+exports.sair = async (req, res) => {
+    console.log("terminal limpo!");
+    res.clearCookie('token');
+    res.redirect("/");
+}
+
+

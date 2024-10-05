@@ -63,12 +63,6 @@
                     <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                         <i class="bi bi-moon-fill"></i>
                     </button>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="/cadastro">Cadastrar</a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -84,7 +78,7 @@
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
 
                         <!-- Formulário de login -->
-                        <form id="loginForm" style="width: 100%;">
+                        <form id="loginForm" style="width: 100%;" action="login" method="post">
                             <div class="mb-3">
                                 <div class="d-flex align-items-center justify-content-center">
                                     <i class="bi bi-envelope-at me-2"
@@ -174,7 +168,7 @@
 
             if (data.success) {
                 // Redireciona para a página de contrato ou onde for necessário
-                window.location.href = "/telaInicialOp";
+                window.location.href = "telaInicial";
             } else {
                 // Exibe o alerta de erro
                 alert(data.message);
