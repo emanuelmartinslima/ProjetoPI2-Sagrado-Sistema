@@ -14,6 +14,8 @@ router.post("/registrar", authController.registrar);
 
 router.post("/login", authController.login);
 
+router.post("/enviarEmailRedefinirSenha", operadorController.enviarEmailAtualizarSenha);
+
 router.post("/atualizar", operadorController.atualizar);
 
 router.post("/atualizarGerente", operadorController.atualizar);

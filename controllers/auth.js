@@ -106,6 +106,27 @@ exports.autenticarToken = (req, res, next) => {
     }
 }
 
+exports.autenticarTokenRedefinirSenha = (req, res, next) => {
+    const token = req.cookies.tokenRedefinirSenha;
+
+    if(!token){
+        console.log("Token para redefinir senha inválido!");
+
+        res.redirect("/");
+    }
+
+    const secret = process.env.SECRET;
+
+    jwt.verify(token, secret, (error, user) => {
+        if(error){
+            console.log("Ocorreu um erro! Token inválido!");
+            res.redirect("/");
+        }
+
+        next();
+    });
+}
+
 exports.locate = async (req, res) => {
     const { cpfCnpj } = req.body;
 
@@ -119,7 +140,6 @@ exports.locate = async (req, res) => {
 }
 
 exports.sair = async (req, res) => {
-    console.log("terminal limpo!");
     res.clearCookie('token');
     res.redirect("/");
 }

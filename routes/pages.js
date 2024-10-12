@@ -11,6 +11,10 @@ router.get("/emailConfirmacao", (req, res) => {
     res.render("emailConfirmacao");
 });
 
+router.get("/redefinirSenha", autenticar.autenticarTokenRedefinirSenha, (req, res) => {
+    res.render("telaRedefinirSenha");
+});
+
 router.get("/telaInicial", autenticar.autenticarToken, (req, res) => {
     const usuarioCargo = req.user.cargo;
 

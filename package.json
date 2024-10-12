@@ -8,6 +8,7 @@
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.2",
+    "nodemailer": "^6.9.15",
     "sequelize": "^6.37.3"
   },
   "devDependencies": {
