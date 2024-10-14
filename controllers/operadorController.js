@@ -73,16 +73,16 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
     res.cookie('tokenRedefinirSenha', token, { httpOnly: true });
 
     const transporter = nodemailer.createTransport({
-        host: 'sandbox.smtp.mailtrap.io',
+        host: 'smtp.sendgrid.net',
         port: 2525,
         secure: false,
         auth: {
-            user: '0a43a67ad92dca',
-            pass: '2763c02b437d23'
+            user: 'apikey',
+            pass: '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'
         }
     });
 
-    // tcct ykim dguy dnf
+    //Código de verificação do twillo: WKAM8YFDV5UDTAGTYA4DDDPX
 
     const url = `${req.protocol}://${req.get('host')}/redefinirSenha`;
 
@@ -114,4 +114,17 @@ exports.redefinirSenha = async (req, res) => {
     } catch (error) {
         console.log("Erro ao atualizar senha do usuário: ", error);
     }
+}
+
+exports.verificarUsuario = async (req, res, next) => {
+    const {email} = req.body;
+
+    const usuario = await Usuario.findOne({where: {email: email}});
+
+    if(!usuario){
+        console.log("Usuário não existente");
+        res.redirect("/");
+    } else {
+        next();
+    } 
 }
