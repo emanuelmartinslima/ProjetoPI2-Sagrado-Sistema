@@ -73,12 +73,12 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
     res.cookie('tokenRedefinirSenha', token, { httpOnly: true });
 
     const transporter = nodemailer.createTransport({
-        host: 'smtp.sendgrid.net',
+        host: process.env.MAIL_HOST,
         port: 2525,
         secure: false,
         auth: {
             user: 'apikey',
-            pass: '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'
+            pass: process.env.API_PASSWORD
         }
     });
 
