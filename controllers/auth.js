@@ -8,7 +8,9 @@ const env = require("dotenv");
 env.config();
 
 exports.registrar = async (req, res) => {
-    const { nome, cpf, cnpj, email, senha } = req.body;
+    const { nome, cpf, cnpj, email, senha, gerente } = req.body;
+
+    const cargo = gerente ? 'gerente' : 'operador';
 
     const verificarUsuario = await Usuario
         .findOne({
@@ -22,7 +24,7 @@ exports.registrar = async (req, res) => {
 
     if (verificarUsuario) {
         console.log("Usuário já cadastrado");
-        res.redirect("/");
+        res.redirect("/telaInicial");
     } else {
         const salt = await bcrypt.genSalt(12);
 
@@ -33,10 +35,11 @@ exports.registrar = async (req, res) => {
             cpf: cpf,
             cnpj: cnpj,
             email: email,
-            senha: hashPassword
+            senha: hashPassword,
+            cargo: cargo
         }).then(() => {
             console.log("Dados cadastrados com sucesso!")
-            res.redirect("/");
+            res.redirect("/telaInicial");
         }).catch((error) => {
             console.log("Erro: ", error)
         });
@@ -83,25 +86,25 @@ exports.login = async (req, res) => {
 }
 
 exports.autenticarToken = (req, res, next) => {
-    try{
+    try {
         const token = req.cookies.token;
 
         // console.log("Token: " + token);
-    
+
         if (!token) {
             console.log("Token não definido");
             res.redirect("/");
         }
-    
+
         const secret = process.env.SECRET;
-    
+
         jwt.verify(token, secret, (error, user) => {
             // console.log(user);
             req.user = user;
-    
+
             next();
         });
-    } catch(error){
+    } catch (error) {
         console.log("Erro: " + error);
     }
 }
@@ -109,7 +112,7 @@ exports.autenticarToken = (req, res, next) => {
 exports.autenticarTokenRedefinirSenha = (req, res, next) => {
     const token = req.cookies.tokenRedefinirSenha;
 
-    if(!token){
+    if (!token) {
         console.log("Token para redefinir senha inválido!");
 
         res.redirect("/");
@@ -118,7 +121,7 @@ exports.autenticarTokenRedefinirSenha = (req, res, next) => {
     const secret = process.env.SECRET;
 
     jwt.verify(token, secret, (error, user) => {
-        if(error){
+        if (error) {
             console.log("Ocorreu um erro! Token inválido!");
             res.redirect("/");
         }

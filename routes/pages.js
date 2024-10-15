@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const autenticar = require("../controllers/auth");
 const Usuario = require("../models/usuarioModel");
+const operadorController = require('../controllers/operadorController');
 
 router.get("/", (req, res) => {
     res.render("index");
@@ -49,14 +50,14 @@ router.get("/paginaContrato", autenticar.autenticarToken, (req, res) => {
     console.log("Cargo:" + usuarioCargo);
 
     if(usuarioCargo !== 'gerente'){
-        res.render("paginaContrato");
+        res.render("paginaContratoOperador");
     } else {
         res.render("paginaContrato");
     }
 });
 
 router.get("/cadastrarClienteGerente", autenticar.autenticarToken, (req, res) => {
-    res.render("cadastroClienteGerente");
+    res.render("cadastrarClienteGerente");
 });
 
 router.get("/paginaContratoGerente", autenticar.autenticarToken, (req, res) => {
@@ -64,7 +65,7 @@ router.get("/paginaContratoGerente", autenticar.autenticarToken, (req, res) => {
 });
 
 router.get("/cadastroClienteFormGerente", autenticar.autenticarToken, (req, res) => {
-    res.render("cadastroClienteFormGerente");
+    res.render("cadastroClienteGerente");
 });
 
 router.get("/editarDados", autenticar.autenticarToken, (req, res) => {
@@ -86,6 +87,8 @@ router.get("/atualizarOperadorGerente", autenticar.autenticarToken, (req, res) =
 router.get("/cadastro", autenticar.autenticarToken, (req, res) => {
     res.render("cadastro");
 });
+
+router.get('/api/usuarios/:cpf', operadorController.buscarPorCPF);
 
 router.get("/sair", autenticar.sair);
 

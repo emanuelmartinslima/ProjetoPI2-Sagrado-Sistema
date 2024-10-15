@@ -117,14 +117,38 @@ exports.redefinirSenha = async (req, res) => {
 }
 
 exports.verificarUsuario = async (req, res, next) => {
-    const {email} = req.body;
+    const { email } = req.body;
 
-    const usuario = await Usuario.findOne({where: {email: email}});
+    const usuario = await Usuario.findOne({ where: { email: email } });
 
-    if(!usuario){
+    if (!usuario) {
         console.log("Usuário não existente");
-        res.redirect("/");
+        // Redireciona para a página de redefinição de senha e envia uma mensagem através do corpo
+        return res.send(`<script>
+            alert('Email não encontrado! Tente novamente.');
+            window.location.href = '/redefinirSenha';
+        </script>`);
     } else {
-        next();
+        next(); // Chama o próximo middleware se o usuário existir
     } 
 }
+
+exports.buscarPorCPF = async (req, res) => {
+    const { cpf } = req.params;
+
+    try {
+        const usuario = await Usuario.findOne({ where: { cpf: cpf } });
+
+        if (usuario) {
+            res.json({
+                nome: usuario.nome,
+                email: usuario.email
+            });
+        } else {
+            res.status(404).json({ message: "Usuário não encontrado" });
+        }
+    } catch (error) {
+        console.error("Erro ao buscar usuário:", error);
+        res.status(500).json({ message: "Erro no servidor" });
+    }
+};
