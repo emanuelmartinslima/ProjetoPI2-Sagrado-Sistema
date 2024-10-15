@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerador de Contratos - Sagrado Neon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        /* Tema claro */
+        :root {
+            --background-color: rgb(192, 185, 216);
+            --text-color: aliceblue;
+            --navbar-background-color: rgb(49, 04, 59);
+            --form-background-color: rgb(49, 04, 59);
+        }
+
+        /* Tema escuro */
+        .dark-mode {
+            --background-color: rgb(29, 5, 33);
+            --text-color: #ffffff;
+            --navbar-background-color: rgb(49, 04, 59);
+            /* Mantém a cor do navbar */
+            --form-background-color: rgb(49, 04, 59);
+            /* Mantém a cor do formulário */
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .navbar {
+            background-color: var(--navbar-background-color);
+        }
+
+        .form-container {
+            background-color: var(--form-background-color);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .form-container label {
+            color: var(--text-color);
+        }
+
+        .title {
+            color: var(--text-color);
+            /* Título com a cor do tema */
+            margin-bottom: 20px;
+        }
+
+        .content-spacing {
+            margin-top: 40px;
+            /* Espaço do topo */
+            margin-bottom: 40px;
+            /* Espaço do fundo */
+        }
+
+        .btn-dark-mode {
+            background-color: #ffffff;
+            color: #000000;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(49, 04, 59);">
+        <div class="container-fluid">
+            <img src="Images/Logoextendido.png" width="150" height="40" alt="Logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <div class="dropdown">
+
+                        <button id="toggleTheme" class="btn btn-light btn-dark-mode">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Menu
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
+                            <li><a class="dropdown-item" href="/">Sair</a></li>
+
+                        </ul>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow-1" style="background-color: --background-color;">
+
+        <div class="container mt-4 content-spacing">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="form-container">
+                        <h1 class="text-center title">Gerador de Contratos</h1>
+
+                        <form id="formContrato">
+                            <div class="mb-3 row">
+                                <label for="contratante" class="col-sm-4 col-form-label">Contratante:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="contratante" readonly disabled>
+
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="cpfCnpj" class="col-sm-4 col-form-label">CPF ou CNPJ:</label>
+                                <div class="col-sm-8">
+
+                                    <input type="text" class="form-control" id="cpfCnpj" readonly disabled>
+
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="endereco" class="col-sm-4 col-form-label">Endereço:</label>
+                                <div class="col-sm-8">
+
+                                    <input type="text" class="form-control" id="endereco" readonly disabled>
+
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="dataEvento" class="col-sm-4 col-form-label">Data do Evento:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" class="form-control" id="dataEvento">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da
+                                    Montagem:</label>
+                                <div class="col-sm-8">
+                                    <input type="time" class="form-control" id="horarioMontagem">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="enderecoEvento" class="col-sm-4 col-form-label">Endereço do Evento:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="enderecoEvento">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="produtoEscolhido" class="col-sm-4 col-form-label">Produto Escolhido:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="produtoEscolhido">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="formaPagamento" class="col-sm-4 col-form-label">Forma de Pagamento:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="formaPagamento" onchange="togglePaymentDetails()">
+                                        <option value="">Selecione uma opção</option>
+                                        <option value="pix">Pix</option>
+                                        <option value="pixParcelado">Pix Parcelado</option>
+                                        <option value="cartaoCredito">Cartão de Crédito</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data
+                                    de Pagamento:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" class="form-control" id="dataPagamento">
+                                </div>
+                            </div>
+                            <div class="mb-3 row payment-details" id="pixParceladoDetails" style="display: none;">
+                                <label for="numParcelas" class="col-sm-4 col-form-label">Número de Parcelas:</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" id="numParcelas"
+                                        oninput="updatePaymentDates()">
+                                </div>
+                            </div>
+                            <div class="mb-3 row payment-details" id="datasPagamentos" style="display: none;">
+                                <label for="datasPagamento" class="col-sm-4 col-form-label">Datas de Pagamento:</label>
+                                <div class="col-sm-8" id="paymentDatesContainer"></div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="valorTotal" class="col-sm-4 col-form-label">Valor Total:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="valorTotal">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary" id="enviarButton">Enviar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('enviarButton').addEventListener('click', function () {
+            // Redireciona para a página telaInicialGerente
+            window.location.href = '/telaInicial';
+        });
+
+        // Função para preencher os campos com os dados do cliente
+        function preencherDadosCliente() {
+            document.getElementById("contratante").value = localStorage.getItem("contratante");
+            document.getElementById("cpfCnpj").value = localStorage.getItem("cpfCnpj");
+            document.getElementById("endereco").value = localStorage.getItem("endereco");
+        }
+
+        // Chama a função ao carregar a página
+        document.addEventListener("DOMContentLoaded", preencherDadosCliente);
+
+        function togglePaymentDetails() {
+            const formaPagamento = document.getElementById("formaPagamento").value;
+            const dataPagamento = document.getElementById("dataPagamento");
+            const pixParceladoDetails = document.getElementById("pixParceladoDetails");
+            const datasPagamentos = document.getElementById("datasPagamentos");
+
+            const labelDatasPagamentos = document.getElementById("dataPagamentoLabel");
+
+
+            if (formaPagamento === "pixParcelado") {
+                pixParceladoDetails.style.display = "flex";
+                datasPagamentos.style.display = "block";
+                dataPagamento.style.display = "none";
+
+                labelDatasPagamentos.style.display = "none";
+
+            } else {
+                pixParceladoDetails.style.display = "none";
+                datasPagamentos.style.display = "none";
+                dataPagamento.style.display = "block"; // Mostra o campo único de data de pagamento
+
+                labelDatasPagamentos.style.display = "block";
+
+                document.getElementById("numParcelas").value = ""; // Limpa o campo ao mudar de opção
+                document.getElementById("paymentDatesContainer").innerHTML = ""; // Limpa as datas de pagamento
+            }
+        }
+
+        function updatePaymentDates() {
+            const numParcelas = document.getElementById("numParcelas").value;
+            const paymentDatesContainer = document.getElementById("paymentDatesContainer");
+
+            // Limpa as datas de pagamento antes de preencher
+            paymentDatesContainer.innerHTML = "";
+
+            // Adiciona campos para as datas de pagamento
+            for (let i = 1; i <= numParcelas; i++) {
+                const input = document.createElement("input");
+                input.type = "date";
+                input.className = "form-control mb-2";
+                input.placeholder = `Data da Parcela ${i}`;
+                paymentDatesContainer.appendChild(input);
+            }
+        }
+
+        // Validação do formulário
+        document.getElementById('formContrato').addEventListener('submit', function (event) {
+            let isValid = true;
+            const fields = [
+                'dataEvento',
+                'horarioMontagem',
+                'enderecoEvento',
+                'produtoEscolhido',
+                'valorTotal'
+            ];
+            let emptyFields = false;
+
+            fields.forEach(id => {
+                const input = document.getElementById(id);
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    emptyFields = true;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (emptyFields) {
+                alert('Por favor, preencha os campos obrigatórios.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Impede o envio do formulário se houver campos inválidos
+            }
+
+            if (isValid) {
+                window.location.href = "telaInicial"; // Redireciona para a tela inicial do gerente
+            }
+        });
+
+        // Recupera o estado do tema do armazenamento local
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('toggleTheme').innerHTML = '<i class="bi bi-brightness-high"></i>';
+            }
+        });
+
+        // Alterna o tema e salva a preferência
+        document.getElementById('toggleTheme').addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            document.getElementById('toggleTheme').innerHTML = isDarkMode
+                ? '<i class="bi bi-brightness-high"></i>'
+                : '<i class="bi bi-moon-fill"></i>';
+        });
+    </script>
+
+    <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">
+        Todos os direitos reservados
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

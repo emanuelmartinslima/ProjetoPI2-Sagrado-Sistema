@@ -1,20 +1,18 @@
-exports.registerContrato = async (req, res) => {
-    console.log(req.body);
-    const {Op} = require("sequelize");
-    const contrato = require("../models/contratoModel");
+const { Op } = require("sequelize");
+const contrato = require("../models/contratoModel");
+
+exports.registrarContrato = async (req, res) => {
     const { nome, cpfCnpj, endereco, contato } = req.body;
 
-        cliente.create({
-            nome: nome,
-            cpfCnpj: cpfCnpj,
-            endereco: endereco,
-            contato: contato
-        }).then(() => {
-            console.log("Dados cadastrados com sucesso!")
-            res.render("cadastrarCliente");
-        }).catch((error) => {
-            console.log("Erro: ", error)
-        });
-    }
-
-    //registro de contrato ainda incompleto
+    cliente.create({
+        nome: nome,
+        cpfCnpj: cpfCnpj,
+        endereco: endereco,
+        contato: contato
+    }).then(() => {
+        console.log("Dados cadastrados com sucesso!")
+        res.redirect("/cadastrarCliente");
+    }).catch((error) => {
+        console.log("Erro: ", error)
+    });
+}

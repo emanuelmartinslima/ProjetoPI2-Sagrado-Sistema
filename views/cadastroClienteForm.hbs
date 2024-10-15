@@ -76,7 +76,7 @@
                             <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
-                            <li><a class="dropdown-item" href="/">Sair</a></li>
+                            <li><a class="dropdown-item" href="sair">Sair</a></li>
 
                         </ul>
                     </div>
@@ -92,16 +92,15 @@
                 <div class="col-12 col-md-8 col-lg-6 d-flex align-items-center" style="min-height: 300px;">
                     <div class="w-100 p-4 text-center"
                         style="background-color: var(--navbar-background-color); border-radius: 10px;">
-                        
+
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
-                        <form id="registrationForm" style="width: 100%;" action="/auth/registerCliente" method="post">
+                        <form id="registrationForm" style="width: 100%;" action="/auth/registrarCliente" method="post">
                             <p style="font-size: medium; color: var(--text-color);">Cadastrar novo cliente.</p>
                             <!-- campo de nome -->
                             <div class="mb-3">
                                 <i class="bi bi-emoji-laughing"
                                     style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                <label for="nome" class="form-label"
-                                    style="color: var(--text-color);">Nome</label>
+                                <label for="nome" class="form-label" style="color: var(--text-color);">Nome</label>
                                 <div class="input-group has-validation">
                                     <input type="text" class="form-control" id="nome" name="nome">
                                 </div>
@@ -110,8 +109,8 @@
                             <!-- campo de cpf/cnpj -->
                             <div class="mb-3">
                                 <i class="bi bi-file-person" style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                <label for="cpfCnpj" class="form-label"
-                                    style="color: var(--text-color);">CPF (ou CNPJ)</label>
+                                <label for="cpfCnpj" class="form-label" style="color: var(--text-color);">CPF (ou
+                                    CNPJ)</label>
                                 <div class="input-group has-validation">
                                     <input type="text" class="form-control" id="cpfCnpj" name="cpfCnpj">
                                 </div>
@@ -119,8 +118,7 @@
 
                             <!-- campo de endereço -->
                             <div class="mb-3">
-                                <i class="bi bi-envelope-at me-2"
-                                    style="color: var(--text-color); font-size: 1.5rem;"></i>
+                                <i class="bi bi-house" style="color: var(--text-color); font-size: 1.5rem;"></i>
                                 <label for="endereco" class="form-label"
                                     style="color: var(--text-color);">Endereço</label>
                                 <input type="text" class="form-control" id="endereco" name="endereco">
@@ -128,7 +126,7 @@
 
                             <!-- campo de contato -->
                             <div class="mb-3">
-                                <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>
+                                <i class="bi bi-telephone" style="color: var(--text-color); font-size: 1.5rem;"></i>
                                 <label for="contato" class="form-label"
                                     style="color: var(--text-color);">Contato</label>
                                 <input type="text" class="form-control" id="contato" name="contato">

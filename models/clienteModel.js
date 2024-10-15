@@ -2,10 +2,10 @@ const db = require("./conexaoBanco.js");
 
 const Clientes = db.sequelize.define("clientes", {
     nome: {
-        type: db.Sequelize.STRING
+        type: db.Sequelize.STRING,
     },
     cpfCnpj: {
-        type: db.Sequelize.STRING
+        type: db.Sequelize.STRING,
     },
     endereco: {
         type: db.Sequelize.TEXT

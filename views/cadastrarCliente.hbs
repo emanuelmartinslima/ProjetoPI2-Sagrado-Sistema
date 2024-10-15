@@ -38,14 +38,14 @@
             background-color: #ffffff;
             color: #000000;
         }
-        
+
         .title {
-            color: white; 
+            color: white;
             margin-bottom: 20px;
         }
 
         .form-container {
-            background-color: rgb(49, 04, 59); 
+            background-color: rgb(49, 04, 59);
             padding: 20px;
             border-radius: 8px;
         }
@@ -60,8 +60,8 @@
         }
 
         .content-spacing {
-            margin-top: 40px; 
-            margin-bottom: 40px; 
+            margin-top: 40px;
+            margin-bottom: 40px;
         }
 
         .is-invalid {
@@ -72,7 +72,6 @@
             display: block;
             color: #dc3545;
         }
-    
     </style>
 </head>
 
@@ -101,7 +100,7 @@
                             <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
-                            <li><a class="dropdown-item" href="/">Sair</a></li>
+                            <li><a class="dropdown-item" href="sair">Sair</a></li>
 
                         </ul>
                     </div>
@@ -110,7 +109,8 @@
         </div>
     </nav>
 
-    <div class="flex-grow-1 d-flex align-items-center justify-content-center" style="background-color: --background-color;">
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center"
+        style="background-color: --background-color;">
 
         <div class="container mt-4 content-spacing">
             <div class="row justify-content-center">
@@ -164,7 +164,7 @@
 
     <script>
 
-            // Recupera o estado do tema do armazenamento local
+        // Recupera o estado do tema do armazenamento local
         document.addEventListener('DOMContentLoaded', () => {
             const isDarkMode = localStorage.getItem('darkMode') === 'true';
             if (isDarkMode) {
@@ -182,7 +182,7 @@
                 ? '<i class="bi bi-brightness-high"></i>'
                 : '<i class="bi bi-moon-fill"></i>';
         });
-        
+
         function cadastrarCliente(event) {
             event.preventDefault(); // Evita o envio padrão do formulário
 
@@ -204,7 +204,7 @@
                 }
             });
 
-                if (emptyFields) {
+            if (emptyFields) {
                 alert('Por favor, preencha os campos obrigatórios.');
                 isValid = false;
             }
@@ -243,7 +243,7 @@
             const response = await fetch('/auth/locate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({cpfCnpj: cpfCnpj.value.trim()})
+                body: JSON.stringify({ cpfCnpj: cpfCnpj.value.trim() })
             });
 
             const data = await response.json();
@@ -251,12 +251,36 @@
             if (data.success) {
                 window.location.href = "/paginaContrato";
             } else {
-                alert(data.message);
-                window.location.href = "/cadastroClienteForm";
+                // Abre o modal de confirmação ao invés de um alert
+                const clientNotFoundModal = new bootstrap.Modal(document.getElementById('clientNotFoundModal'));
+                clientNotFoundModal.show();
             }
         });
 
     </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="clientNotFoundModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: rgb(49, 04, 59);">
+                <div class="modal-header">
+                    <h5 class="modal-title text-light" id="exampleModalLabel">Cliente não encontrado</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-light">
+                    O cliente não foi encontrado. Deseja cadastrar um novo cliente?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="confirmRegister" class="btn btn-primary" href="/cadastroClienteForm">Cadastrar novo
+                        cliente</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

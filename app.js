@@ -5,16 +5,19 @@ const app = express();
 
 const bodyParser = require("body-parser");
 const handlebars = require("handlebars");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 const cliente = require("./models/clienteModel.js");
 const contrato = require("./models/contratoModel.js");
 const item = require("./models/itemModel.js");
-const operador = require("./models/operadorModel.js");
+const Usuario = require("./models/usuarioModel.js");
 const produto = require("./models/produtoModel.js");
-
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 const publicDirectory = path.join(__dirname, './public');
 app.use(express.static(publicDirectory));
@@ -27,13 +30,18 @@ app.use(express.static(imagesDirectory));
 app.use("/", require("./routes/pages"));
 app.use("/auth", require("./routes/auth.js"));
 
-// Criação de operador
 async function criarOperador() {
     try {
-        const novoOperador = await operador.create({
-            gerente: false,              
-            email: "a@gmail.com",       
-            senha: "123",       
+        const senha = "123";
+
+        const salt = await bcrypt.genSalt(12);
+
+        const hashPassword = await bcrypt.hash(senha, salt);
+
+        const novoOperador = await Usuario.create({
+            cargo: "operador",              
+            email: "operador@gmail.com",       
+            senha: hashPassword,       
             nome: "Operador da Silva",   
             cpf: "12345678910"
         });
@@ -42,16 +50,20 @@ async function criarOperador() {
     } catch (error) {
         console.error("Erro ao criar operador:", error);
     }
+};
 
-}
-
-// Criação de registro ao iniciar a aplicação
 async function criarGerente() {
     try {
-        const novoGerente = await operador.create({
-            gerente: true,              
-            email: "b@gmail.com",       
-            senha: "321",       
+        const senha = "321";
+
+        const salt = await bcrypt.genSalt(12);
+
+        const hashPassword = await bcrypt.hash(senha, salt);
+
+        const novoGerente = await Usuario.create({
+            cargo: "gerente",              
+            email: "gerente@gmail.com",       
+            senha: hashPassword,       
             nome: "Gerente da Silva",   
             cpf: "10987654321"
         });
@@ -60,10 +72,8 @@ async function criarGerente() {
     } catch (error) {
         console.error("Erro ao criar operador:", error);
     }
-
 }
 
-// Chamando a função ao iniciar a aplicação
 // criarOperador();
 // criarGerente();
 

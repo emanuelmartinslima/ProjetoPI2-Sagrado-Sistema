@@ -60,6 +60,7 @@ exports.registerClienteGerente = async (req, res) => {
 
     if (usuario) {
         console.log("Cliente já cadastrado");
+        res.redirect("/paginaContrato");
     } else {
         cliente.create({
             nome: nome,
@@ -68,7 +69,7 @@ exports.registerClienteGerente = async (req, res) => {
             contato: contato
         }).then(() => {
             console.log("Dados cadastrados com sucesso!")
-            res.redirect("/cadastrarClienteGerente");
+            res.redirect("/paginaContrato");
         }).catch((error) => {
             console.log("Erro: ", error)
         });

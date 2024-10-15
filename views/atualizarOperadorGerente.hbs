@@ -76,7 +76,7 @@
                             <li><a class="dropdown-item" href="cadastrarClienteGerente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
-                            <li><a class="dropdown-item" href="/">Sair</a></li>
+                            <li><a class="dropdown-item" href="sair">Sair</a></li>
 
                         </ul>
                     </div>
@@ -94,24 +94,25 @@
                         style="background-color: var(--navbar-background-color); border-radius: 10px;">
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
                         <p style="font-size: medium; color: var(--text-color);">Atualizar dados</p>
-                        <form id="registrationForm" style="width: 100%;" action="/auth/atualizarGerente" method="post">
+                        <form id="registrationForm" style="width: 100%;" action="/auth/atualizarOperadorGerente"
+                            method="post">
                             <!-- campo de cpf, servirá para localizar o cliente e alterar -->
                             <div class="mb-3">
-                                <label for="validationCPF" class="form-label"
-                                    style="color: var(--text-color);">Digite o CPF do Operador</label>
+                                <label for="validationCPF" class="form-label" style="color: var(--text-color);">Digite o
+                                    CPF do Operador</label>
                                 <div class="input-group has-validation">
                                     <input type="text" class="form-control" id="validationCPF" name="cpf">
                                 </div>
                             </div>
 
                             <p style="font-size: medium; color: var(--text-color);">Atualizar dados</p>
-                            
+
                             <!-- campo de nome -->
                             <div class="mb-3">
                                 <i class="bi bi-emoji-laughing"
                                     style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                <label for="validationNome" class="form-label"
-                                    style="color: var(--text-color);">Alterar nome</label>
+                                <label for="validationNome" class="form-label" style="color: var(--text-color);">Alterar
+                                    nome</label>
                                 <div class="input-group has-validation">
                                     <input type="text" class="form-control" id="validationNome" name="nome">
                                 </div>
@@ -182,6 +183,35 @@
 
             if (!isValid) {
                 event.preventDefault(); // Impede o envio do formulário se houver campos inválidos
+            }
+        });
+
+        // Função para buscar usuário pelo CPF
+        document.getElementById('validationCPF').addEventListener('input', async function () {
+            const cpf = this.value;
+
+            // Apenas faz a busca se o CPF tiver pelo menos 11 dígitos
+            if (cpf.length >= 11) {
+                try {
+                    const response = await fetch(`/api/usuarios/${cpf}`);
+                    if (response.ok) {
+                        const usuario = await response.json();
+                        // Preenche os campos de nome e email
+                        document.getElementById('validationNome').value = usuario.nome || '';
+                        document.getElementById('exampleInputEmail1').value = usuario.email || '';
+                    } else {
+                        console.log("Usuário não encontrado");
+                        // Limpa os campos se não encontrar o usuário
+                        document.getElementById('validationNome').value = '';
+                        document.getElementById('exampleInputEmail1').value = '';
+                    }
+                } catch (error) {
+                    console.error("Erro ao buscar o usuário:", error);
+                }
+            } else {
+                // Limpa os campos se o CPF for muito curto
+                document.getElementById('validationNome').value = '';
+                document.getElementById('exampleInputEmail1').value = '';
             }
         });
     </script>

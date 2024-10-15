@@ -1,78 +1,95 @@
 const express = require("express");
-
 const router = express.Router();
+const autenticar = require("../controllers/auth");
+const Usuario = require("../models/usuarioModel");
+const operadorController = require('../controllers/operadorController');
 
-//Login
 router.get("/", (req, res) => {
     res.render("index");
 });
-//E-mail de recuperação
+
 router.get("/emailConfirmacao", (req, res) => {
     res.render("emailConfirmacao");
 });
 
-
-
-//Rotas do operador: tela inicial
-router.get("/telaInicialOp", (req, res) => {
-    res.render("telaInicialOp");
+router.get("/redefinirSenha", autenticar.autenticarTokenRedefinirSenha, (req, res) => {
+    res.render("telaRedefinirSenha");
 });
 
-//Validar cliente
-router.get("/cadastrarCliente", (req, res) => {
+router.get("/telaInicial", autenticar.autenticarToken, (req, res) => {
+    const usuarioCargo = req.user.cargo;
+
+    // console.log("Cargo:" + usuarioCargo);
+
+    if(usuarioCargo !== 'gerente'){
+        res.render("telaInicialOp");
+    } else {
+        res.render("telaInicialGerente");
+    }
+});
+
+router.get("/cadastrarCliente", autenticar.autenticarToken, (req, res) => {
     res.render("cadastrarCliente");
 });
-//Gerar contrato
-router.get("/paginaContrato", (req, res) => {
-    res.render("paginaContrato");
-});
-//Cadastrar clientes novos
-router.get("/cadastroClienteForm", (req, res) => {
+
+router.get("/cadastroClienteForm", autenticar.autenticarToken, (req, res) =>{
     res.render("cadastroClienteForm");
 });
 
-//Atualizar informações próprias
-router.get("/atualizarOperador", (req, res) => {
-    res.render("atualizarOperador");
+router.get("/atualizarOperador", autenticar.autenticarToken, async (req, res) => {
+    const usuarioId = req.user.id;
+
+    const usuario = await Usuario.findOne({where: {id: usuarioId}});
+
+    res.render("atualizarOperador", {cpf: usuario.cpf, nome: usuario.nome, email: usuario.email});
 });
 
+router.get("/paginaContrato", autenticar.autenticarToken, (req, res) => {
+    const usuarioCargo = req.user.cargo;
 
+    console.log("Cargo:" + usuarioCargo);
 
-//Rotas do Gerente: tela inicial
-router.get("/telaInicialGerente", (req, res) => {
-    res.render("telaInicialGerente");
+    if(usuarioCargo !== 'gerente'){
+        res.render("paginaContratoOperador");
+    } else {
+        res.render("paginaContrato");
+    }
 });
 
-//Validar cliente
-router.get("/cadastrarClienteGerente", (req, res) => {
+router.get("/cadastrarClienteGerente", autenticar.autenticarToken, (req, res) => {
     res.render("cadastrarClienteGerente");
 });
-//Gerar contrato
-router.get("/paginaContratoGerente", (req, res) => {
+
+router.get("/paginaContratoGerente", autenticar.autenticarToken, (req, res) => {
     res.render("paginaContratoGerente");
 });
-//Cadastrar cliente
-router.get("/cadastroClienteFormGerente", (req, res) => {
-    res.render("cadastroClienteFormGerente");
+
+router.get("/cadastroClienteFormGerente", autenticar.autenticarToken, (req, res) => {
+    res.render("cadastroClienteGerente");
 });
 
-//Escolher quais informações quer alterar
-router.get("/editarDados", (req, res) => {
+router.get("/editarDados", autenticar.autenticarToken, (req, res) => {
     res.render("editarDados");
 });
-//Atualizar informações própias
-router.get("/atualizarGerente", (req, res) => {
-    res.render("atualizarGerente");
+
+router.get("/atualizarGerente", autenticar.autenticarToken, async (req, res) => {
+    const usuarioId = req.user.id;
+
+    const usuario = await Usuario.findOne({where: {id: usuarioId}});
+
+    res.render("atualizarGerente", {cpf: usuario.cpf, nome: usuario.nome, email: usuario.email});
 });
-//Atualizar informações de um operador
-router.get("/atualizarOperadorGerente", (req, res) => {
+
+router.get("/atualizarOperadorGerente", autenticar.autenticarToken, (req, res) => {
     res.render("atualizarOperadorGerente");
 });
 
-
-
-router.get("/cadastro", (req, res) => {
+router.get("/cadastro", autenticar.autenticarToken, (req, res) => {
     res.render("cadastro");
 });
+
+router.get('/api/usuarios/:cpf', operadorController.buscarPorCPF);
+
+router.get("/sair", autenticar.sair);
 
 module.exports = router;

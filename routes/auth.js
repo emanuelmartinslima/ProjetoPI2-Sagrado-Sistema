@@ -10,21 +10,24 @@ const clienteController = require("../controllers/clienteController");
 
 const contratoController = require("../controllers/contratoController");
 
-
-
-router.post("/register", authController.register);
+router.post("/registrar", authController.registrar);
 
 router.post("/login", authController.login);
 
+router.post("/enviarEmailRedefinirSenha", operadorController.verificarUsuario, operadorController.enviarEmailAtualizarSenha);
+
 router.post("/atualizar", operadorController.atualizar);
-router.post("/atualizarGerente", operadorController.atualizarGerente);
+
+router.post("/atualizarGerente", operadorController.atualizar);
+
+router.post("/atualizarOperadorGerente", operadorController.atualizarOperador);
 
 router.post("/locate", clienteController.locate);
 
-router.post("/registerCliente", clienteController.registerCliente);
-router.post("/registerClienteGerente", clienteController.registerClienteGerente);
+router.post("/registrarCliente", clienteController.registerCliente);
 
-//ainda não funciona
-router.post("/registerContrato", contratoController.registerContrato);
+router.post("/registrarClienteGerente", clienteController.registerClienteGerente);
+
+router.post("/registrarContrato", contratoController.registrarContrato);
 
 module.exports = router;
