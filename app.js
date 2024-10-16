@@ -74,8 +74,8 @@ async function criarGerente() {
     }
 }
 
-// criarOperador();
-// criarGerente();
+ //criarOperador();
+ //criarGerente();
 
 app.listen(8081, function () {
     console.log("Servidor ativo! Port: 8081");

@@ -34,6 +34,6 @@ const Usuarios = db.sequelize.define("usuarios", {
     }
 });
 
-// Usuarios.sync({force: true});
+//Usuarios.sync({force: true});
 
 module.exports = Usuarios;

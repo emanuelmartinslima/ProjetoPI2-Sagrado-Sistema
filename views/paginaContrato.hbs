@@ -78,7 +78,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
-                    
+
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                             <i class="bi bi-moon-fill"></i>
                         </button>
@@ -87,12 +87,11 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="cadastro">Cadastrar Usuário</a></li>
                             <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
-                            <li><a class="dropdown-item" href="cadastrarClienteGerente">Gerar Contratos</a></li>
-                            <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
-                            <li><a class="dropdown-item" href="sair">Sair</a></li>
+                            <li><a class="dropdown-item" href="/">Sair</a></li>
 
                         </ul>
                     </div>
@@ -120,7 +119,7 @@
                             <div class="mb-3 row">
                                 <label for="cpfCnpj" class="col-sm-4 col-form-label">CPF ou CNPJ:</label>
                                 <div class="col-sm-8">
-                                
+
                                     <input type="text" class="form-control" id="cpfCnpj" readonly disabled>
 
                                 </div>
@@ -129,7 +128,7 @@
                                 <label for="endereco" class="col-sm-4 col-form-label">Endereço:</label>
                                 <div class="col-sm-8">
 
-                                        <input type="text" class="form-control" id="endereco" readonly disabled>
+                                    <input type="text" class="form-control" id="endereco" readonly disabled>
 
                                 </div>
                             </div>
@@ -140,7 +139,8 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da Montagem:</label>
+                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da
+                                    Montagem:</label>
                                 <div class="col-sm-8">
                                     <input type="time" class="form-control" id="horarioMontagem">
                                 </div>
@@ -151,10 +151,16 @@
                                     <input type="text" class="form-control" id="enderecoEvento">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label for="produtoEscolhido" class="col-sm-4 col-form-label">Produto Escolhido:</label>
+                             <div class="mb-3 row">
+                                <label for="quantidadeProdutos" class="col-sm-4 col-form-label">Quantidade de Produtos:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="produtoEscolhido">
+                                    <input type="number" class="form-control" id="quantidadeProdutos" oninput="showProductSelection()" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 row" id="produtoSelectionContainer" style="display: none;">
+                                <label for="produtosSelecionados" class="col-sm-4 col-form-label">Produtos Selecionados:</label>
+                                <div class="col-sm-8" id="produtosSelecionados">
+                                    <!-- Abas para selecionar os produtos vão aqui -->
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -169,7 +175,8 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data de Pagamento:</label>
+                                <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data
+                                    de Pagamento:</label>
                                 <div class="col-sm-8">
                                     <input type="date" class="form-control" id="dataPagamento">
                                 </div>
@@ -177,7 +184,8 @@
                             <div class="mb-3 row payment-details" id="pixParceladoDetails" style="display: none;">
                                 <label for="numParcelas" class="col-sm-4 col-form-label">Número de Parcelas:</label>
                                 <div class="col-sm-8">
-                                    <input type="number" class="form-control" id="numParcelas" oninput="updatePaymentDates()">
+                                    <input type="number" class="form-control" id="numParcelas"
+                                        oninput="updatePaymentDates()">
                                 </div>
                             </div>
                             <div class="mb-3 row payment-details" id="datasPagamentos" style="display: none;">
@@ -202,10 +210,10 @@
 
     <script>
         document.getElementById('enviarButton').addEventListener('click', function () {
-    // Redireciona para a página telaInicialGerente
-    window.location.href = '/telaInicial';
-});
-        
+            // Redireciona para a página telaInicialGerente
+            window.location.href = '/telaInicial';
+        });
+
         // Função para preencher os campos com os dados do cliente
         function preencherDadosCliente() {
             document.getElementById("contratante").value = localStorage.getItem("contratante");
@@ -293,7 +301,7 @@
             }
 
             if (isValid) {
-            window.location.href = "telaInicial"; // Redireciona para a tela inicial do gerente
+                window.location.href = "telaInicial"; // Redireciona para a tela inicial do gerente
             }
         });
 
@@ -315,13 +323,58 @@
                 ? '<i class="bi bi-brightness-high"></i>'
                 : '<i class="bi bi-moon-fill"></i>';
         });
+
+        //Função Atualizar Produto
+       function showProductSelection() {
+    const quantidadeProdutos = document.getElementById("quantidadeProdutos").value;
+    const produtoSelectionContainer = document.getElementById("produtoSelectionContainer");
+    produtoSelectionContainer.style.display = quantidadeProdutos > 0 ? "block" : "none";
+    produtoSelectionContainer.innerHTML = ''; // Limpa os produtos antes de adicionar novos
+
+    for (let i = 0; i < quantidadeProdutos; i++) {
+        const productSelect = document.createElement("select");
+        productSelect.className = "form-control mb-2";
+        productSelect.innerHTML = `
+            <option value="">Selecione o Produto ${i + 1}</option>
+            <option value="Better Together">Better Together</option>
+            <option value="All you need is Love">All you need is Love</option>
+            <option value="Aqui tem Amor">Aqui tem Amor</option>
+            <option value="Para sempre um pelo outro">Para sempre um pelo outro</option>
+            <option value="You + me">You + me</option>
+            <option value="Tudo Aqui já foi um sonho">Tudo Aqui já foi um sonho</option>
+            <option value="Happily Ever After">Happily Ever After</option>
+            <option value="Best Day Ever">Best Day Ever</option>
+            <option value="Let´s Party">Let´s Party</option>
+            <option value="Cheers">Cheers</option>
+            <option value="Mas se o tempo é curto">Mas se o tempo é curto</option>
+            <option value="Good vibes Only">Good vibes Only</option>
+            <option value="Deus Abençoe o Role">Deus Abençoe o Role</option>
+            <option value="Bar">Bar</option>
+            <option value="Love without limits">Love without limits</option>
+            <option value="Eu te amo em cada universo">Eu te amo em cada universo</option>
+            <option value="Deixe um recado após o sinal">Deixe um recado após o sinal</option>
+            <option value="Muro Ingles 2x2">Muro Ingles 2x2</option>
+            <option value="Muro Ingles 3x3">Muro Ingles 3x3</option>
+            <option value="Welcome Drink">Welcome Drink</option>
+            <option value="Painel Terracota">Painel Terracota</option>
+            <option value="Painel de Latanias">Painel de Latanias</option>
+            <option value="Painel Verde">Painel de Verde</option>
+            <option value="Painel de Led">Painel de Led</option>
+            <option value="Painel de shot">Painel de shot</option>
+        `;
+        produtoSelectionContainer.appendChild(productSelect);
+    }
+}
+
+
     </script>
+
 
     <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">
         Todos os direitos reservados
     </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
