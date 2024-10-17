@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editar Produtos - Sagrado Neon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .title {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: rgb(49, 04, 59);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        body {
+            background-color: rgb(192, 185, 216);
+        }
+
+        footer {
+            background-color: rgb(49, 04, 59);
+            color: white;
+        }
+
+        .content-spacing {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .form-container label {
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(49, 04, 59);">
+        <div class="container-fluid">
+            <img src="Images/Logoextendido.png" width="150" height="40" alt="Logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <div class="dropdown">
+                        <button class="btn btn-light">
+                            <i class="bi bi-moon-fill"></i>
+                        </button>
+                        <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Menu
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Gerar Relatórios</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="#">Cadastrar Produtos</a></li>
+                            <li><a class="dropdown-item" href="/">Sair</a></li>
+                        </ul>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow-1 content-spacing">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="form-container">
+                        <h1 class="text-center title">Editar Produto</h1>
+                        <form id="editarProdutoForm" onsubmit="return editarProduto(event)">
+                            <div class="mb-3 row">
+                                <label for="produtoSelecionado" class="col-sm-4 col-form-label">Produto:</label>
+                                <div class="col-sm-8">
+                                    <select class="form-select" id="produtoSelecionado" required onchange="carregarProduto()">
+                                        <option value="" disabled selected>Selecione um produto</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="nomeProduto" class="col-sm-4 col-form-label">Nome do Produto:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="nomeProduto" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="dimensoes" class="col-sm-4 col-form-label">Dimensões:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="dimensoes" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="quantidade" class="col-sm-4 col-form-label">Quantidade:</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" id="quantidade" required min="1">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="imagemProduto" class="col-sm-4 col-form-label">Imagem:</label>
+                                <div class="col-sm-8">
+                                    <input type="file" class="form-control" id="imagemProduto">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-light text-center py-3">
+        Todos os direitos reservados
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            carregarListaDeProdutos();
+        });
+
+        function carregarListaDeProdutos() {
+            const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+            const produtoSelecionado = document.getElementById('produtoSelecionado');
+
+            produtos.forEach((produto, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = produto.nomeProduto;
+                produtoSelecionado.appendChild(option);
+            });
+        }
+
+        function carregarProduto() {
+            const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+            const index = document.getElementById('produtoSelecionado').value;
+            const produto = produtos[index];
+
+            document.getElementById('nomeProduto').value = produto.nomeProduto;
+            document.getElementById('dimensoes').value = produto.dimensoes;
+            document.getElementById('quantidade').value = produto.quantidade;
+        }
+
+        function editarProduto(event) {
+            event.preventDefault();
+
+            const index = document.getElementById('produtoSelecionado').value;
+            const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+
+            produtos[index].nomeProduto = document.getElementById('nomeProduto').value;
+            produtos[index].dimensoes = document.getElementById('dimensoes').value;
+            produtos[index].quantidade = document.getElementById('quantidade').value;
+
+            const imagemInput = document.getElementById('imagemProduto');
+            if (imagemInput.files[0]) {
+                produtos[index].imagemProduto = imagemInput.files[0].name;
+            }
+
+            localStorage.setItem('produtos', JSON.stringify(produtos));
+            alert('Produto editado com sucesso!');
+            document.getElementById('editarProdutoForm').reset();
+            carregarListaDeProdutos();
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

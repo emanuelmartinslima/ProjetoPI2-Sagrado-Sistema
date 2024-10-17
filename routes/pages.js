@@ -92,4 +92,25 @@ router.get('/api/usuarios/:cpf', operadorController.buscarPorCPF);
 
 router.get("/sair", autenticar.sair);
 
+router.get('/produtos', (req, res) => {
+    res.render('produtos'); 
+});
+
+router.get('/vizualizarProdutos', (req, res) => {
+    res.render('vizualizarProdutos');
+});
+
+router.get('/formCadastrarProdutos', (req, res) => {
+    res.render('formCadastrarProdutos');
+});
+
+router.get('/formEditarProdutos', (req, res) => {
+    res.render('formEditarProdutos');
+});
+
+router.get('/formDeletarProdutos', (req, res) => {
+    res.render('formDeletarProdutos');
+});
+
+
 module.exports = router;
