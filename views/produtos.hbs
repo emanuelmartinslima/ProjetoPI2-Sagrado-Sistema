@@ -4,12 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edição de Dados - Sagrado Neon</title>
+    <title>Dashboard Produtos - Sagrado Neon</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-
         /* Tema claro */
         :root {
             --background-color: rgb(192, 185, 216);
@@ -37,7 +36,7 @@
             background-color: #ffffff;
             color: #000000;
         }
-        
+
         .card-title {
             color: white;
         }
@@ -70,7 +69,7 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .container-wrapper {
@@ -84,7 +83,7 @@
 
 <body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg" style="background-color: rgb(49, 04, 59);">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <img src="/Logoextendido.png" width="150" height="40" alt="Logo">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -94,9 +93,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
-
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
-
                             <i class="bi bi-moon-fill"></i>
                         </button>
                         <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -104,13 +101,12 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="cadastro">Cadastrar Usuário</a></li>
-                            <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
-                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
-                            <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
-                            <li><a class="dropdown-item" href="produtos">Produtos</a></li>
-                            <li><a class="dropdown-item" href="sair">Sair</a></li>
-
+                            <li><a class="dropdown-item" href="vizualizarProdutos">Visualizar Produtos</a></li>
+                            <li><a class="dropdown-item" href="formCadastrarProdutos">Cadastrar Produto</a></li>
+                            <li><a class="dropdown-item" href="formEditarProdutos">Editar Produto</a></li>
+                            <li><a class="dropdown-item" href="formDeletarProdutos">Deletar Produto</a></li>
+                            <li><a class="dropdown-item" href="telaInicial">Tela Inicial</a></li>
+                            <li><a class="dropdown-item" href="/">Sair</a></li>
                         </ul>
                     </div>
                 </ul>
@@ -119,39 +115,51 @@
     </nav>
 
     <!-- Conteúdo Principal -->
-
-    <div class="container-wrapper" style="background-color: --background-color;">
-
+    <div class="container-wrapper">
         <div class="container mt-4 container-spacing">
             <div class="cards-wrapper text-center">
-                <!-- Card 1: Editar Dados do Operador -->
+                <!-- Card 1: Visualizar Produtos -->
                 <div class="card card-custom">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-person-lines-fill card-icon"></i>
-                        <h5 class="card-title">Editar Dados do Operador</h5>
-                        <p class="card-text text-white text-center">Atualizar informações do operador.</p>
-
-                        <a href="atualizarOperadorGerente" class="btn btn-light">Acessar</a>
-
+                        <i class="bi bi-eye-fill card-icon"></i>
+                        <h5 class="card-title">Visualizar Produtos</h5>
+                        <p class="card-text text-white text-center">Consulte todos os produtos disponíveis.</p>
+                       <a href="/vizualizarProdutos" class="btn btn-light">Acessar</a>
                     </div>
                 </div>
-                <!-- Card 2: Editar Meus Dados -->
+                <!-- Card 2: Cadastrar Produto -->
                 <div class="card card-custom">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-person-circle card-icon"></i>
-                        <h5 class="card-title">Editar Meus Dados</h5>
-                        <p class="card-text text-white text-center">Atualizar suas informações pessoais.</p>
-
-                        <a href="atualizarGerente" class="btn btn-light">Acessar</a>
-
+                        <i class="bi bi-plus-square-fill card-icon"></i>
+                        <h5 class="card-title">Cadastrar Produto</h5>
+                        <p class="card-text text-white text-center">Adicione novos produtos ao sistema.</p>
+                       <a href="/formCadastrarProdutos" class="btn btn-light">Acessar</a>
+                    </div>
+                </div>
+                <!-- Card 3: Editar Produto -->
+                <div class="card card-custom">
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                        <i class="bi bi-pencil-fill card-icon"></i>
+                        <h5 class="card-title">Editar Produto</h5>
+                        <p class="card-text text-white text-center">Atualize informações de produtos.</p>
+                       <a href="/formEditarProdutos" class="btn btn-light">Acessar</a>
+                    </div>
+                </div>
+                <!-- Card 4: Deletar Produto -->
+                <div class="card card-custom">
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                        <i class="bi bi-trash-fill card-icon"></i>
+                        <h5 class="card-title">Deletar Produto</h5>
+                        <p class="card-text text-white text-center">Remova produtos do sistema.</p>
+                        <a href="/formDeletarProdutos" class="btn btn-light">Acessar</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-<script>
-    // Recupera o estado do tema do armazenamento local
+    <script>
+        // Recupera o estado do tema do armazenamento local
         document.addEventListener('DOMContentLoaded', () => {
             const isDarkMode = localStorage.getItem('darkMode') === 'true';
             if (isDarkMode) {
@@ -169,7 +177,7 @@
                 ? '<i class="bi bi-brightness-high"></i>'
                 : '<i class="bi bi-moon-fill"></i>';
         });
-</script>
+    </script>
 
     <!-- Rodapé -->
     <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">

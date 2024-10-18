@@ -10,6 +10,8 @@ const clienteController = require("../controllers/clienteController");
 
 const contratoController = require("../controllers/contratoController");
 
+const produtoController = require("../controllers/produtoController");
+
 router.post("/registrar", authController.registrar);
 
 router.post("/login", authController.login);
@@ -29,5 +31,7 @@ router.post("/registrarCliente", clienteController.registerCliente);
 router.post("/registrarClienteGerente", clienteController.registerClienteGerente);
 
 router.post("/registrarContrato", contratoController.registrarContrato);
+
+router.post("/registrarProduto", produtoController.registrarProduto);
 
 module.exports = router;
