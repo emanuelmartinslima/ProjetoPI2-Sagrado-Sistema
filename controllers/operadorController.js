@@ -32,7 +32,9 @@ exports.atualizar = async (req, res) => {
 
 exports.atualizarOperador = async (req, res) => {
     try {
-        const { cpf, nome, email } = req.body;
+        const { cpf, nome, email, gerente } = req.body;
+
+        const cargo = gerente ? 'gerente' : 'operador';
 
         const operador = Usuario.findOne({ where: { cpf: cpf } });
 
@@ -41,7 +43,7 @@ exports.atualizarOperador = async (req, res) => {
             res.redirect("telaInicial");
         }
 
-        Usuario.update({ nome: nome, email: email }, { where: { cpf: cpf } });
+        Usuario.update({ nome: nome, email: email, cargo: cargo }, { where: { cpf: cpf } });
         res.redirect("../telaInicial");
     } catch (error) {
         console.log(error);
@@ -84,7 +86,7 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
 
     //Código de verificação do twillo: WKAM8YFDV5UDTAGTYA4DDDPX
 
-    const url = `${req.protocol}://${req.get('host')}/redefinirSenha`;
+    const url = `${req.protocol}://${req.get('host')}/telaRedefinirSenha`;
 
     transporter.sendMail({
         to: usuario.email,

@@ -93,6 +93,30 @@ router.get('/api/usuarios/:cpf', operadorController.buscarPorCPF);
 
 router.get("/sair", autenticar.sair);
 
+router.get('/produtos', autenticar.autenticarToken, (req, res) => {
+    res.render('produtos'); 
+});
+
+router.get('/vizualizarProdutos', autenticar.autenticarToken, (req, res) => {
+    res.render('vizualizarProdutos');
+});
+
+router.get('/formCadastrarProdutos', autenticar.autenticarToken, (req, res) => {
+    res.render('formCadastrarProdutos');
+});
+
+router.get('/formEditarProdutos', autenticar.autenticarToken, (req, res) => {
+    res.render('formEditarProdutos');
+});
+
+router.get('/formDeletarProdutos', autenticar.autenticarToken, (req, res) => {
+    res.render('formDeletarProdutos');
+});
+
+router.get("/redefinirSenhaDef", (req, res) => {
+    res.render("telaRedefinirSenhaPos");
+});
+
 router.get('/auth/google', async (req, res) => {
     const open = await import('open');
     const authUrl = googleController.getAuthUrl();

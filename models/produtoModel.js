@@ -1,15 +1,15 @@
 const db = require("./conexaoBanco.js");
 
 const Produtos = db.sequelize.define("produtos", {
-    descricao: {
+    nome: {
         type: db.Sequelize.TEXT
     },
     valorUnidade: {
         type: db.Sequelize.FLOAT
     },
-    disponibilidade: {
-        type: db.Sequelize.BOOLEAN
-    },
+    // disponibilidade: {
+    //     type: db.Sequelize.BOOLEAN
+    // },
     estado: {
         type: db.Sequelize.TEXT
     },

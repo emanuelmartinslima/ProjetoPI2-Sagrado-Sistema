@@ -90,7 +90,7 @@
                             <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
                             <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
-                            <li><a class="dropdown-item" href="">Cadastrar Produtos</a></li>
+                            <li><a class="dropdown-item" href="produtos">Produtos</a></li>
                             <li><a class="dropdown-item" href="/">Sair</a></li>
 
                         </ul>
@@ -151,10 +151,16 @@
                                     <input type="text" class="form-control" id="enderecoEvento">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label for="produtoEscolhido" class="col-sm-4 col-form-label">Produto Escolhido:</label>
+                             <div class="mb-3 row">
+                                <label for="quantidadeProdutos" class="col-sm-4 col-form-label">Quantidade de Produtos:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="produtoEscolhido">
+                                    <input type="number" class="form-control" id="quantidadeProdutos" oninput="showProductSelection()" required>
+                                </div>
+                            </div>
+                            <div class="mb-3 row" id="produtoSelectionContainer" style="display: none;">
+                                <label for="produtosSelecionados" class="col-sm-4 col-form-label">Produtos Selecionados:</label>
+                                <div class="col-sm-8" id="produtosSelecionados">
+                                    <!-- Abas para selecionar os produtos vão aqui -->
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -182,10 +188,14 @@
                                         oninput="updatePaymentDates()">
                                 </div>
                             </div>
-                            <div class="mb-3 row payment-details" id="datasPagamentos" style="display: none;">
+            
+                            <div  class="mb-3 row payment-details" id="datasPagamentos" style="display: none;">
                                 <label for="datasPagamento" class="col-sm-4 col-form-label">Datas de Pagamento:</label>
-                                <div class="col-sm-8" id="paymentDatesContainer"></div>
+                                <div class="col-sm-8 "style="margin-left: 240px;" id="paymentDatesContainer">
+                                    <!-- As datas serão inseridas aqui -->
+                                </div>
                             </div>
+                            
                             <div class="mb-3 row">
                                 <label for="valorTotal" class="col-sm-4 col-form-label">Valor Total:</label>
                                 <div class="col-sm-8">
@@ -247,21 +257,23 @@
         }
 
         function updatePaymentDates() {
-            const numParcelas = document.getElementById("numParcelas").value;
-            const paymentDatesContainer = document.getElementById("paymentDatesContainer");
+    const numParcelas = document.getElementById("numParcelas").value;
+    const paymentDatesContainer = document.getElementById("paymentDatesContainer");
 
-            // Limpa as datas de pagamento antes de preencher
-            paymentDatesContainer.innerHTML = "";
+    // Limpa as datas de pagamento antes de preencher
+    paymentDatesContainer.innerHTML = "";
 
-            // Adiciona campos para as datas de pagamento
-            for (let i = 1; i <= numParcelas; i++) {
-                const input = document.createElement("input");
-                input.type = "date";
-                input.className = "form-control mb-2";
-                input.placeholder = `Data da Parcela ${i}`;
-                paymentDatesContainer.appendChild(input);
-            }
-        }
+    // Adiciona campos para as datas de pagamento
+    for (let i = 1; i <= numParcelas; i++) {
+        // Cria um input de data e insere diretamente dentro do col-sm-8
+        const input = document.createElement("input");
+        input.type = "date";
+        input.className = "form-control mb-2"; // Estilo do Bootstrap para alinhar corretamente
+
+        paymentDatesContainer.appendChild(input);
+    }
+}
+
 
         // Validação do formulário
         document.getElementById('formContrato').addEventListener('submit', function (event) {
@@ -317,6 +329,49 @@
                 ? '<i class="bi bi-brightness-high"></i>'
                 : '<i class="bi bi-moon-fill"></i>';
         });
+
+        //Função Atualizar Produto
+function showProductSelection() {
+    const quantidadeProdutos = document.getElementById("quantidadeProdutos").value;
+    const produtoSelectionContainer = document.getElementById("produtoSelectionContainer");
+    produtoSelectionContainer.style.display = quantidadeProdutos > 0 ? "block" : "none";
+    produtoSelectionContainer.innerHTML = ''; // Limpa os produtos antes de adicionar novos
+
+    for (let i = 0; i < quantidadeProdutos; i++) {
+        const productSelect = document.createElement("div");
+        productSelect.className = "row mb-2"; // Adiciona espaçamento entre os selects
+        productSelect.innerHTML = `
+            <label for="produtoSelecionado${i}" class="col-sm-4 col-form-label">Produto:</label>
+            <div class="col-sm-8">
+                <select class="form-select" id="produtoSelecionado${i}">
+                    <option value="" disabled selected>Selecione um produto</option>
+                </select>
+            </div>
+        `;
+        produtoSelectionContainer.appendChild(productSelect);
+
+        // Preencher o select com produtos
+        carregarListaDeProdutos(productSelect.querySelector(`select`));
+    }
+}
+
+        document.addEventListener("DOMContentLoaded", function () {
+            carregarListaDeProdutos();
+        });
+
+function carregarListaDeProdutos(produtoSelecionado) {
+    const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+
+    // Limpa as opções existentes no select
+    produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>';
+
+    produtos.forEach((produto, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = produto.nomeProduto;
+        produtoSelecionado.appendChild(option);
+    });
+}
     </script>
 
     <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">
