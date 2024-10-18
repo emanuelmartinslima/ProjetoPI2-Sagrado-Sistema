@@ -22,9 +22,9 @@ const getAuthUrl = () => {
 
 // Função para obter tokens
 const getTokens = async (code) => {
-    const { tokens: newTokens } = await oAuth2Client.getToken(code);
-    oAuth2Client.setCredentials(newTokens);
-    tokens = newTokens; // Armazena tokens
+    const { tokens } = await oAuth2Client.getToken(code);
+    oAuth2Client.setCredentials(tokens);
+    console.log(oAuth2Client);
     return tokens;
 };
 

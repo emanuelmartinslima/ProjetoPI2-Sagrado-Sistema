@@ -123,12 +123,13 @@ router.get('/auth/google', async (req, res) => {
     open.openApp(authUrl); // Abre o navegador automaticamente
 });
 
-
 router.get('/auth/google/callback', async (req, res) => {
     const { code } = req.query;
 
     try {
-        await googleController.getTokens(code);
+        const token = await googleController.getTokens(code);
+        res.cookie('access_token', token, {httpOnly: true});
+
         res.redirect("/telaInicial");
     } catch (error) {
         console.error('Erro ao obter tokens:', error);

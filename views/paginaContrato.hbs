@@ -109,11 +109,12 @@
                     <div class="form-container">
                         <h1 class="text-center title">Gerador de Contratos</h1>
 
-                        <form id="formContrato" action="auth/gerarContrato" method="post">
+                        <form id="formContrato" action="auth/registrarContrato" method="post">
                             <div class="mb-3 row">
                                 <label for="contratante" class="col-sm-4 col-form-label">Contratante:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="contratante" readonly disabled>
+
+                                    <input type="text" class="form-control" id="contratante" name="nomeContratante" disabled>
 
                                 </div>
                             </div>
@@ -121,7 +122,7 @@
                                 <label for="cpfCnpj" class="col-sm-4 col-form-label">CPF ou CNPJ:</label>
                                 <div class="col-sm-8">
 
-                                    <input type="text" class="form-control" id="cpfCnpj" readonly disabled>
+                                    <input type="text" class="form-control" id="cpfCnpj" name="cpfCnpj">
 
                                 </div>
                             </div>
@@ -129,33 +130,48 @@
                                 <label for="endereco" class="col-sm-4 col-form-label">Endereço:</label>
                                 <div class="col-sm-8">
 
-                                    <input type="text" class="form-control" id="endereco" readonly disabled>
+                                    <input type="text" class="form-control" id="endereco" name="enderecoCliente" disabled>
 
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="dataEvento" class="col-sm-4 col-form-label">Data do Evento:</label>
                                 <div class="col-sm-8">
-                                    <input type="date" class="form-control" id="dataEvento">
+
+                                    <input type="date" class="form-control" id="dataEvento" name="dataEvento">
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da
                                     Montagem:</label>
                                 <div class="col-sm-8">
-                                    <input type="time" class="form-control" id="horarioMontagem">
+                                    <input type="time" class="form-control" id="horarioMontagem" name="horarioMontagem">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário de
+                                    Encerramento:</label>
+                                <div class="col-sm-8">
+
+                                    <input type="time" class="form-control" id="horarioEncerramento" name="horarioEncerramento">
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="enderecoEvento" class="col-sm-4 col-form-label">Endereço do Evento:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="enderecoEvento">
+
+                                    <input type="text" class="form-control" id="enderecoEvento" name="enderecoEvento">
+
                                 </div>
                             </div>
                              <div class="mb-3 row">
                                 <label for="quantidadeProdutos" class="col-sm-4 col-form-label">Quantidade de Produtos:</label>
                                 <div class="col-sm-8">
-                                    <input type="number" class="form-control" id="quantidadeProdutos" oninput="showProductSelection()" required>
+
+                                    <input type="number" class="form-control" id="quantidadeProdutos" oninput="showProductSelection()" name="quantidadeProdutos" required>
+
                                 </div>
                             </div>
                             <div class="mb-3 row" id="produtoSelectionContainer" style="display: none;">
@@ -167,7 +183,7 @@
                             <div class="mb-3 row">
                                 <label for="formaPagamento" class="col-sm-4 col-form-label">Forma de Pagamento:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" id="formaPagamento" onchange="togglePaymentDetails()">
+                                    <select class="form-control" id="formaPagamento" onchange="togglePaymentDetails()" name="formaPagamento">
                                         <option value="">Selecione uma opção</option>
                                         <option value="pix">Pix</option>
                                         <option value="pixParcelado">Pix Parcelado</option>
@@ -179,14 +195,18 @@
                                 <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data
                                     de Pagamento:</label>
                                 <div class="col-sm-8">
-                                    <input type="date" class="form-control" id="dataPagamento">
+
+                                    <input type="date" class="form-control" id="dataPagamento" name="dataPagamento">
+
                                 </div>
                             </div>
                             <div class="mb-3 row payment-details" id="pixParceladoDetails" style="display: none;">
                                 <label for="numParcelas" class="col-sm-4 col-form-label">Número de Parcelas:</label>
                                 <div class="col-sm-8">
-                                    <input type="number" class="form-control" id="numParcelas"
+
+                                    <input type="number" class="form-control" id="numParcelas" name="numeroParcelas"
                                         oninput="updatePaymentDates()">
+
                                 </div>
                             </div>
             
@@ -200,7 +220,9 @@
                             <div class="mb-3 row">
                                 <label for="valorTotal" class="col-sm-4 col-form-label">Valor Total:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="valorTotal">
+
+                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal">
+
                                 </div>
                             </div>
                             <div class="text-center">

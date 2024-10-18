@@ -10,19 +10,31 @@ const Contratos = db.sequelize.define("contratos", {
     valor: {
         type: db.Sequelize.FLOAT
     },
-    dataGerado: {
-        type: db.Sequelize.DATEONLY
-    },
     horaMontagem: {
         type: db.Sequelize.TIME
     },
-    dataEvento: {
+    horarioEncerramento: {
         type: db.Sequelize.TIME
     },
-    encerramentoEvento: {
-        type: db.Sequelize.TIME
+    enderecoEvento: {
+        type: db.Sequelize.STRING
+    },
+    dataEvento: {
+        type: db.Sequelize.DATE
+    },
+    quantidadeProdutos: {
+        type: db.Sequelize.INTEGER
     },
     formaPagamento: {
+        type: db.Sequelize.STRING
+    },
+    dataPagamento: {
+        type: db.Sequelize.DATEONLY
+    },
+    numeroParcelas: {
+        type: db.Sequelize.INTEGER
+    },
+    idDocumento: {
         type: db.Sequelize.STRING
     }
 });
