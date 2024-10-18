@@ -3,6 +3,7 @@ const router = express.Router();
 const autenticar = require("../controllers/auth");
 const Usuario = require("../models/usuarioModel");
 const operadorController = require('../controllers/operadorController');
+const googleController = require('../controllers/googleController');
 
 router.get("/", (req, res) => {
     res.render("index");
@@ -92,4 +93,22 @@ router.get('/api/usuarios/:cpf', operadorController.buscarPorCPF);
 
 router.get("/sair", autenticar.sair);
 
+router.get('/auth/google', async (req, res) => {
+    const open = await import('open');
+    const authUrl = googleController.getAuthUrl();
+    open.openApp(authUrl); // Abre o navegador automaticamente
+});
+
+
+router.get('/auth/google/callback', async (req, res) => {
+    const { code } = req.query;
+
+    try {
+        await googleController.getTokens(code);
+        res.redirect("/telaInicial");
+    } catch (error) {
+        console.error('Erro ao obter tokens:', error);
+        res.status(500).send('Erro ao autenticar.');
+    }
+});
 module.exports = router;

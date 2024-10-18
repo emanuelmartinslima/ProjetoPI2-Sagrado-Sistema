@@ -1,6 +1,12 @@
 const db = require("./conexaoBanco.js");
 
 const Contratos = db.sequelize.define("contratos", {
+    idCliente: {
+        type: db.Sequelize.INTEGER
+    },
+    idOperador: {
+        type: db.Sequelize.FLOAT
+    },
     valor: {
         type: db.Sequelize.FLOAT
     },
