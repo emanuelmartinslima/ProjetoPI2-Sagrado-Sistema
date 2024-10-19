@@ -79,26 +79,28 @@
                     <div class="w-100 p-4 text-center"
                         style="background-color: var(--navbar-background-color); border-radius: 10px;">
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
-                        <form id="recoveryForm" style="width: 100%;" action="/auth/enviarEmailRedefinirSenha" method="post">
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-envelope-at me-2"
-                                        style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                    <label for="exampleInputEmail1" class="form-label"
-                                        style="color: var(--text-color);">E-mail</label>
-                                </div>
-                                <input type="email" class="form-control" id="exampleInputEmail1" name="email">
-                                <p style="font-size: medium; color: var(--text-color);">Será enviado um e-mail que
-                                    permitirá a alteração de sua senha.</p>
-                            </div>
+                        <form id="recoveryForm" style="width: 100%;" action="/auth/redefinirSenha" method="post">
+    <div class="mb-3">
+        <div class="d-flex align-items-center justify-content-center">
+            <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>
+            <label for="senha" class="form-label" style="color: var(--text-color);">Nova senha:</label>
+        </div>
+        <input type="password" class="form-control" id="senha" name="senha">
 
-                            <button type="submit" class="btn btn-primary">Enviar e-mail</button>
-                            <br><br>
-                        </form>
-                    </div>
+        <div class="d-flex align-items-center justify-content-center">
+            <i class="bi bi-lock me-2" style="color: var(--text-color); font-size: 1.5rem;"></i>
+            <label for="confirmarSenha" class="form-label" style="color: var(--text-color);">Confirmação da nova senha:</label>
+        </div>
+        <input type="password" class="form-control" id="confirmarSenha" name="confirmarSenha">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Redefinir Senha</button>
+</form>
+
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <footer class="text-light text-center py-3" style="background-color: var(--navbar-background-color);">

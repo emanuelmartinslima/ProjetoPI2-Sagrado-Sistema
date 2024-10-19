@@ -20,7 +20,6 @@
             --background-color: rgb(29, 5, 33);
             --text-color: #ffffff;
             --navbar-background-color: rgb(49, 04, 59);
-            /* Mantém a cor do navbar */
         }
 
         body {
@@ -86,7 +85,7 @@
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
-                        <i class="bi bi-moon-fill"></i>
+                            <i class="bi bi-moon-fill"></i>
                         </button>
                         <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -116,7 +115,7 @@
                             <div class="mb-3 row">
                                 <label for="produtoSelecionado" class="col-sm-4 col-form-label">Produto:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-select" id="produtoSelecionado" required>
+                                    <select class="form-select" id="produtoSelecionado">
                                         <option value="" disabled selected>Selecione um produto</option>
                                     </select>
                                 </div>
@@ -136,13 +135,13 @@
     </footer>
 
     <script>
-                // Recupera o estado do tema do armazenamento local
         document.addEventListener('DOMContentLoaded', () => {
             const isDarkMode = localStorage.getItem('darkMode') === 'true';
             if (isDarkMode) {
                 document.body.classList.add('dark-mode');
                 document.getElementById('toggleTheme').innerHTML = '<i class="bi bi-brightness-high"></i>';
             }
+            carregarListaDeProdutos();
         });
 
         // Alterna o tema e salva a preferência
@@ -155,43 +154,54 @@
                 : '<i class="bi bi-moon-fill"></i>';
         });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            carregarListaDeProdutos();
-        });
+        async function carregarListaDeProdutos() {
+            try {
+                const response = await fetch('/auth/produtos'); // Verifique se essa URL está correta
+                const produtos = await response.json();
+                const produtoSelecionado = document.getElementById('produtoSelecionado');
 
-        function carregarListaDeProdutos() {
-            const produtos = JSON.parse(localStorage.getItem('produtos')) || [];
-            const produtoSelecionado = document.getElementById('produtoSelecionado');
-            produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>'; // Resetar lista
+                // Limpa as opções existentes no select
+                produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>';
 
-            produtos.forEach((produto, index) => {
-                const option = document.createElement('option');
-                option.value = index;
-                option.textContent = produto.nomeProduto;
-                produtoSelecionado.appendChild(option);
-            });
+                produtos.forEach(produto => {
+                    const option = document.createElement('option');
+                    option.value = produto.id; // Assume que 'id' é a chave primária
+                    option.textContent = produto.nome; // Use o campo correto para o nome do produto
+                    produtoSelecionado.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar produtos:", error);
+                alert("Erro ao carregar produtos.");
+            }
         }
 
-function deletarProduto(event) {
-    event.preventDefault();
-    
-    const index = document.getElementById('produtoSelecionado').value;
-    let produtos = JSON.parse(localStorage.getItem('produtos')) || [];
+        async function deletarProduto(event) {
+            event.preventDefault();
 
-    if (!index) {  // Verifica se um produto foi selecionado
-        alert('Por favor, selecione um produto para deletar.');
-        return;  // Sai da função se nenhum produto foi selecionado
-    }
+            const id = document.getElementById('produtoSelecionado').value;
 
-    produtos.splice(index, 1);  // Remover o produto da lista
-    localStorage.setItem('produtos', JSON.stringify(produtos));
+            if (!id) {
+                alert('Por favor, selecione um produto para deletar.');
+                return;
+            }
 
-    alert('Produto deletado com sucesso!');
-    carregarListaDeProdutos();  // Atualizar a lista no select
+            try {
+                const response = await fetch(`/auth/produtos/${id}`, {
+                    method: 'DELETE',
+                });
 
-    document.getElementById('deletarProdutoForm').reset();
-}
+                if (!response.ok) {
+                    throw new Error('Erro ao deletar produto.');
+                }
 
+                alert('Produto deletado com sucesso!');
+                carregarListaDeProdutos(); // Atualiza a lista no select
+                document.getElementById('deletarProdutoForm').reset(); // Reseta o formulário
+            } catch (error) {
+                console.error("Erro ao deletar produto:", error);
+                alert("Erro ao deletar produto.");
+            }
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

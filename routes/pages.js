@@ -112,8 +112,4 @@ router.get('/formDeletarProdutos', autenticar.autenticarToken, (req, res) => {
     res.render('formDeletarProdutos');
 });
 
-router.get("/redefinirSenhaDef", (req, res) => {
-    res.render("telaRedefinirSenhaPos");
-});
-
 module.exports = router;

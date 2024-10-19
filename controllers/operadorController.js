@@ -86,7 +86,7 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
 
     //Código de verificação do twillo: WKAM8YFDV5UDTAGTYA4DDDPX
 
-    const url = `${req.protocol}://${req.get('host')}/telaRedefinirSenha`;
+    const url = `${req.protocol}://${req.get('host')}/redefinirSenha`;
 
     transporter.sendMail({
         to: usuario.email,
@@ -99,22 +99,35 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
 }
 
 exports.redefinirSenha = async (req, res) => {
-    const { senha } = req.body;
+    const { senha, confirmarSenha } = req.body;
+
+    if (senha !== confirmarSenha) {
+        return res.status(400).send("As senhas não coincidem.");
+    }
 
     const token = req.cookies.tokenRedefinirSenha;
-
     const secret = process.env.SECRET;
 
-    const payloadToken = jwt.verify(token, secret);
-
-    const salt = bcrypt.genSalt(12);
-
-    const hashSenha = bcrypt.hash(senha, salt);
-
     try {
+        // Verifica o token e trata o caso de expiração
+        const payloadToken = jwt.verify(token, secret);
+
+        const salt = await bcrypt.genSalt(12);
+        const hashSenha = await bcrypt.hash(senha, salt);
+
+        // Atualiza a senha no banco de dados
         await Usuario.update({ senha: hashSenha }, { where: { id: payloadToken.id } });
+
+        // Redireciona para a página de login após redefinir a senha
+        res.redirect("/");
+
     } catch (error) {
-        console.log("Erro ao atualizar senha do usuário: ", error);
+        // Captura o erro de token expirado e outros possíveis erros
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).send("Token expirado. Solicite novamente a redefinição de senha.");
+        }
+        // Para outros erros
+        res.status(500).send("Erro ao redefinir senha.");
     }
 }
 

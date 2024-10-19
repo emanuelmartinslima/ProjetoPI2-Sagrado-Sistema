@@ -21,10 +21,9 @@
         .dark-mode {
             --background-color: rgb(29, 5, 33);
             --text-color: #ffffff;
-            --card-color:rgb(192, 185, 216);
+            --card-color: rgb(192, 185, 216);
             --navbar-background-color: rgb(49, 04, 59);
             --littletext-color: rgb(49, 04, 59);
-            /* Mantém a cor do navbar */
         }
 
         body {
@@ -53,11 +52,7 @@
             color: #dc3545;
         }
 
-        .navbar {
-            background-color: rgb(49, 04, 59);
-        }
-
-        footer {
+        .footer {
             background-color: rgb(49, 04, 59);
             color: white;
             position: relative;
@@ -95,7 +90,7 @@
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
-                        <i class="bi bi-moon-fill"></i>
+                            <i class="bi bi-moon-fill"></i>
                         </button>
                         <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -116,45 +111,51 @@
     </nav>
 
     <div class="container content-spacing flex-grow-1">
-        <h1 class="text-center mb-4" style="color: --text-color;">Produtos</h1>
+        <h1 class="text-center mb-4" style="color: var(--text-color);">Produtos</h1>
         <div class="row" id="productCards"></div>
     </div>
 
-    <footer class="text-light text-center py-3">
+    <footer class="footer text-light text-center py-3">
         Todos os direitos reservados
     </footer>
 
     <script>
-        
-        document.addEventListener("DOMContentLoaded", function () {
-    const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-    const productCards = document.getElementById("productCards");
+        document.addEventListener("DOMContentLoaded", async function () {
+            const productCards = document.getElementById("productCards");
 
-    if (produtos.length === 0) {
-        productCards.innerHTML = "<p class='text-center'>Nenhum produto cadastrado.</p>";
-    } else {
-        produtos.forEach(produto => {
-            const card = document.createElement("div");
-            card.className = "col-md-4 mb-4";
+            try {
+                const response = await fetch('/auth/produtos'); // Altere esta URL para corresponder à sua API
+                const produtos = await response.json();
 
-            card.innerHTML = `
-                <div class="card h-100">
-                    <img src="${produto.imagemProduto}" class="card-img-top" alt="${produto.nomeProduto}">
-                    <div class="card-body">
-                        <h5 class="card-title">${produto.nomeProduto}</h5>
-                        <p class="card-text">Dimensões: ${produto.dimensoes}</p>
-                        <p class="card-text">Valor: ${produto.valorUnidade}</p>
-                        <p class="card-text">Estado: ${produto.estado}</p>
-                    </div>
-                </div>
-            `;
-            productCards.appendChild(card);
+                if (!produtos.length) {
+                    productCards.innerHTML = "<p class='text-center'>Nenhum produto cadastrado.</p>";
+                } else {
+                    produtos.forEach(produto => {
+                        const card = document.createElement("div");
+                        card.className = "col-md-4 mb-4";
+
+                        card.innerHTML = `
+                            <div class="card h-100">
+                                <img src="data:image/png;base64,${produto.imagem}" class="card-img-top" alt="${produto.nome}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${produto.nome}</h5>
+                                    <p class="card-text">Dimensões: ${produto.dimensoes}</p>
+                                    <p class="card-text">Valor: R$ ${produto.valorUnidade.toFixed(2)}</p>
+                                    <p class="card-text">Estado: ${produto.estado}</p>
+                                    <p class="card-text">Disponível: ${produto.disponibilidade ? 'Sim' : 'Não'}</p>
+                                </div>
+                            </div>
+                        `;
+                        productCards.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error("Erro ao carregar produtos:", error);
+                productCards.innerHTML = "<p class='text-center'>Erro ao carregar produtos.</p>";
+            }
         });
-    }
-});
 
-
-                        // Recupera o estado do tema do armazenamento local
+        // Recupera o estado do tema do armazenamento local
         document.addEventListener('DOMContentLoaded', () => {
             const isDarkMode = localStorage.getItem('darkMode') === 'true';
             if (isDarkMode) {
@@ -172,7 +173,6 @@
                 ? '<i class="bi bi-brightness-high"></i>'
                 : '<i class="bi bi-moon-fill"></i>';
         });
-
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
