@@ -1,23 +1,41 @@
 const db = require("./conexaoBanco.js");
 
 const Contratos = db.sequelize.define("contratos", {
-    valor: {
+    idCliente: {
+        type: db.Sequelize.INTEGER
+    },
+    idOperador: {
         type: db.Sequelize.FLOAT
     },
-    dataGerado: {
-        type: db.Sequelize.DATEONLY
+    valor: {
+        type: db.Sequelize.FLOAT
     },
     horaMontagem: {
         type: db.Sequelize.TIME
     },
-    dataEvento: {
+    horarioEncerramento: {
         type: db.Sequelize.TIME
     },
-    encerramentoEvento: {
-        type: db.Sequelize.TIME
+    enderecoEvento: {
+        type: db.Sequelize.STRING
+    },
+    dataEvento: {
+        type: db.Sequelize.DATE
+    },
+    quantidadeProdutos: {
+        type: db.Sequelize.INTEGER
     },
     formaPagamento: {
         type: db.Sequelize.STRING
+    },
+    dataPagamento: {
+        type: db.Sequelize.DATEONLY
+    },
+    numeroParcelas: {
+        type: db.Sequelize.INTEGER
+    },
+    documento: {
+        type: db.Sequelize.BLOB
     }
 });
 
