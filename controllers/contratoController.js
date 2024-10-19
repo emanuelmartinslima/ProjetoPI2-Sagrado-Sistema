@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
 const { Document, Packer, Paragraph, TextRun, Alignment, Header, Media , ImageRun} = require("docx");
+const { text } = require("body-parser");
 
 exports.registrarContrato = async (req, res) => {
     const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal } = req.body;
@@ -53,41 +54,6 @@ exports.registrarContrato = async (req, res) => {
 const templatePath = path.join(__dirname, "Contrato Espelho.docx");
 const outputPath = path.join(__dirname, "output.docx");
 
-// async function automatizarContrato(cliente, contrato) {
-//     const data = new Date();
-
-//     const mes = String(data.getMonth() + 1).padStart(2, '0');
-//     const dia = String(data.getDay()).padStart(2, '0');
-
-//     const dataFormatada = `${dia}${mes}`;
-
-//     const replacements = {
-//         "{{nomeCliente}}": `${cliente.nome}`,
-//         "{{cpfCnpj}}": `${cliente.cpfCnpj}`,
-//         "{{enderecoCliente}}": `${cliente.endereco}`,
-//         "{{dataEvento}}": `${contrato.dataEvento}`,
-//         "{{horarioMontagem}}": `${contrato.horarioMontagem}`,
-//         "{{horarioEncerramento}}": `${contrato.horarioEncerramento}`,
-//         "{{enderecoEvento}}": `${contrato.enderecoEvento}`,
-//         "{{valor}}": `${contrato.valorTotal}`,
-//         "{{formaPagamento}}": `${contrato.formaPagamento}`
-//     };
-
-//     const { value: html } = await mammoth.convertToHtml({ path: templatePath });
-
-//     let updatedHtml = html;
-//     for (const [placeholder, value] of Object.entries(replacements)) {
-//         const regex = new RegExp(placeholder, "g");
-//         updatedHtml = updatedHtml.replace(regex, value);
-//     }
-
-//     await createDocxFromHtml(updatedHtml, outputPath);
-
-//     console.log("Arquivo atualizado com sucesso!");
-
-//     salvarDocumento(outputPath);
-// }
-
 async function substituirCampos(templatePath, outputPath, replacements, body, cliente) {
     try {
         const data = new Date();
@@ -97,16 +63,6 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
         const ano = data.getFullYear();
 
         const dataFormatada = `${dia}${mes}`;
-
-        // // Converter o template para HTML
-        // const { value: html } = await mammoth.convertToHtml({ path: templatePath });
-
-        // // Fazer substituições no HTML
-        // let updatedHtml = html;
-        // for (const [placeholder, value] of Object.entries(replacements)) {
-        //     const regex = new RegExp(placeholder, "g");
-        //     updatedHtml = updatedHtml.replace(regex, value);
-        // }
 
         // Criar um novo documento Word
         const doc = new Document({
@@ -142,58 +98,269 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                                     alignment: "center",
                                     bold: true
                                 })
+                            ],
+                            spacing: {
+                                after: 300
+                            }
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: `Pelo presente instrumento particular e na melhor forma de direito, as partes a seguir qualificadas, de um lado ${cliente.nome} pessoa física, CPF ou CNPJ: ${body.cpfCnpj},   Endereço Residencial ou Comercial: ${cliente.endereco}, doravante denominada `,
+                                }),
+                                new TextRun({
+                                    text: "CONTRATANTE",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " e, do outro Lado ",
+                                }),
+                                new TextRun({
+                                    text: "SAGRADO NEON",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " inscrita no CNPJ sob o nº 42.593.312/0001-04, neste ato representada por Luiz Carlos Blasques, inscrito na receita federal através do CPF Nº 428.963.018-95 e portador do RG Nº 36.860.179-1 SSP/SP residente e domiciliado na Rua Campo das Pitangueiras, 600 casa 30  Jd São nicolau/SP,telefone:(11)94101-1464, doravante denominada ",
+                                }),
+                                new TextRun({
+                                    text: "CONTRATADA",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: ", firmam o presente contrato de Prestação de Serviços, mediante as seguintes cláusulas e condições:",
+                                })
+                            ],
+                            spacing: {
+                                after: 150
+                            }
+                        }),
+                        new Paragraph({
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA PRIMEIRA – DO OBJETO:",
+                                    bold: true,
+                                })
                             ]
                         }),
                         new Paragraph({
-                            text: `Pelo presente instrumento particular e na melhor forma de direito, as partes a seguir qualificadas, de um lado ${cliente.nome} pessoa física, CPF ou CNPJ: ${body.cpfCnpj},   Endereço Residencial ou Comercial: ${cliente.endereco}, doravante denominada CONTRATANTE e, do outro Lado SAGRADO NEON inscrita no CNPJ sob o nº 42.593.312/0001-04, neste ato representada por Luiz Carlos Blasques, inscrito na receita federal através do CPF Nº 428.963.018-95 e portador do RG Nº 36.860.179-1 SSP/SP residente e domiciliado na Rua Campo das Pitangueiras, 600 casa 30  Jd São nicolau/SP,telefone:(11)94101-1464, doravante denominada CONTRATADA, firmam o presente contrato de Prestação de Serviços, mediante as seguintes cláusulas e condições:`
+                            children: [
+                                new TextRun({
+                                    text: "1.1 - Constitui objeto do presente a locação por parte da "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATANTE",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " dos itens discriminados no parágrafo a seguir, sendo todos disponibilizado pelo "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATADO",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " na data descrita a seguir:"
+                                })
+                            ],
+                            spacing: {
+                                before: 150,
+                                after: 150
+                            }
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA PRIMEIRA – DO OBJETO:"
+                            children: [
+                                new TextRun({
+                                    text: "Item: Item Escolhido",
+                                    bold: true
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: "1.1 - Constitui objeto do presente a locação por parte da CONTRATANTE dos itens discriminados no parágrafo a seguir, sendo todos disponibilizado pelo CONTRATADO na data descrita a seguir:"
+                            children: [
+                                new TextRun({
+                                    text: "Dimensões Aproximadas: 2m x 2m",
+                                    bold: true
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: "Item: Item Escolhido"
+                            children: [
+                                new TextRun({
+                                    text: "Obs:",
+                                    bold: true
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: "Dimensões Aproximadas: 2m x 2m"
+                            children: [
+                                new TextRun({
+                                    text: "1.2 - O objeto do presente Contrato também abrange a montagem e instalação do(s) objeto (s) comprado pela "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATADA",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: ", nas condições especificadas a seguir:"
+                                })
+                            ],
+                            spacing: {
+                                before: 150,
+                                after: 150
+                            }
                         }),
                         new Paragraph({
-                            text: "Obs:"
+                            children: [
+                                new TextRun({
+                                    text: "Data do Evento: ",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: `${body.dataEvento}`
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: "1.2 - O objeto do presente Contrato também abrange a montagem e instalação do(s) objeto (s) comprado pela CONTRATADA, nas condições especificadas a seguir:"
+                            children: [
+                                new TextRun({
+                                    text: "Horário da Montagem: ",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: `${body.horarioMontagem}`
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: `Data do Evento: ${body.dataEvento}`
+                            children: [
+                                new TextRun({
+                                    text: "Desmontagem: ",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: `${body.horarioEncerramento}`
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: `Horário da Montagem: ${body.horarioMontagem}`
+                            children: [
+                                new TextRun({
+                                    text: "Local do Evento: ",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: `${body.enderecoEvento}`
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: `Desmontagem: ${body.horarioEncerramento}`
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 2 – DOS SERVIÇOS:",
+                                    bold: true
+                                })
+                            ],
+                            spacing: {
+                                before: 150
+                            }
                         }),
                         new Paragraph({
-                            text: `Local do Evento: ${body.enderecoEvento}`
+                            children: [
+                                new TextRun({
+                                    text: "2.1 – O "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATADO",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " se compromete a realizar a entrega do item vendido ou alugado, no local e horário previamente indicados pelo "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATANTE",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: ". Em caso de eventuais atrasos no evento, a "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATADA",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " se disponibiliza em estender seus serviços em no máximo 1 hora além do que está previsto em contrato;"
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 2 – DOS SERVIÇOS:"
+                            children: [
+                                new TextRun({
+                                    text: "2.2 – Caso na montagem o letreiro escolhido passe por alguma falha ou falta de funcionamento a "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATANTE",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " entende que será necessário a substituição do mesmo, podendo ser alterado por outro disponível pelo "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATANTE",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " no dia do evento."
+                                }),
+                            ]
                         }),
                         new Paragraph({
-                            text: "2.1 – O CONTRATADO se compromete a realizar a entrega do item vendido ou alugado, no local e horário previamente indicados pelo CONTRATANTE. Em caso de eventuais atrasos no evento, a CONTRATADA se disponibiliza em estender seus serviços em no máximo 1 hora além do que está previsto em contrato;"
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 3 – DO PREÇO E PAGAMENTO:",
+                                    bold: true
+                                })
+                            ],
+                            spacing: {
+                                before: 150
+                            }
                         }),
                         new Paragraph({
-                            text: "2.2 – Caso na montagem o letreiro escolhido passe por alguma falha ou falta de funcionamento a CONTRATANTE entende que será necessário a substituição do mesmo, podendo ser alterado por outro disponível pelo CONTRATANTE no dia do evento."
+                            children: [
+                                new TextRun({
+                                    text: "3.1 – A "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATANTE",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " pagará ao "
+                                }),
+                                new TextRun({
+                                    text: "CONTRATADO",
+                                    bold: true
+                                }),
+                                new TextRun({
+                                    text: " pelos serviços prestados e locações do Item descrito no Objeto deste contrato, o valor de: R$ "
+                                }),
+                                new TextRun({
+                                    text: `${body.valorTotal}`
+                                }),
+                                new TextRun({
+                                    text: " + Frete",
+                                    bold: true
+                                })
+                            ]
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 3 – DO PREÇO E PAGAMENTO:"
-                        }),
-                        new Paragraph({
-                            text: `3.1 – A CONTRATANTE pagará ao CONTRATADO pelos serviços prestados e locações do Item descrito no Objeto deste contrato, o valor de : R$ ${body.valorTotal} + Frete`
-                        }),
-                        new Paragraph({
-                            text: `3.2 – O pagamento será realizado via: ${body.formaPagamento}`
+                            children: [
+                                new TextRun({
+                                    text: `3.2 – O pagamento será realizado via: ${body.formaPagamento}`
+                                })
+                            ],
+                            spacing: {
+                                after: 150
+                            }
                         }),
                         new Paragraph({
                             text: "Nossos dados bancários:"
@@ -217,13 +384,32 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                             text: "Chave Pix: 42.593.312/0001-04"
                         }),
                         new Paragraph({
-                            text: "3.3 O contrato apenas será validado, após assinatura por ambas as partes, e o pagamento conforme combinado, enquanto o pagamento não for realizado e o contrato não for assinado, a data permanece em aberto, podendo ser repassada a outro cliente sem aviso prévio."
+                            children: [
+                                new TextRun({
+                                    text: "3.3 O contrato apenas será validado, após assinatura por ambas as partes, e o pagamento conforme combinado, enquanto o pagamento não for realizado e o contrato não for assinado, a data permanece em aberto, podendo ser repassada a outro cliente sem aviso prévio."
+                                })
+                            ],
+                            spacing:{
+                                before: 150
+                            }
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 4 – DAS OBRIGAÇÕES DA CONTRATANTE:"
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 4 – DAS OBRIGAÇÕES DA CONTRATANTE:",
+                                    bold: true
+                                })
+                            ],
+                            spacing: {
+                                before: 150
+                            }
                         }),
                         new Paragraph({
-                            text: "4.1 – O CONTRATANTE compromete-se a: "
+                            children: [
+                                new TextRun({
+                                    text: "4.1 – O CONTRATANTE compromete-se a: "
+                                })
+                            ]
                         }),
                         new Paragraph({
                             text: "a) Recomenda-se que a montagem ocorra em locais cobertos, pois a exposição à chuva pode resultar em danos aos equipamentos. A contratante assume total responsabilidade pelos danos causados aos itens contratados."
@@ -238,7 +424,16 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                             text: "d) Após a realização de cada pagamento, o CONTRATANTE deverá informar e comprovar o ato ao CONTRATADO;"
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 5 – DA RESCISÃO CONTRATUAL:"
+                            // text: "CLÁUSULA 5 – DA RESCISÃO CONTRATUAL:"
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 5 – DA RESCISÃO CONTRATUAL:",
+                                    bold: true
+                                })
+                            ],
+                            spacing: {
+                                before: 150
+                            }
                         }),
                         new Paragraph({
                             text: "5.1 - Terá findo este presente instrumento na data da efetivação do serviço contratado ou por inadimplemento ou por extinção antecipada, observada a seguintes condições:"
@@ -262,7 +457,16 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                             text: "f) Em caso de problema técnico causado por falta de energia, algum pane elétrico do local do evento, a qual não nos permita realizar nossos serviços, não haverá devolução de valores."
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 6 – ALTERAÇÃO DE DATA DO EVENTO:"
+                            // text: "CLÁUSULA 6 – ALTERAÇÃO DE DATA DO EVENTO:"
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 6 – ALTERAÇÃO DE DATA DO EVENTO:",
+                                    bold: true
+                                })
+                            ],
+                            spacing: {
+                                before: 150
+                            }
                         }),
                         new Paragraph({
                             text: "6.1 - Se por motivo de força maior e o CONTRATANTE solicitar alteração da data fixada, deverá informar ao CONTRATADO com antecedência mínima de 30 dias. Neste caso, desde que haja a disponibilidade do CONTRATADO, fica estipulada à CONTRATANTE, o pagamento de taxa de alteração no valor de 10% sobre o valor total estipulado neste instrumento;"
@@ -271,7 +475,16 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                             text: "6.2 – Em caso de impossibilidade do CONTRATADO em realizar o evento em nova data, será considerada a rescisão contratual por parte da CONTRATANTE, conforme descrito na Cláusula 5 deste contrato;"
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 7 – DA CONCESSÃO DO USO DE IMAGEM: "
+                            // text: "CLÁUSULA 7 – DA CONCESSÃO DO USO DE IMAGEM: "
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 7 – DA CONCESSÃO DO USO DE IMAGEM: ",
+                                    bold: true
+                                })
+                            ],
+                            spacing:{
+                                before: 150,
+                            }
                         }),
                         new Paragraph({
                             text: "7.1 - Pelo presente instrumento particular e na melhor forma de direito, o (a) CONTRATANTE (A) autoriza a CONTRATADO, desde já, em caráter irretratável e irrevogável, a:"
@@ -283,7 +496,16 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                             text: "b) Utilizar as fotografias na produção de quaisquer materiais publicitários e promocionais para fins de divulgação em mídias sociais do CONTRATADO, tais como, exemplificativamente, anúncios em revistas e jornais, folhetos, cartazetes, Instagram, Facebook “posters”, filmes publicitários, “out door” e “bus door”, dentre outros, a serem veiculados;"
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 8 – DISPOSIÇÕES GERAIS:"
+                            // text: "CLÁUSULA 8 – DISPOSIÇÕES GERAIS:"
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 8 – DISPOSIÇÕES GERAIS:",
+                                    bold: true
+                                })
+                            ],
+                            spacing: {
+                                before: 150
+                            }
                         }),
                         new Paragraph({
                             text: "8.1 – Define-se que:"
@@ -298,7 +520,16 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                             text: "c) Festas canceladas por motivos de morte de parentes de primeiro grau, doença do anfitrião ou de parentes de primeiro grau e/ou decretos governamentais (ex. Restrições por pandemia), o valor pago fica como crédito para um futuro evento, podendo ser marcado em até 6 meses desde que seja comunicado com até 30 dias de antecedência do evento."
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 9 - DANOS AOS EQUIPAMENTOS"
+                            // text: "CLÁUSULA 9 - DANOS AOS EQUIPAMENTOS"
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 9 - DANOS AOS EQUIPAMENTOS",
+                                    bold: true
+                                })
+                            ],
+                             spacing: {
+                                before: 150
+                             }
                         }),
                         new Paragraph({
                             text: "Em caso de danos contra a estrutura dos Painéis, letreiros ou qualquer outro equipamento que compõem nossos serviços, causados por algum convidado, cabe reparo dos itens ao próprio convidado, ou em falta de pagamento do convidado, fica sob a responsabilidade do CONTRATANTE nos valores atuais do mercado."
@@ -307,14 +538,31 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                             text: "Em caso de danos ao equipamento causado pelo nosso STAFF, fica ausentado a responsabilidade do reparo ao CONTRATANTE;"
                         }),
                         new Paragraph({
-                            text: "CLÁUSULA 10 – DO FORO"
+                            // text: "CLÁUSULA 10 – DO FORO"
+                            children: [
+                                new TextRun({
+                                    text: "CLÁUSULA 10 – DO FORO",
+                                    bold: true
+                                })
+                            ],
+                            spacing: {
+                                before: 150
+                            }
                         }),
                         new Paragraph({
                             text: "10.1 – Elege o foro da comarca de São Paulo- SP para dirimir eventuais LITÍGIOS DECORRENTES DO PRESENTE termo de contrato, em duas vias de igual teor. Aplicam-se ao presente, todas as disposições relativas ao código de Defesa DO CONSUMIDOR (Lei 8078 de 11 de setembro de 1990), outras aplicáveis à espécie."
                         }),
                         new Paragraph({
-                            text: `São Paulo, ${dia} de ${mes} de ${ano}`,
-                            alignment: Alignment.CENTER
+                            // text: `São Paulo, ${dia} de ${mes} de ${ano}`
+                            children: [
+                                new TextRun({
+                                    text: `São Paulo, ${dia} de ${mes} de ${ano}`
+                                })
+                            ],
+                            spacing: {
+                                before: 150,
+                                after: 150
+                            }
                         }),
                         // new Paragraph({
                         //     children: [

@@ -10,7 +10,7 @@ const Contratos = db.sequelize.define("contratos", {
     valor: {
         type: db.Sequelize.FLOAT
     },
-    horaMontagem: {
+    horarioMontagem: {
         type: db.Sequelize.TIME
     },
     horarioEncerramento: {
@@ -20,7 +20,7 @@ const Contratos = db.sequelize.define("contratos", {
         type: db.Sequelize.STRING
     },
     dataEvento: {
-        type: db.Sequelize.DATE
+        type: db.Sequelize.DATEONLY
     },
     quantidadeProdutos: {
         type: db.Sequelize.INTEGER
