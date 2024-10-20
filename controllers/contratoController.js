@@ -64,6 +64,9 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
 
         const dataFormatada = `${dia}${mes}`;
 
+        const imagemLogo= fs.readFileSync(path.join(__dirname, "logo.jpeg"));
+        const imagemAssinatura = fs.readFileSync(path.join(__dirname, "assinatura.jpeg"));
+
         // Criar um novo documento Word
         const doc = new Document({
             sections: [
@@ -75,7 +78,7 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                 //                     {
                 //                         children: [
                 //                             new ImageRun({
-                //                                 data: fs.readFileSync(path.join(__dirname, "logo.png")),
+                //                                 data: imagemLogo,
                 //                                 transformation: {
                 //                                     width: 97,
                 //                                     height: 97
@@ -567,7 +570,7 @@ async function substituirCampos(templatePath, outputPath, replacements, body, cl
                         // new Paragraph({
                         //     children: [
                         //         new ImageRun({
-                        //             data: fs.readFileSync(path.join(__dirname, "assinatura.png")),
+                        //             data: imagemAssinatura,
                         //             transformation: {
                         //                 width: 212,
                         //                 height: 196
