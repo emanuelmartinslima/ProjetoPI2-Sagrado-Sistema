@@ -62,30 +62,30 @@ app.get("/google/redirect", async (req, res) => {
     const { tokens } = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);
     fs.writeFileSync("creds.json", JSON.stringify(tokens));
-    res.send("sucess");
+    res.redirect("/telaInicial");
 });
 
-app.get("/copiarDocumento/:algumTexto", async (req, res)=>{
-    const drive = google.drive({
-        version: 'v3',
-        auth: oauth2Client
-    });
+// app.get("/copiarDocumento/:algumTexto", async (req, res)=>{
+//     const drive = google.drive({
+//         version: 'v3',
+//         auth: oauth2Client
+//     });
 
-    const algumTexto = req.params.algumTexto;
+//     const algumTexto = req.params.algumTexto;
 
-    await drive.files.create({
-        requestBody: {
-            name: 'text.txt',
-            mimeType: 'text/plain'
-        },
-        media: {
-            mimeType: 'text/plain',
-            body: algumTexto
-        }
-    });
+//     await drive.files.create({
+//         requestBody: {
+//             name: 'text.txt',
+//             mimeType: 'text/plain'
+//         },
+//         media: {
+//             mimeType: 'text/plain',
+//             body: algumTexto
+//         }
+//     });
 
-    return "Success";
-});
+//     return "Success";
+// });
 
 async function criarOperador() {
     try {

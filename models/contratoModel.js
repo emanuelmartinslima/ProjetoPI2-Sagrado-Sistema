@@ -34,8 +34,8 @@ const Contratos = db.sequelize.define("contratos", {
     numeroParcelas: {
         type: db.Sequelize.INTEGER
     },
-    documento: {
-        type: db.Sequelize.BLOB
+    idDocumento: {
+        type: db.Sequelize.STRING
     }
 });
 
