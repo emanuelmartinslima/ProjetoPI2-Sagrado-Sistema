@@ -8,6 +8,8 @@ const handlebars = require("handlebars");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const {google} = require("googleapis");
+const fs = require("fs");
 
 const cliente = require("./models/clienteModel.js");
 const contrato = require("./models/contratoModel.js");
@@ -30,6 +32,61 @@ app.use(express.static(imagesDirectory));
 app.use("/", require("./routes/pages"));
 app.use("/auth", require("./routes/auth.js"));
 
+const oauth2Client = new google.auth.OAuth2({
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: process.env.REDIRECT_URI
+});
+
+try {
+    const creds = fs.readFileSync("creds.json");
+    oauth2Client.setCredentials(JSON.parse(creds));
+} catch (error) {
+    console.log("Creds não encontrado!" + error);
+}
+
+app.get("/auth/google", (req, res) => {
+    const url = oauth2Client.generateAuthUrl({
+        access_type: "offline",
+        scope: ["https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/documents",
+            "https://www.googleapis.com/auth/drive"
+        ]
+    });
+
+    res.redirect(url);
+});
+
+app.get("/google/redirect", async (req, res) => {
+    const { code } = req.query;
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+    fs.writeFileSync("creds.json", JSON.stringify(tokens));
+    res.send("sucess");
+});
+
+app.get("/copiarDocumento/:algumTexto", async (req, res)=>{
+    const drive = google.drive({
+        version: 'v3',
+        auth: oauth2Client
+    });
+
+    const algumTexto = req.params.algumTexto;
+
+    await drive.files.create({
+        requestBody: {
+            name: 'text.txt',
+            mimeType: 'text/plain'
+        },
+        media: {
+            mimeType: 'text/plain',
+            body: algumTexto
+        }
+    });
+
+    return "Success";
+});
+
 async function criarOperador() {
     try {
         const senha = "123";
@@ -39,10 +96,10 @@ async function criarOperador() {
         const hashPassword = await bcrypt.hash(senha, salt);
 
         const novoOperador = await Usuario.create({
-            cargo: "operador",              
-            email: "operador@gmail.com",       
-            senha: hashPassword,       
-            nome: "Operador da Silva",   
+            cargo: "operador",
+            email: "operador@gmail.com",
+            senha: hashPassword,
+            nome: "Operador da Silva",
             cpf: "12345678910"
         });
 
@@ -61,10 +118,10 @@ async function criarGerente() {
         const hashPassword = await bcrypt.hash(senha, salt);
 
         const novoGerente = await Usuario.create({
-            cargo: "gerente",              
-            email: "gerente@gmail.com",       
-            senha: hashPassword,       
-            nome: "Gerente da Silva",   
+            cargo: "gerente",
+            email: "gerente@gmail.com",
+            senha: hashPassword,
+            nome: "Gerente da Silva",
             cpf: "10987654321"
         });
 
