@@ -112,4 +112,29 @@ router.get('/formDeletarProdutos', autenticar.autenticarToken, (req, res) => {
     res.render('formDeletarProdutos');
 });
 
+router.get('/gerarRelatorios', autenticar.autenticarToken, (req, res) => {
+    res.render('gerarRelatorios');
+});
+
+router.get('/gerarRelatoriosOp', autenticar.autenticarToken, (req, res) => {
+    res.render('gerarRelatoriosOp');
+});
+
+router.get('/relatorioComissoes', autenticar.autenticarToken, (req, res) => {
+    res.render('relatorioComissoes');
+});
+
+router.get('/relatorioVendas', autenticar.autenticarToken, (req, res) => {
+    res.render('relatorioVendas');
+});
+
+router.get('/relatorioVendasOp', autenticar.autenticarToken, (req, res) => {
+    res.render('relatorioVendasOp');
+});
+
+router.get('/relatorioComissoesOp', autenticar.autenticarToken, (req, res) => {
+    res.render('relatorioComissoesOp    ');
+});
+
+
 module.exports = router;

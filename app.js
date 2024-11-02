@@ -74,7 +74,7 @@ app.get("/google/redirect", async (req, res) => {
 //     const algumTexto = req.params.algumTexto;
 
 //     await drive.files.create({
-//         requestBody: {
+//       requestBody: {
 //             name: 'text.txt',
 //             mimeType: 'text/plain'
 //         },
@@ -131,8 +131,8 @@ async function criarGerente() {
     }
 }
 
-// criarOperador();
-// criarGerente();
+ //criarOperador();
+ //criarGerente();
 
 app.listen(8081, function () {
     console.log("Servidor ativo! Port: 8081");
