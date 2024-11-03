@@ -6,5 +6,12 @@ const Items = db.sequelize.define("items", {
     },
     valor: {
         type: db.Sequelize.FLOAT
+    },
+    lista: {
+        type: db.Sequelize.INTEGER
     }
 });
+
+// Items.sync({force: true});
+
+module.exports = Items;

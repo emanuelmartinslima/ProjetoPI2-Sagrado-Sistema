@@ -8,6 +8,10 @@ router.get("/", (req, res) => {
     res.render("index");
 });
 
+router.get("/calendario", (req, res)=>{
+    res.render("paginaCalendario");
+});
+
 router.get("/emailConfirmacao", (req, res) => {
     res.render("emailConfirmacao");
 });

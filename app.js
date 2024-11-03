@@ -49,6 +49,7 @@ app.get("/auth/google", (req, res) => {
     const url = oauth2Client.generateAuthUrl({
         access_type: "offline",
         scope: ["https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.google.com/calendar/feeds",
             "https://www.googleapis.com/auth/documents",
             "https://www.googleapis.com/auth/drive"
         ]
@@ -64,28 +65,6 @@ app.get("/google/redirect", async (req, res) => {
     fs.writeFileSync("creds.json", JSON.stringify(tokens));
     res.redirect("/telaInicial");
 });
-
-// app.get("/copiarDocumento/:algumTexto", async (req, res)=>{
-//     const drive = google.drive({
-//         version: 'v3',
-//         auth: oauth2Client
-//     });
-
-//     const algumTexto = req.params.algumTexto;
-
-//     await drive.files.create({
-//         requestBody: {
-//             name: 'text.txt',
-//             mimeType: 'text/plain'
-//         },
-//         media: {
-//             mimeType: 'text/plain',
-//             body: algumTexto
-//         }
-//     });
-
-//     return "Success";
-// });
 
 async function criarOperador() {
     try {

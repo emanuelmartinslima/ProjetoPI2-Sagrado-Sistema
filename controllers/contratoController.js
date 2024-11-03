@@ -1,5 +1,8 @@
 const Contrato = require("../models/contratoModel");
 const Cliente = require("../models/clienteModel");
+const ListaProdutos = require("../models/listaProdutos");
+const Produto = require("../models/produtoModel");
+const Items = require("../models/itemModel");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
@@ -8,9 +11,7 @@ const { text } = require("body-parser");
 const { google } = require("googleapis");
 
 exports.registrarContrato = async (req, res) => {
-    const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal } = req.body;
-
-    const body = req.body
+    const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal, produtos } = req.body;
 
     const cliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
 
@@ -18,6 +19,21 @@ exports.registrarContrato = async (req, res) => {
     const token = req.cookies.token;
     const secret = process.env.SECRET;
     const payloadToken = jwt.verify(token, secret);
+
+    const lista = await ListaProdutos.create({
+        valorTotal: valorTotal
+    });
+
+    console.log(produtos);
+
+    // produtos.map(async (produto)=>{
+    //     const produtoSelecionado = await Produto.findOne({where: produto});
+
+    //     await Items.create({
+    //         valor: produtoSelecionado.valorUnidade,
+    //         lista: lista.id
+    //     });
+    // });
 
     await Contrato.create({
         idCliente: cliente.id,
