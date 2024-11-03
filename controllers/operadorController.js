@@ -93,7 +93,7 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
     <html>
       <body style="font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;">
         <div style="background-color:  rgb(49, 04, 59); padding: 10px; text-align: center;">
-          <img src="/Logoextendido.png alt="Logo da Empresa" style="height: 50px;">
+          <img src="/Logoextendido.svg" alt="Logo da Empresa" style="height: 50px;">
         </div>
 
         <!-- Corpo do e-mail -->

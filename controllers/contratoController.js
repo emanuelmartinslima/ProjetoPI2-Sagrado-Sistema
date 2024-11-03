@@ -11,7 +11,7 @@ const { text } = require("body-parser");
 const { google } = require("googleapis");
 
 exports.registrarContrato = async (req, res) => {
-    const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal, produtos } = req.body;
+    const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal } = req.body;
 
     const cliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
 
@@ -24,16 +24,17 @@ exports.registrarContrato = async (req, res) => {
         valorTotal: valorTotal
     });
 
-    console.log(produtos);
+    const produtos = req.body.produtos;
 
-    // produtos.map(async (produto)=>{
-    //     const produtoSelecionado = await Produto.findOne({where: produto});
+    produtos.forEach(async (produto)=>{
+        const produtoSelecionado = await Produto.findOne({where: {id: produto}});
 
-    //     await Items.create({
-    //         valor: produtoSelecionado.valorUnidade,
-    //         lista: lista.id
-    //     });
-    // });
+        await Items.create({
+            produtoId: produtoSelecionado.id,
+            valor: produtoSelecionado.valorUnidade,
+            lista: lista.id
+        });
+    });
 
     await Contrato.create({
         idCliente: cliente.id,
@@ -51,7 +52,7 @@ exports.registrarContrato = async (req, res) => {
         console.log("Contrato criado com sucesso!")
         const numeroContrato = await Contrato.count();
         const contrato = await Contrato.findOne({where: {id: numeroContrato}});
-        criarDocumentoContrato(contrato);
+        criarDocumentoContrato(contrato, lista);
         res.redirect("/telaInicial");
     }).catch((error) => {
         console.log("Erro: ", error)
@@ -64,7 +65,7 @@ const oauth2Client = new google.auth.OAuth2({
     redirectUri: process.env.REDIRECT_URI
 });
 
-async function criarDocumentoContrato(contrato){
+async function criarDocumentoContrato(contrato, lista){
     const creds = fs.readFileSync('creds.json');
     const tokens = JSON.parse(creds);
     oauth2Client.setCredentials(tokens);
@@ -80,6 +81,21 @@ async function criarDocumentoContrato(contrato){
     });
 
     const cliente = await Cliente.findOne({where: {id: contrato.idCliente}});
+
+    const items = await Items.findAll({where: {lista: lista.id}});
+
+    let paragrafoProdutos = "";
+
+    items.forEach(async (item)=>{
+        const produtoItem = await Produto.findOne({where: {id: item.produtoId}});
+
+        paragrafoProdutos += 
+        `
+        Item Escolhido: ${produtoItem.nome}
+        Dimensões Aproximadas: ${produtoItem.dimensoes}
+        Obs:
+        `;
+    });
 
     const data = new Date();
 
@@ -122,6 +138,15 @@ async function criarDocumentoContrato(contrato){
                     matchCase: true
                 },
                 replaceText: `${cliente.endereco}`
+            }
+        },
+        {
+            replaceAllText: {
+                containsText: {
+                    text: '{{listaProduto}}',
+                    matchCase: true
+                },
+                replaceText: `${paragrafoProdutos}`
             }
         },
         {
