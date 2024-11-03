@@ -15,6 +15,6 @@ const Clientes = db.sequelize.define("clientes", {
     }
 });
 
-// Clientes.sync({force: true});
+ //Clientes.sync({force: true});
 
 module.exports = Clientes;

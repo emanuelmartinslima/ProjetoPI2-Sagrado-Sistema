@@ -88,11 +88,35 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
 
     const url = `${req.protocol}://${req.get('host')}/redefinirSenha`;
 
+    const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+      <body style="font-family: Arial, sans-serif; color: #333; margin: 0; padding: 0;">
+        <div style="background-color:  rgb(49, 04, 59); padding: 10px; text-align: center;">
+          <img src="/Logoextendido.png alt="Logo da Empresa" style="height: 50px;">
+        </div>
+
+        <!-- Corpo do e-mail -->
+        <div style="padding: 20px; color: Black; ">
+          <h2>Olá, ${usuario.nome}</h2>
+          <p>Recebemos uma solicitação para redefinir sua senha.</p>
+          <p>Para criar uma nova senha, clique no botão abaixo:</p>
+
+          <a href="${url}" style="display: inline-block; padding: 8px 16px; margin: 10px 0; background-color: #197ACF; color: white; text-decoration: none; border-radius: 5px;">Redefinir senha</a>
+          
+          <p>Se você não solicitou essa alteração, ignore este e-mail.</p>
+          <p>Atenciosamente,</p>
+          <p>Sagrado Neon </p>
+        </div>
+      </body>
+    </html>
+    `;
+
     transporter.sendMail({
         to: usuario.email,
         from: process.env.MAIL_USER,
         subject: "Sagrado Sistema - Redefinição de Senha",
-        html: `<a href=${url}>Clique neste link para redefinir a senha!</a>`
+        html: htmlContent
     });
 
     res.redirect("/");
