@@ -5,9 +5,6 @@ const Produto = require("../models/produtoModel");
 const Items = require("../models/itemModel");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
-const path = require("path");
-const { Document, Packer, Paragraph, TextRun, Alignment, Header, Media , ImageRun} = require("docx");
-const { text } = require("body-parser");
 const { google } = require("googleapis");
 
 exports.registrarContrato = async (req, res) => {
@@ -15,7 +12,6 @@ exports.registrarContrato = async (req, res) => {
 
     const cliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
 
-    console.log(cliente);
     const token = req.cookies.token;
     const secret = process.env.SECRET;
     const payloadToken = jwt.verify(token, secret);
@@ -101,7 +97,14 @@ async function criarDocumentoContrato(contrato, lista){
 
     const ano = data.getFullYear();
     const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const dia = String(data.getDay()).padStart(2, '0');
+
+    const mesString = mesParaString(mes);
+
+    const diaNaoFormatado = String(data.getDate());
+
+    let dia;
+
+    if(diaNaoFormatado < 10) dia = `0${diaNaoFormatado}`; 
 
     const dataFormatada = `${dia}${mes}`;
 
@@ -218,7 +221,7 @@ async function criarDocumentoContrato(contrato, lista){
                     text: '{{mes}}',
                     matchCase: true
                 },
-                replaceText: `${mes}`
+                replaceText: `${mesString}`
             }
         },
         {
@@ -240,5 +243,24 @@ async function criarDocumentoContrato(contrato, lista){
     });
 
     contrato.update({idDocumento: documentoAtualizado.data.id});
+}
+
+function mesParaString(mes){
+    const meses = [
+        'Jan',
+        'Fev',
+        'Mar',
+        'Abr',
+        'Mai',
+        'Jun',
+        'Jul',
+        'Ago',
+        'Set',
+        'Out',
+        'Nov',
+        'Dez'
+    ];
+
+    return meses[mes - 1];
 }
 
