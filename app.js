@@ -8,7 +8,7 @@ const handlebars = require("handlebars");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const {google} = require("googleapis");
+const { google } = require("googleapis");
 const fs = require("fs");
 
 const cliente = require("./models/clienteModel.js");
@@ -38,12 +38,19 @@ const oauth2Client = new google.auth.OAuth2({
     redirectUri: process.env.REDIRECT_URI
 });
 
-try {
-    const creds = fs.readFileSync("creds.json");
-    oauth2Client.setCredentials(JSON.parse(creds));
-} catch (error) {
-    console.log("Creds não encontrado!" + error);
-}
+app.get("/validarTokenGoogle", (req, res) => {
+    try {
+        const creds = fs.readFileSync("creds.json");
+        oauth2Client.setCredentials(JSON.parse(creds));
+
+        console.log("Credencial válida, usuário logado!");
+    
+        res.redirect("/telaInicial");
+    } catch (error) {
+        console.log("Creds não encontrado!" + error);
+        res.redirect("/auth/google");
+    }
+});
 
 app.get("/auth/google", (req, res) => {
     const url = oauth2Client.generateAuthUrl({
@@ -61,6 +68,7 @@ app.get("/auth/google", (req, res) => {
 app.get("/google/redirect", async (req, res) => {
     const { code } = req.query;
     const { tokens } = await oauth2Client.getToken(code);
+
     oauth2Client.setCredentials(tokens);
     fs.writeFileSync("creds.json", JSON.stringify(tokens));
     res.redirect("/telaInicial");
@@ -110,8 +118,8 @@ async function criarGerente() {
     }
 }
 
- //criarOperador();
- //criarGerente();
+//criarOperador();
+//criarGerente();
 
 app.listen(8081, function () {
     console.log("Servidor ativo! Port: 8081");

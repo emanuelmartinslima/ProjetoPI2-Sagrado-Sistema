@@ -22,15 +22,15 @@ exports.registrarContrato = async (req, res) => {
 
     const produtos = req.body.produtos;
 
-    produtos.forEach(async (produto)=>{
-        const produtoSelecionado = await Produto.findOne({where: {id: produto}});
+    for(let i = 0; i < produtos.lenght; i++){
+        const produtoSelecionado = await Produto.findOne({where: {id: produtos[i]}});
 
         await Items.create({
             produtoId: produtoSelecionado.id,
             valor: produtoSelecionado.valorUnidade,
             lista: lista.id
         });
-    });
+    }
 
     await Contrato.create({
         idCliente: cliente.id,
@@ -115,7 +115,6 @@ async function criarDocumentoContrato(contrato, lista){
     const anoEvento = dataEventoNaoFormatada.split("-")[0]
 
     const dataEvento = `${diaEvento}/${mesEvento}/${anoEvento}`;
-    console.log(`Data Evento: ${dataEvento}`);
 
     const copiaDocumento = await drive.files.copy({
         fileId: '1yYsbk87kuPZlaYT5t2pWT6L8ArvcYiZBESNZtOhMksg',

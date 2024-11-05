@@ -362,8 +362,6 @@ async function carregarListaDeProdutos(produtoSelecionado) {
     try {
         const response = await fetch('/auth/produtos'); // Altere a URL para a sua API de produtos
         const produtos = await response.json();
-        
-        console.log(produtos); // Adicione isso para verificar a estrutura dos dados
 
         // Limpa as opções existentes no select
         produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>';
