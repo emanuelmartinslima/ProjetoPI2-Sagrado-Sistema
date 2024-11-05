@@ -360,7 +360,7 @@
         // Carregar a lista de produtos
 async function carregarListaDeProdutos(produtoSelecionado) {
     try {
-        const response = await fetch('/auth/produtos'); // Altere a URL para a sua API de produtos
+        const response = await fetch('/auth/produtosDisponiveis'); // Altere a URL para a sua API de produtos
         const produtos = await response.json();
         
         console.log(produtos); // Adicione isso para verificar a estrutura dos dados

@@ -5,7 +5,7 @@
     "cookie-parser": "^1.4.6",
     "docx": "^9.0.2",
     "dotenv": "^16.4.5",
-    "express": "^4.21.0",
+    "express": "^4.21.1",
     "googleapis": "^144.0.0",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",

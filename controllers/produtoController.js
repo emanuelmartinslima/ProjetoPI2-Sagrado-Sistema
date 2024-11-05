@@ -56,6 +56,17 @@ exports.buscarProdutos = async (req, res) => {
     }
 };
 
+exports.buscarProdutosDisponiveis = async (req, res) => {
+    try {
+        const produtosList = await produto.findAll({ where : { disponibilidade : 1 }});
+        console.log("Produtos retornados:", produtosList); // Log para depuração
+        res.json(produtosList);
+    } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+        res.status(500).json({ message: "Erro ao buscar produtos." });
+    }
+};
+
 // Função para editar um produto existente
 exports.editarProduto = async (req, res) => {
     const { id } = req.params; // Assume que o ID do produto está na URL
@@ -86,6 +97,8 @@ exports.editarProduto = async (req, res) => {
         // Processa a disponibilidade
         if (disponibilidade !== undefined) {
             updatedData.disponibilidade = disponibilidade === 'on'; // Converte o valor para booleano
+        }else{
+            updatedData.disponibilidade = disponibilidade === 'off';
         }
 
         // Se uma nova imagem for enviada, processa e adiciona ao objeto

@@ -5,11 +5,8 @@ const router = express.Router();
 const authController = require("../controllers/auth");
 
 const operadorController = require("../controllers/operadorController");
-
 const clienteController = require("../controllers/clienteController");
-
 const contratoController = require("../controllers/contratoController");
-
 const produtoController = require("../controllers/produtoController");
 
 router.post("/registrar", authController.registrar);
@@ -37,6 +34,10 @@ router.post("/registrarContrato", contratoController.registrarContrato);
 router.post("/registrarProduto", produtoController.upload.single('imagem'), produtoController.registrarProduto);
 
 router.get('/produtos', produtoController.buscarProdutos);
+router.get('/produtosDisponiveis', produtoController.buscarProdutosDisponiveis);
+
+router.get('/contratos', contratoController.buscarContratos);
+router.get('/contratosGeral', contratoController.buscarContratosGeral);
 
 // Adicione esta linha para buscar um produto específico pelo ID
 router.get("/produtos/:id", produtoController.buscarProdutoPorId);
@@ -44,5 +45,7 @@ router.get("/produtos/:id", produtoController.buscarProdutoPorId);
 router.put("/produtos/:id", produtoController.upload.single('imagem'), produtoController.editarProduto);
 
 router.delete("/produtos/:id", produtoController.deletarProduto);
+
+router.get("/download/:idDocumento", contratoController.baixarContrato);
 
 module.exports = router;

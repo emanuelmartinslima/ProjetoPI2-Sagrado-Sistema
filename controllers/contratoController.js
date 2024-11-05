@@ -1,5 +1,6 @@
 const Contrato = require("../models/contratoModel");
 const Cliente = require("../models/clienteModel");
+const Usuario = require("../models/usuarioModel")
 const ListaProdutos = require("../models/listaProdutos");
 const Produto = require("../models/produtoModel");
 const Items = require("../models/itemModel");
@@ -7,11 +8,67 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const { google } = require("googleapis");
 
+
+exports.buscarContratos = async (req, res) => {
+    const token = req.cookies.token;
+    const secret = process.env.SECRET;
+    const payloadToken = jwt.verify(token, secret);
+
+    try {
+        // Busca os contratos associados ao operador
+        const contratosList = await Contrato.findAll({
+            where: { idOperador: payloadToken.id }
+        });
+
+        // Mapeia cada contrato para incluir o nome do cliente
+        const contratosComNomeCliente = await Promise.all(contratosList.map(async (contrato) => {
+            const cliente = await Cliente.findByPk(contrato.idCliente);
+            return {
+                ...contrato.toJSON(),
+                nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
+                idDocumento: contrato.idDocumento  // Incluindo o idDocumento
+            };
+        }));        
+
+        console.log("Contratos com nome do cliente:", contratosComNomeCliente);
+        res.json(contratosComNomeCliente);
+    } catch (error) {
+        console.error("Erro ao buscar contratos:", error);
+        res.status(500).json({ message: "Erro ao buscar contratos." });
+    }
+};
+
+exports.buscarContratosGeral = async (req, res) => {
+
+    try {
+        // Busca os contratos associados ao operador
+        const contratosList = await Contrato.findAll();
+
+        // Mapeia cada contrato para incluir o nome do cliente
+        const contratosComNomeCliente = await Promise.all(contratosList.map(async (contrato) => {
+            const cliente = await Cliente.findByPk(contrato.idCliente);
+            const operador = await Usuario.findByPk(contrato.idOperador);
+            return {
+                ...contrato.toJSON(),
+                nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
+                nomeOperador: operador ? operador.nome : "Operador não encontrado",
+                idDocumento: contrato.idDocumento  // Incluindo o idDocumento
+            };
+
+        }));        
+
+        console.log("Contratos com nome do cliente:", contratosComNomeCliente);
+        res.json(contratosComNomeCliente);
+    } catch (error) {
+        console.error("Erro ao buscar contratos:", error);
+        res.status(500).json({ message: "Erro ao buscar contratos." });
+    }
+};
+
 exports.registrarContrato = async (req, res) => {
     const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal } = req.body;
 
     const cliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
-
     const token = req.cookies.token;
     const secret = process.env.SECRET;
     const payloadToken = jwt.verify(token, secret);
@@ -22,15 +79,14 @@ exports.registrarContrato = async (req, res) => {
 
     const produtos = req.body.produtos;
 
-    produtos.forEach(async (produto)=>{
-        const produtoSelecionado = await Produto.findOne({where: {id: produto}});
-
+    for (const produto of produtos) {
+        const produtoSelecionado = await Produto.findOne({ where: { id: produto } });
         await Items.create({
             produtoId: produtoSelecionado.id,
             valor: produtoSelecionado.valorUnidade,
             lista: lista.id
         });
-    });
+    }
 
     await Contrato.create({
         idCliente: cliente.id,
@@ -45,13 +101,13 @@ exports.registrarContrato = async (req, res) => {
         dataPagamento: dataPagamento,
         numeroParcelas: numeroParcelas
     }).then(async () => {
-        console.log("Contrato criado com sucesso!")
+        console.log("Contrato criado com sucesso!");
         const numeroContrato = await Contrato.count();
-        const contrato = await Contrato.findOne({where: {id: numeroContrato}});
-        criarDocumentoContrato(contrato, lista);
+        const contrato = await Contrato.findOne({ where: { id: numeroContrato } });
+        await criarDocumentoContrato(contrato, lista);
         res.redirect("/telaInicial");
     }).catch((error) => {
-        console.log("Erro: ", error)
+        console.log("Erro: ", error);
     });
 }
 
@@ -61,61 +117,36 @@ const oauth2Client = new google.auth.OAuth2({
     redirectUri: process.env.REDIRECT_URI
 });
 
-async function criarDocumentoContrato(contrato, lista){
+async function criarDocumentoContrato(contrato, lista) {
     const creds = fs.readFileSync('creds.json');
     const tokens = JSON.parse(creds);
     oauth2Client.setCredentials(tokens);
 
-    const drive = google.drive({
-        version: 'v3',
-        auth: oauth2Client
-    });
+    const drive = google.drive({ version: 'v3', auth: oauth2Client });
+    const docs = google.docs({ version: 'v1', auth: oauth2Client });
+    const cliente = await Cliente.findOne({ where: { id: contrato.idCliente } });
 
-    const docs = google.docs({
-        version: 'v1',
-        auth: oauth2Client
-    });
-
-    const cliente = await Cliente.findOne({where: {id: contrato.idCliente}});
-
-    const items = await Items.findAll({where: {lista: lista.id}});
+    const items = await Items.findAll({ where: { lista: lista.id } });
 
     let paragrafoProdutos = "";
-
-    items.forEach(async (item)=>{
-        const produtoItem = await Produto.findOne({where: {id: item.produtoId}});
-
-        paragrafoProdutos += 
-        `
+    for (const item of items) {
+        const produtoItem = await Produto.findOne({ where: { id: item.produtoId } });
+        paragrafoProdutos += `
         Item Escolhido: ${produtoItem.nome}
         Dimensões Aproximadas: ${produtoItem.dimensoes}
         Obs:
         `;
-    });
+    }
 
     const data = new Date();
-
     const ano = data.getFullYear();
     const mes = String(data.getMonth() + 1).padStart(2, '0');
-
     const mesString = mesParaString(mes);
-
-    const diaNaoFormatado = String(data.getDate());
-
-    let dia;
-
-    if(diaNaoFormatado < 10) dia = `0${diaNaoFormatado}`; 
-
+    const dia = String(data.getDate()).padStart(2, '0');
     const dataFormatada = `${dia}${mes}`;
 
-    const dataEventoNaoFormatada = contrato.dataEvento;
-
-    const diaEvento = dataEventoNaoFormatada.split("-")[2];
-    const mesEvento = dataEventoNaoFormatada.split("-")[1]
-    const anoEvento = dataEventoNaoFormatada.split("-")[0]
-
-    const dataEvento = `${diaEvento}/${mesEvento}/${anoEvento}`;
-    console.log(`Data Evento: ${dataEvento}`);
+    const dataEventoArray = contrato.dataEvento.split("-");
+    const dataEvento = `${dataEventoArray[2]}/${dataEventoArray[1]}/${dataEventoArray[0]}`;
 
     const copiaDocumento = await drive.files.copy({
         fileId: '1yYsbk87kuPZlaYT5t2pWT6L8ArvcYiZBESNZtOhMksg',
@@ -251,25 +282,52 @@ async function criarDocumentoContrato(contrato, lista){
         }
     });
 
-    contrato.update({idDocumento: documentoAtualizado.data.id});
+    await contrato.update({ idDocumento: copiaDocumento.data.id });
 }
 
-function mesParaString(mes){
+function mesParaString(mes) {
     const meses = [
-        'Jan',
-        'Fev',
-        'Mar',
-        'Abr',
-        'Mai',
-        'Jun',
-        'Jul',
-        'Ago',
-        'Set',
-        'Out',
-        'Nov',
-        'Dez'
+        'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
+        'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
     ];
-
-    return meses[mes - 1];
+    return meses[parseInt(mes) - 1];
 }
+
+exports.baixarContrato = async (req, res) => {
+    const { idDocumento } = req.params;
+
+    try {
+        const creds = fs.readFileSync('creds.json');
+        const tokens = JSON.parse(creds);
+        oauth2Client.setCredentials(tokens);
+
+        const drive = google.drive({ version: 'v3', auth: oauth2Client });
+
+        // Tenta exportar o arquivo em formato DOCX
+        const file = await drive.files.export({
+            fileId: idDocumento,
+            mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        }, { responseType: 'stream' });
+
+        // Define os cabeçalhos para o download do arquivo
+        res.set({
+            'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'Content-Disposition': `attachment; filename="${idDocumento}.docx"`,
+        });
+
+        // Envia o arquivo como resposta
+        file.data.on('end', () => {
+            console.log('Download concluído.');
+        }).on('error', (err) => {
+            console.error('Erro durante o download:', err);
+            res.status(500).send('Erro ao baixar o contrato.');
+        }).pipe(res);
+    } catch (error) {
+        console.error("Erro ao baixar o contrato:", error);
+        if (error.code === 404) {
+            return res.status(404).send('Arquivo não encontrado.');
+        }
+        res.status(500).send('Erro ao baixar o contrato.');
+    }
+};
 
