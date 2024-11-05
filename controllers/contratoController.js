@@ -108,6 +108,15 @@ async function criarDocumentoContrato(contrato, lista){
 
     const dataFormatada = `${dia}${mes}`;
 
+    const dataEventoNaoFormatada = contrato.dataEvento;
+
+    const diaEvento = dataEventoNaoFormatada.split("-")[2];
+    const mesEvento = dataEventoNaoFormatada.split("-")[1]
+    const anoEvento = dataEventoNaoFormatada.split("-")[0]
+
+    const dataEvento = `${diaEvento}/${mesEvento}/${anoEvento}`;
+    console.log(`Data Evento: ${dataEvento}`);
+
     const copiaDocumento = await drive.files.copy({
         fileId: '1yYsbk87kuPZlaYT5t2pWT6L8ArvcYiZBESNZtOhMksg',
         requestBody: {
@@ -158,7 +167,7 @@ async function criarDocumentoContrato(contrato, lista){
                     text: '{{dataEvento}}',
                     matchCase: true
                 },
-                replaceText: `${contrato.dataEvento}`
+                replaceText: `${dataEvento}`
             }
         },
         {
