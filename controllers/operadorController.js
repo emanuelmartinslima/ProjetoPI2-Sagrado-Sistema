@@ -9,20 +9,16 @@ exports.atualizar = async (req, res) => {
 
     jwt.verify(token, secret, async (error, user) => {
         const { nome, email } = req.body
-
         const usuario = await Usuario.findOne({ where: { id: user.id } });
 
         try {
             const verificarUsuario = await Usuario.findOne({ where: { cpf: usuario.cpf } });
-
             if (!verificarUsuario) {
                 return;
             } else {
                 usuario.update({ nome: nome, email: email }, { where: { cpf: usuario.cpf } });
-
                 res.redirect("/telaInicial");
             }
-
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: "Erro no servidor" });
@@ -33,16 +29,13 @@ exports.atualizar = async (req, res) => {
 exports.atualizarOperador = async (req, res) => {
     try {
         const { cpf, nome, email, gerente } = req.body;
-
         const cargo = gerente ? 'gerente' : 'operador';
-
         const operador = Usuario.findOne({ where: { cpf: cpf } });
 
         if (!operador) {
             console.log("Operador não encontrado!");
             res.redirect("telaInicial");
         }
-
         Usuario.update({ nome: nome, email: email, cargo: cargo }, { where: { cpf: cpf } });
         res.redirect("../telaInicial");
     } catch (error) {
@@ -52,17 +45,14 @@ exports.atualizarOperador = async (req, res) => {
 
 exports.enviarEmailAtualizarSenha = async (req, res) => {
     const email = req.body.email;
-
     const usuario = await Usuario.findOne({ where: { email: email } });
 
     if (!usuario) {
         console.log("Usuário não encontrado");
-
         res.redirect("/");
     }
 
     const secret = process.env.SECRET;
-
     const token = jwt.sign({
         'id': usuario.id
     },
@@ -71,7 +61,6 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
             expiresIn: '5min'
         }
     );
-
     res.cookie('tokenRedefinirSenha', token, { httpOnly: true });
 
     const transporter = nodemailer.createTransport({
@@ -87,7 +76,6 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
     //Código de verificação do twillo: WKAM8YFDV5UDTAGTYA4DDDPX
 
     const url = `${req.protocol}://${req.get('host')}/redefinirSenha`;
-
     const htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -118,7 +106,6 @@ exports.enviarEmailAtualizarSenha = async (req, res) => {
         subject: "Sagrado Sistema - Redefinição de Senha",
         html: htmlContent
     });
-
     res.redirect("/");
 }
 
@@ -133,43 +120,33 @@ exports.redefinirSenha = async (req, res) => {
     const secret = process.env.SECRET;
 
     try {
-        // Verifica o token e trata o caso de expiração
         const payloadToken = jwt.verify(token, secret);
-
         const salt = await bcrypt.genSalt(12);
         const hashSenha = await bcrypt.hash(senha, salt);
-
-        // Atualiza a senha no banco de dados
         await Usuario.update({ senha: hashSenha }, { where: { id: payloadToken.id } });
-
-        // Redireciona para a página de login após redefinir a senha
         res.redirect("/");
 
     } catch (error) {
-        // Captura o erro de token expirado e outros possíveis erros
         if (error.name === 'TokenExpiredError') {
             return res.status(401).send("Token expirado. Solicite novamente a redefinição de senha.");
         }
-        // Para outros erros
         res.status(500).send("Erro ao redefinir senha.");
     }
 }
 
 exports.verificarUsuario = async (req, res, next) => {
     const { email } = req.body;
-
     const usuario = await Usuario.findOne({ where: { email: email } });
 
     if (!usuario) {
         console.log("Usuário não existente");
-        // Redireciona para a página de redefinição de senha e envia uma mensagem através do corpo
         return res.send(`<script>
             alert('Email não encontrado! Tente novamente.');
             window.location.href = '/redefinirSenha';
         </script>`);
     } else {
-        next(); // Chama o próximo middleware se o usuário existir
-    } 
+        next();
+    }
 }
 
 exports.buscarPorCPF = async (req, res) => {
@@ -177,7 +154,6 @@ exports.buscarPorCPF = async (req, res) => {
 
     try {
         const usuario = await Usuario.findOne({ where: { cpf: cpf } });
-
         if (usuario) {
             res.json({
                 nome: usuario.nome,

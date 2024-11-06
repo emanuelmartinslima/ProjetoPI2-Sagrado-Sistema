@@ -17,10 +17,10 @@ const Produtos = db.sequelize.define("produtos", {
         type: db.Sequelize.TEXT
     },
     imagem: {
-        type: db.Sequelize.TEXT // Altera de BLOB para TEXT para armazenar a string Base64
+        type: db.Sequelize.TEXT
     }
 });
 
-// Produtos.sync({force: true}); // Use isso se você quiser reinicializar a tabela e perder os dados
+// Produtos.sync({force: true});
 
 module.exports = Produtos;

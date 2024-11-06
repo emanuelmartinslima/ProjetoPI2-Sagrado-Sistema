@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-
 const app = express();
 
 const bodyParser = require("body-parser");
@@ -77,11 +76,8 @@ app.get("/google/redirect", async (req, res) => {
 async function criarOperador() {
     try {
         const senha = "123";
-
         const salt = await bcrypt.genSalt(12);
-
         const hashPassword = await bcrypt.hash(senha, salt);
-
         const novoOperador = await Usuario.create({
             cargo: "operador",
             email: "operador@gmail.com",
@@ -89,7 +85,6 @@ async function criarOperador() {
             nome: "Operador da Silva",
             cpf: "12345678910"
         });
-
         console.log("Operador criado com sucesso:", novoOperador.toJSON());
     } catch (error) {
         console.error("Erro ao criar operador:", error);
@@ -99,11 +94,8 @@ async function criarOperador() {
 async function criarGerente() {
     try {
         const senha = "321";
-
         const salt = await bcrypt.genSalt(12);
-
         const hashPassword = await bcrypt.hash(senha, salt);
-
         const novoGerente = await Usuario.create({
             cargo: "gerente",
             email: "gerente@gmail.com",
@@ -111,7 +103,6 @@ async function criarGerente() {
             nome: "Gerente da Silva",
             cpf: "10987654321"
         });
-
         console.log("Operador criado com sucesso:", novoGerente.toJSON());
     } catch (error) {
         console.error("Erro ao criar operador:", error);

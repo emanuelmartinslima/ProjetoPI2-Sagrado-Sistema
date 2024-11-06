@@ -74,7 +74,7 @@
 
                             <li><a class="dropdown-item" href="cadastro">Cadastrar Usuário</a></li>
                             <li><a class="dropdown-item" href="gerarRelatorios">Gerar Relatórios</a></li>
-                            <li><a class="dropdown-item" href="cadastrarClienteGerente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="produtos">Produtos</a></li>
                             <li><a class="dropdown-item" href="sair">Sair</a></li>
@@ -94,7 +94,7 @@
                     <div class="w-100 p-4 text-center"
                         style="background-color: var(--navbar-background-color); border-radius: 10px;">
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
-                        <form id="registrationForm" style="width: 100%;" action="/auth/registrarClienteGerente"
+                        <form id="registrationForm" style="width: 100%;" action="/auth/registrarCliente"
                             method="post">
                             <p style="font-size: medium; color: var(--text-color);">Cadastrar novo cliente.</p>
                             <!-- campo de nome -->
@@ -162,36 +162,58 @@
                 : '<i class="bi bi-moon-fill"></i>';
         });
 
-        // Validação do formulário
-        document.getElementById('registrationForm').addEventListener('submit', function (event) {
-            let isValid = true;
-            const fields = [
-                'nome',
-                'cpfCnpj',
-                'endereco',
-                'contato'
-            ];
-            let emptyFields = false;
+    document.getElementById('registrationForm').addEventListener('submit', function (event) {
+        // Impede o envio imediato do formulário
+        event.preventDefault();
 
-            fields.forEach(id => {
-                const input = document.getElementById(id);
-                if (!input.value.trim()) {
-                    input.classList.add('is-invalid');
-                    emptyFields = true;
-                } else {
-                    input.classList.remove('is-invalid');
-                }
-            });
+        let isValid = true;
+        const fields = [
+            'nome',
+            'cpfCnpj',
+            'endereco',
+            'contato'
+        ];
+        let emptyFields = false;
 
-            if (emptyFields) {
-                alert('Por favor, preencha os campos obrigatórios.');
-                isValid = false;
-            }
-
-            if (!isValid) {
-                event.preventDefault(); // Impede o envio do formulário se houver campos inválidos
+        fields.forEach(id => {
+            const input = document.getElementById(id);
+            if (!input.value.trim()) {
+                input.classList.add('is-invalid');
+                emptyFields = true;
+            } else {
+                input.classList.remove('is-invalid');
             }
         });
+
+        if (emptyFields) {
+            alert('Por favor, preencha os campos obrigatórios.');
+            isValid = false;
+        }
+
+        if (isValid) {
+            // Validação adicional no CPF/CNPJ
+            const cpfCnpj = document.getElementById('cpfCnpj').value;
+
+            fetch('/auth/locate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ cpfCnpj })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cliente já cadastrado!');
+                } else {
+                    document.getElementById('registrationForm').submit();
+                }
+            })
+            .catch(error => {
+                console.log("Erro na requisição:", error);
+            });
+        }
+    });
     </script>
 
     <footer class="text-light text-center py-3" style="background-color: var(--navbar-background-color);">
