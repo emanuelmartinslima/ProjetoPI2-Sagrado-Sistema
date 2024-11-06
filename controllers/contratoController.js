@@ -1,4 +1,5 @@
 const Contrato = require("../models/contratoModel");
+const calendarioController = require("./calendarioController");
 const Cliente = require("../models/clienteModel");
 const Usuario = require("../models/usuarioModel")
 const ListaProdutos = require("../models/listaProdutos");
@@ -88,7 +89,7 @@ exports.registrarContrato = async (req, res) => {
         });
     }
 
-    await Contrato.create({
+    const contrato = await Contrato.create({
         idCliente: cliente.id,
         idOperador: payloadToken.id,
         valor: valorTotal,
@@ -100,15 +101,18 @@ exports.registrarContrato = async (req, res) => {
         formaPagamento: formaPagamento,
         dataPagamento: dataPagamento,
         numeroParcelas: numeroParcelas
-    }).then(async () => {
-        console.log("Contrato criado com sucesso!");
-        const numeroContrato = await Contrato.count();
-        const contrato = await Contrato.findOne({ where: { id: numeroContrato } });
-        await criarDocumentoContrato(contrato, lista);
-        res.redirect("/telaInicial");
-    }).catch((error) => {
+    })
+        
+    if(!contrato){
         console.log("Erro: ", error);
-    });
+        return;
+    }
+
+    console.log("Contrato criado com sucesso!");
+    await criarDocumentoContrato(contrato, lista);
+    calendarioController.gerarEventoContrato(contrato, lista);
+
+    res.redirect("/telaInicial");
 }
 
 const oauth2Client = new google.auth.OAuth2({

@@ -71,6 +71,8 @@ app.get("/google/redirect", async (req, res) => {
 
     oauth2Client.setCredentials(tokens);
     fs.writeFileSync("creds.json", JSON.stringify(tokens));
+
+    console.log("Foi preciso obter um novo token!");
     res.redirect("/telaInicial");
 });
 
