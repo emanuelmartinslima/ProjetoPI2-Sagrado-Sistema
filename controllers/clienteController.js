@@ -5,11 +5,13 @@ exports.locate = async (req, res) => {
     const verificarCliente = await cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
 
     if (verificarCliente) {
-        res.json({ success : true });
+        // Retorna os dados do cliente (nome e endereço)
+        res.json({ success: true, cliente: { nome: verificarCliente.nome, endereco: verificarCliente.endereco } });
     } else {
         res.json({ success: false, message: "Cliente não encontrado!" });
     }
-}
+};
+
 
 exports.registerCliente = async (req, res) => {
     console.log(req.body);

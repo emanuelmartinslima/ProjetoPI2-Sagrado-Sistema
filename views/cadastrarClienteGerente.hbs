@@ -258,6 +258,30 @@
             }
         });
 
+        document.getElementById('cpfCnpj').addEventListener('input', async function() {
+        const cpfCnpj = document.getElementById('cpfCnpj').value.trim();
+        
+        if (cpfCnpj.length === 11 || cpfCnpj.length === 14) {  // CPF ou CNPJ válido
+            const response = await fetch('/auth/locate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cpfCnpj: cpfCnpj })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Preenche automaticamente os campos
+                document.getElementById('contratante').value = data.cliente.nome;
+                document.getElementById('endereco').value = data.cliente.endereco;
+            } else {
+                // Limpa os campos se o cliente não for encontrado
+                document.getElementById('contratante').value = '';
+                document.getElementById('endereco').value = '';
+            }
+        }
+    });
+
     </script>
 
     <!-- Modal -->
