@@ -116,12 +116,28 @@ router.get('/formDeletarProdutos', autenticar.autenticarToken, (req, res) => {
     res.render('formDeletarProdutos');
 });
 
-router.get('/gerarRelatorios', autenticar.autenticarToken, (req, res) => {
-    res.render('gerarRelatorios');
+router.get("/gerarRelatorios", autenticar.autenticarToken, (req, res) => {
+    const usuarioCargo = req.user.cargo;
+
+    console.log("Cargo:" + usuarioCargo);
+
+    if(usuarioCargo !== 'gerente'){
+        res.render("gerarRelatoriosOp");
+    } else {
+        res.render("gerarRelatorios");
+    }
 });
 
-router.get('/gerarRelatoriosOp', autenticar.autenticarToken, (req, res) => {
-    res.render('gerarRelatoriosOp');
+router.get("/visualizarContratos", autenticar.autenticarToken, (req, res) => {
+    const usuarioCargo = req.user.cargo;
+
+    console.log("Cargo:" + usuarioCargo);
+
+    if(usuarioCargo !== 'gerente'){
+        res.render("visualizarContratos");
+    } else {
+        res.render("visualizarContratosGerente");
+    }
 });
 
 router.get('/relatorioComissoes', autenticar.autenticarToken, (req, res) => {
@@ -139,6 +155,5 @@ router.get('/relatorioVendasOp', autenticar.autenticarToken, (req, res) => {
 router.get('/relatorioComissoesOp', autenticar.autenticarToken, (req, res) => {
     res.render('relatorioComissoesOp    ');
 });
-
 
 module.exports = router;

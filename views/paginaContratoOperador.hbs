@@ -22,9 +22,7 @@
             --background-color: rgb(29, 5, 33);
             --text-color: #ffffff;
             --navbar-background-color: rgb(49, 04, 59);
-            /* Mantém a cor do navbar */
             --form-background-color: rgb(49, 04, 59);
-            /* Mantém a cor do formulário */
         }
 
         body {
@@ -48,15 +46,12 @@
 
         .title {
             color: var(--text-color);
-            /* Título com a cor do tema */
             margin-bottom: 20px;
         }
 
         .content-spacing {
             margin-top: 40px;
-            /* Espaço do topo */
             margin-bottom: 40px;
-            /* Espaço do fundo */
         }
 
         .btn-dark-mode {
@@ -78,7 +73,6 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
-
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                             <i class="bi bi-moon-fill"></i>
                         </button>
@@ -87,12 +81,11 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="">Gerar Relatórios</a></li>
+                            <li><a class="dropdown-item" href="gerarRelatorios">Gerar Relatórios</a></li>
                             <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="atualizarOperador">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="produtos">Produtos</a></li>
-                            <li><a class="dropdown-item" href="/">Sair</a></li>
-
+                            <li><a class="dropdown-item" href="sair">Sair</a></li>
                         </ul>
                     </div>
                 </ul>
@@ -101,7 +94,6 @@
     </nav>
 
     <div class="flex-grow-1" style="background-color: --background-color;">
-
         <div class="container mt-4 content-spacing">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10">
@@ -230,11 +222,6 @@
     </div>
 
     <script>
-        document.getElementById('enviarButton').addEventListener('click', function () {
-            // Redireciona para a página telaInicialGerente
-            window.location.href = '/telaInicial';
-        });
-
         // Função para preencher os campos com os dados do cliente
         function preencherDadosCliente() {
             document.getElementById("contratante").value = localStorage.getItem("contratante");
@@ -357,7 +344,7 @@
                 productSelect.innerHTML = `
                     <label for="produtoSelecionado${i}" class="col-sm-4 col-form-label">Produto:</label>
                     <div class="col-sm-8">
-                        <select class="form-select" id="produtoSelecionado${i}">
+                        <select class="form-select" id="produtoSelecionado${i}" name="produtos">
                             <option value="" disabled selected>Selecione um produto</option>
                         </select>
                     </div>
@@ -372,7 +359,7 @@
         // Carregar a lista de produtos
 async function carregarListaDeProdutos(produtoSelecionado) {
     try {
-        const response = await fetch('/auth/produtos'); // Altere a URL para a sua API de produtos
+        const response = await fetch('/auth/produtosDisponiveis'); // Altere a URL para a sua API de produtos
         const produtos = await response.json();
         
         console.log(produtos); // Adicione isso para verificar a estrutura dos dados
