@@ -9,28 +9,24 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const { google } = require("googleapis");
 
-
 exports.buscarContratos = async (req, res) => {
     const token = req.cookies.token;
     const secret = process.env.SECRET;
     const payloadToken = jwt.verify(token, secret);
 
     try {
-        // Busca os contratos associados ao operador
         const contratosList = await Contrato.findAll({
             where: { idOperador: payloadToken.id }
         });
 
-        // Mapeia cada contrato para incluir o nome do cliente
         const contratosComNomeCliente = await Promise.all(contratosList.map(async (contrato) => {
             const cliente = await Cliente.findByPk(contrato.idCliente);
             return {
                 ...contrato.toJSON(),
                 nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
-                idDocumento: contrato.idDocumento  // Incluindo o idDocumento
+                idDocumento: contrato.idDocumento
             };
-        }));        
-
+        }));
         console.log("Contratos com nome do cliente:", contratosComNomeCliente);
         res.json(contratosComNomeCliente);
     } catch (error) {
@@ -40,12 +36,8 @@ exports.buscarContratos = async (req, res) => {
 };
 
 exports.buscarContratosGeral = async (req, res) => {
-
     try {
-        // Busca os contratos associados ao operador
         const contratosList = await Contrato.findAll();
-
-        // Mapeia cada contrato para incluir o nome do cliente
         const contratosComNomeCliente = await Promise.all(contratosList.map(async (contrato) => {
             const cliente = await Cliente.findByPk(contrato.idCliente);
             const operador = await Usuario.findByPk(contrato.idOperador);
@@ -53,11 +45,9 @@ exports.buscarContratosGeral = async (req, res) => {
                 ...contrato.toJSON(),
                 nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
                 nomeOperador: operador ? operador.nome : "Operador não encontrado",
-                idDocumento: contrato.idDocumento  // Incluindo o idDocumento
+                idDocumento: contrato.idDocumento
             };
-
-        }));        
-
+        }));
         console.log("Contratos com nome do cliente:", contratosComNomeCliente);
         res.json(contratosComNomeCliente);
     } catch (error) {
@@ -68,8 +58,8 @@ exports.buscarContratosGeral = async (req, res) => {
 
 exports.registrarContrato = async (req, res) => {
     const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal } = req.body;
-
     const cliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
+
     const token = req.cookies.token;
     const secret = process.env.SECRET;
     const payloadToken = jwt.verify(token, secret);
@@ -77,7 +67,6 @@ exports.registrarContrato = async (req, res) => {
     const lista = await ListaProdutos.create({
         valorTotal: valorTotal
     });
-
     const produtos = req.body.produtos;
 
     for (const produto of produtos) {
@@ -147,8 +136,8 @@ async function criarDocumentoContrato(contrato, lista) {
     const mes = String(data.getMonth() + 1).padStart(2, '0');
     const mesString = mesParaString(mes);
     const dia = String(data.getDate()).padStart(2, '0');
-    const dataFormatada = `${dia}${mes}`;
 
+    const dataFormatada = `${dia}${mes}`;
     const dataEventoArray = contrato.dataEvento.split("-");
     const dataEvento = `${dataEventoArray[2]}/${dataEventoArray[1]}/${dataEventoArray[0]}`;
 
@@ -291,7 +280,7 @@ async function criarDocumentoContrato(contrato, lista) {
 
 function mesParaString(mes) {
     const meses = [
-        'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
+        'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
         'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
     ];
     return meses[parseInt(mes) - 1];
@@ -307,19 +296,16 @@ exports.baixarContrato = async (req, res) => {
 
         const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
-        // Tenta exportar o arquivo em formato DOCX
         const file = await drive.files.export({
             fileId: idDocumento,
             mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         }, { responseType: 'stream' });
 
-        // Define os cabeçalhos para o download do arquivo
         res.set({
             'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'Content-Disposition': `attachment; filename="${idDocumento}.docx"`,
         });
 
-        // Envia o arquivo como resposta
         file.data.on('end', () => {
             console.log('Download concluído.');
         }).on('error', (err) => {
