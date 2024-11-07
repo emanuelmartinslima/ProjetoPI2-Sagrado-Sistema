@@ -139,4 +139,20 @@ router.get("/calendario", (req, res)=>{
 
 router.get("/sair", autenticar.sair);
 
+router.get('/visualizarRealtoriosDeVendas', autenticar.autenticarToken, (req, res) => {
+    res.render('visualizarRealtoriosDeVendas ');
+});
+
+router.get('/visualizarRealtoriosDeVendasOp', autenticar.autenticarToken, (req, res) => {
+    res.render('visualizarRealtoriosDeVendasOp ');
+});
+
+router.get('/vizualizarRelatorioDeComissao', autenticar.autenticarToken, (req, res) => {
+    res.render('vizualizarRelatorioDeComissao');
+});
+
+router.get('/vizualizarRelatorioDeComissaoOp', autenticar.autenticarToken, (req, res) => {
+    res.render('vizualizarRelatorioDeComissaoOp ');
+});
+
 module.exports = router;
