@@ -18,6 +18,9 @@ const Produtos = db.sequelize.define("produtos", {
     },
     imagem: {
         type: db.Sequelize.TEXT
+    },
+    quantidadeEstoque: {
+        type: db.Sequelize.INTEGER
     }
 });
 

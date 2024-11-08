@@ -133,6 +133,24 @@ router.get("/relatorioVendas", autenticar.autenticarToken, (req, res) => {
     }
 });
 
+router.get("/visualizarRelatorioVendas", autenticar.autenticarToken, (req, res) => {
+    const usuarioCargo = req.user.cargo;
+    if(usuarioCargo !== 'gerente'){
+        res.render("vizualizarRelatorioDeVendasOp");
+    } else {
+        res.render("visualizarRealtoriosDeVendas");
+    }
+});
+
+router.get("/vizualizarRelatoriosDeComissao", autenticar.autenticarToken, (req, res) => {
+    const usuarioCargo = req.user.cargo;
+    if(usuarioCargo !== 'gerente'){
+        res.render("vizualizarRelatorioDeComissaoOp");
+    } else {
+        res.render("vizualizarRelatoriosDeComissao");
+    }
+});
+
 router.get("/calendario", (req, res)=>{
     res.render("paginaCalendario");
 });

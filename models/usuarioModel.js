@@ -25,15 +25,9 @@ const Usuarios = db.sequelize.define("usuarios", {
     },
     cnpj: {
         type: db.Sequelize.STRING,
-    },
-    salario: {
-        type: db.Sequelize.FLOAT
-    },
-    comissao: {
-        type: db.Sequelize.FLOAT
     }
 });
 
- //Usuarios.sync({force: true});
+//  Usuarios.sync({force: true});
 
 module.exports = Usuarios;

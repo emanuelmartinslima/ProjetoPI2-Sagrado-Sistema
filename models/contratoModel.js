@@ -39,9 +39,12 @@ const Contratos = db.sequelize.define("contratos", {
     },
     nomeDocumento: {
         type: db.Sequelize.STRING
+    },
+    lista: {
+        type: db.Sequelize.INTEGER
     }
 });
 
-// Contratos.sync({force: true});
+// Contratos.sync({alter: true});
 
 module.exports = Contratos;

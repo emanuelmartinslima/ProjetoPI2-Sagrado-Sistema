@@ -2,6 +2,9 @@ const { Op } = require("sequelize");
 const multer = require('multer');
 const sharp = require('sharp');
 const produto = require("../models/produtoModel");
+const Contrato = require("../models/contratoModel");
+const ListaProdutos = require("../models/listaProdutos");
+const Item = require("../models/itemModel");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -51,11 +54,56 @@ exports.buscarProdutos = async (req, res) => {
 
 exports.buscarProdutosDisponiveis = async (req, res) => {
     try {
-        const {dataEvento} = req.params;
-        const contratos = await Contratos.findAll();
-        const produtosList = await produto.findAll({ where: { disponibilidade: 1 } });
-        console.log("Produtos retornados:", produtosList);
-        res.json(produtosList);
+        const { dataEvento } = req.params;
+        const contratos = await Contrato.findAll({
+            where: {
+                dataEvento: dataEvento
+            }
+        });
+
+        const mapProdutos = new Map();
+        const mapProdutosIndisponiveis = new Map();
+
+        contratos.forEach(async (contrato) => {
+            console.log("Contratos na busca de produtos disponíveis: " + contrato.id);
+            const lista = await ListaProdutos.findByPk(contrato.lista);
+            console.log("Lista associada ao contrato: " + lista.id);
+            const items = await Item.findAll({ where: { lista: lista.id } });
+            items.forEach(async (item) => {
+                const produtos = await produto.findByPk(item.produtoId);
+                console.log(`Item associados a lista de produtos do contrato n° ${contrato.id}: ${item.id}\nProduto: ${produtos.nome}`);
+
+                const mapTemProduto = mapProdutos.has(produtos.id);
+                console.log("Mapa já tem esse produto: " + mapTemProduto);
+
+                if (mapTemProduto) {
+                    mapProdutos.set(produtos.id, mapProdutos.get(produtos.id) - 1);
+                    console.log("Tentando controlar a quantidade de produtos dentro do map\n" + mapProdutos.get(produtos.id) + `\nProduto: ${produtos.id} e quantidade ${produtos.quantidadeEstoque}`);
+
+                    mapProdutos.forEach((value, key, map)=>{
+                        console.log("Tentando colocar algum produto no map de produtos indisponíveis");
+                        if(value <= 0){
+                            mapProdutosIndisponiveis.set(key, key);
+                            console.log("Map de produtos indisponíveis: " + key + " " + mapProdutosIndisponiveis.get(key));
+                        }
+                    })
+                } else {
+                    mapProdutos.set(produtos.id, produtos.quantidadeEstoque);
+                    console.log("Tentando adicionar produto ao map\n" + mapProdutos.get(produtos.id) + `\nProduto: ${produtos.id} e quantidade ${produtos.quantidadeEstoque}`);
+                }
+            });
+        });
+
+        // mapProdutos.forEach((valor, chave) => {
+        //     console.log("Tentando colocar os produtos indisponíveis no map de produtos indisponíveis");
+        //     if(valor <= 0){
+        //         mapProdutosIndisponiveis.set(chave, valor);
+        //     }
+        // });
+
+        // const produtosList = await produto.findAll({ where: { disponibilidade: 1 } });
+        // console.log("Produtos retornados:", produtosList);
+        res.json(mapProdutosIndisponiveis);
     } catch (error) {
         console.error("Erro ao buscar produtos:", error);
         res.status(500).json({ message: "Erro ao buscar produtos." });

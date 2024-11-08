@@ -89,7 +89,8 @@ exports.registrarContrato = async (req, res) => {
         quantidadeProdutos: quantidadeProdutos,
         formaPagamento: formaPagamento,
         dataPagamento: dataPagamento,
-        numeroParcelas: numeroParcelas
+        numeroParcelas: numeroParcelas,
+        lista: lista.id
     })
 
     if (!contrato) {
@@ -307,7 +308,7 @@ exports.baixarContrato = async (req, res) => {
 
         res.set({
             'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'Content-Disposition': `attachment; filename="${contrato.nomeDocumento || idDocumento}.docx"`,
+            'Content-Disposition': `attachment; filename="${contrato.nomeDocumento || idDocumento}.word"`,
         });
 
         file.data.on('end', () => {

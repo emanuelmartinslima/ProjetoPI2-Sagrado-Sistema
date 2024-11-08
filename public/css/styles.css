@@ -1,0 +1,142 @@
+/* Tema claro */
+:root {
+    --background-color: rgb(192, 185, 216);
+    --text-color: aliceblue;
+    --littletext-color: aliceblue;
+}
+
+/* Tema escuro */
+.dark-mode {
+    --background-color: rgb(29, 5, 33);
+    --text-color: #ffffff;
+    --littletext-color: rgb(49, 04, 59);
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.navbar {
+    background-color: rgb(49, 04, 59);
+}
+
+footer {
+    background-color: rgb(49, 04, 59);
+    color: var(--text-color);
+}
+
+.btn-dark-mode {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.invalid-feedback {
+    display: block;
+    color: #dc3545;
+}
+
+
+
+.title {
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.form-container {
+    background-color: rgb(49, 04, 59);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.content-spacing {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.form-container label {
+    color: var(--text-color);
+}
+
+.contract-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.table-container {
+    background-color: rgb(49, 04, 59);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+
+
+.card-title {
+    color: var(--text-color);
+}
+
+.card-custom {
+    background-color: rgb(49, 04, 59);
+    border: none;
+    transition: transform 0.3s ease-in-out;
+    width: 300px;
+    height: 300px;
+}
+
+.card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+    font-size: 50px;
+    color: var(--text-color);
+    margin-bottom: 20px;
+}
+
+.container-spacing {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.cards-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: nowrap;
+}
+
+.container-wrapper {
+    height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    background-color: rgb(49, 04, 59);
+    color: var(--text-color);
+}
+
+
+
+.form-container {
+    background-color: rgb(49, 04, 59);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.form-container input,
+.form-container select {
+    margin-bottom: 10px;
+}
+
+.form-container label {
+    color: white;
+}

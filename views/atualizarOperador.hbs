@@ -5,49 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Atualizar cadastro - Sagrado Neon</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        /* Tema claro */
-        :root {
-            --background-color: rgb(192, 185, 216);
-            --text-color: aliceblue;
-            --navbar-background-color: rgb(49, 04, 59);
-        }
-
-        /* Tema escuro */
-        .dark-mode {
-            --background-color: rgb(29, 5, 33);
-            --text-color: #ffffff;
-            --navbar-background-color: rgb(49, 04, 59);
-            /* Mantém a cor do navbar */
-        }
-
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .navbar {
-            background-color: var(--navbar-background-color);
-        }
-
-        .btn-dark-mode {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .is-invalid {
-            border-color: #dc3545;
-        }
-
-        .invalid-feedback {
-            display: block;
-            color: #dc3545;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -62,7 +23,6 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <div class="dropdown">
-
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                             <i class="bi bi-moon-fill"></i>
                         </button>
@@ -88,40 +48,39 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-lg-6 d-flex align-items-center" style="min-height: 300px;">
-                    <div class="w-100 p-4 text-center"
-                        style="background-color: var(--navbar-background-color); border-radius: 10px;">
+                    <div class="w-100 p-4 text-center" style="background-color: rgb(49, 04, 59); border-radius: 10px;">
                         <img src="/WhatsApp Image 2024-08-22 at 12.39.38.jpeg" width="100" alt="Imagem" class="mb-3">
                         <form id="registrationForm" style="width: 100%;" action="/auth/atualizar" method="post">
-                           
-                           <!-- campo de cpf, será eliminado quando adicionarmos o token (CPF já será preenchido automaticamente) -->
+
                             <div class="mb-3">
-                                <label for="validationCPF" class="form-label"
-                                    style="color: var(--text-color);">Digite seu CPF</label>
+                                <label for="validationCPF" class="form-label" style="color: var(--text-color);">Seu
+                                    CPF</label>
                                 <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationCPF" name="cpf" value="{{cpf}}">
+                                    <input type="text" class="form-control" id="validationCPF" name="cpf"
+                                        value="{{cpf}}" disabled>
                                 </div>
                             </div>
 
                             <p style="font-size: medium; color: var(--text-color);">Atualizar dados</p>
-                           
-                            <!-- campo de nome -->
+
                             <div class="mb-3">
                                 <i class="bi bi-emoji-laughing"
                                     style="color: var(--text-color); font-size: 1.5rem;"></i>
-                                <label for="validationNome" class="form-label"
-                                    style="color: var(--text-color);">Alterar nome</label>
+                                <label for="validationNome" class="form-label" style="color: var(--text-color);">Alterar
+                                    nome</label>
                                 <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationNome" name="nome" value="{{nome}}">
+                                    <input type="text" class="form-control" id="validationNome" name="nome"
+                                        value="{{nome}}">
                                 </div>
                             </div>
 
-                            <!-- campo de email -->
                             <div class="mb-3">
                                 <i class="bi bi-envelope-at me-2"
                                     style="color: var(--text-color); font-size: 1.5rem;"></i>
                                 <label for="exampleInputEmail1" class="form-label"
                                     style="color: var(--text-color);">Alterar e-mail</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" name="email" value="{{email}}">
+                                <input type="email" class="form-control" id="exampleInputEmail1" name="email"
+                                    value="{{email}}">
                             </div>
 
                             <button type="submit" class="btn btn-primary">Atualizar dados</button>
@@ -134,26 +93,6 @@
     </div>
 
     <script>
-        // Recupera o estado do tema do armazenamento local
-        document.addEventListener('DOMContentLoaded', () => {
-            const isDarkMode = localStorage.getItem('darkMode') === 'true';
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-                document.getElementById('toggleTheme').innerHTML = '<i class="bi bi-brightness-high"></i>';
-            }
-        });
-
-        // Alterna o tema e salva a preferência
-        document.getElementById('toggleTheme').addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDarkMode);
-            document.getElementById('toggleTheme').innerHTML = isDarkMode
-                ? '<i class="bi bi-brightness-high"></i>'
-                : '<i class="bi bi-moon-fill"></i>';
-        });
-
-        // Validação do formulário
         document.getElementById('registrationForm').addEventListener('submit', function (event) {
             let isValid = true;
             const fields = [
@@ -179,18 +118,19 @@
             }
 
             if (!isValid) {
-                event.preventDefault(); // Impede o envio do formulário se houver campos inválidos
+                event.preventDefault();
             }
         });
     </script>
 
-    <footer class="text-light text-center py-3" style="background-color: var(--navbar-background-color);">
+    <footer class="text-light text-center py-3">
         Todos os direitos reservados
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script src="/js/themeSwitcher.js"></script>
 </body>
 
 </html>
