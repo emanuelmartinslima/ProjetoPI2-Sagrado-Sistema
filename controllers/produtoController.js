@@ -51,6 +51,8 @@ exports.buscarProdutos = async (req, res) => {
 
 exports.buscarProdutosDisponiveis = async (req, res) => {
     try {
+        const {dataEvento} = req.params;
+        const contratos = await Contratos.findAll();
         const produtosList = await produto.findAll({ where: { disponibilidade: 1 } });
         console.log("Produtos retornados:", produtosList);
         res.json(produtosList);

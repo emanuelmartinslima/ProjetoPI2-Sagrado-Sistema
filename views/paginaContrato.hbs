@@ -105,7 +105,8 @@
                             <div class="mb-3 row">
                                 <label for="contratante" class="col-sm-4 col-form-label">Contratante:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="contratante" name="nomeContratante" disabled>
+                                    <input type="text" class="form-control" id="contratante" name="nomeContratante"
+                                        disabled>
 
                                 </div>
                             </div>
@@ -121,7 +122,8 @@
                                 <label for="endereco" class="col-sm-4 col-form-label">Endereço:</label>
                                 <div class="col-sm-8">
 
-                                    <input type="text" class="form-control" id="endereco" name="enderecoCliente" disabled>
+                                    <input type="text" class="form-control" id="endereco" name="enderecoCliente"
+                                        disabled>
 
                                 </div>
                             </div>
@@ -134,7 +136,8 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da Montagem:</label>
+                                <label for="horarioMontagem" class="col-sm-4 col-form-label">Horário da
+                                    Montagem:</label>
                                 <div class="col-sm-8">
                                     <input type="time" class="form-control" id="horarioMontagem" name="horarioMontagem">
                                 </div>
@@ -144,7 +147,8 @@
                                     Encerramento:</label>
                                 <div class="col-sm-8">
 
-                                    <input type="time" class="form-control" id="horarioEncerramento" name="horarioEncerramento">
+                                    <input type="time" class="form-control" id="horarioEncerramento"
+                                        name="horarioEncerramento">
 
                                 </div>
                             </div>
@@ -157,15 +161,18 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="quantidadeProdutos" class="col-sm-4 col-form-label">Quantidade de Produtos:</label>
+                                <label for="quantidadeProdutos" class="col-sm-4 col-form-label">Quantidade de
+                                    Produtos:</label>
                                 <div class="col-sm-8">
 
-                                    <input type="number" class="form-control" id="quantidadeProdutos" oninput="showProductSelection()" name="quantidadeProdutos" required>
+                                    <input type="number" class="form-control" id="quantidadeProdutos"
+                                        oninput="showProductSelection()" name="quantidadeProdutos" required>
 
                                 </div>
                             </div>
                             <div class="mb-3 row" id="produtoSelectionContainer" style="display: none;">
-                                <label for="produtosSelecionados" class="col-sm-4 col-form-label">Produtos Selecionados:</label>
+                                <label for="produtosSelecionados" class="col-sm-4 col-form-label">Produtos
+                                    Selecionados:</label>
                                 <div class="col-sm-8" id="produtosSelecionados">
                                     <!-- Abas para selecionar os produtos vão aqui -->
                                 </div>
@@ -173,7 +180,8 @@
                             <div class="mb-3 row">
                                 <label for="formaPagamento" class="col-sm-4 col-form-label">Forma de Pagamento:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" id="formaPagamento" onchange="togglePaymentDetails()" name="formaPagamento">
+                                    <select class="form-control" id="formaPagamento" onchange="togglePaymentDetails()"
+                                        name="formaPagamento">
                                         <option value="">Selecione uma opção</option>
                                         <option value="Pix">Pix</option>
                                         <option value="Pix Parcelado">Pix Parcelado</option>
@@ -182,7 +190,8 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data de Pagamento:</label>
+                                <label for="dataPagamento" id="dataPagamentoLabel" class="col-sm-4 col-form-label">Data
+                                    de Pagamento:</label>
                                 <div class="col-sm-8">
 
                                     <input type="date" class="form-control" id="dataPagamento" name="dataPagamento">
@@ -233,49 +242,49 @@
         // Chama a função ao carregar a página
         document.addEventListener("DOMContentLoaded", preencherDadosCliente);
 
-    function togglePaymentDetails() {
-        const formaPagamento = document.getElementById("formaPagamento").value;
-        const dataPagamento = document.getElementById("dataPagamento");
-        const pixParceladoDetails = document.getElementById("pixParceladoDetails");
-        const datasPagamentos = document.getElementById("datasPagamentos");
+        function togglePaymentDetails() {
+            const formaPagamento = document.getElementById("formaPagamento").value;
+            const dataPagamento = document.getElementById("dataPagamento");
+            const pixParceladoDetails = document.getElementById("pixParceladoDetails");
+            const datasPagamentos = document.getElementById("datasPagamentos");
 
-        const labelDatasPagamentos = document.getElementById("dataPagamentoLabel");
+            const labelDatasPagamentos = document.getElementById("dataPagamentoLabel");
 
-        if (formaPagamento === "Pix Parcelado") {
-            pixParceladoDetails.style.display = "flex";
-            datasPagamentos.style.display = "block";
-            dataPagamento.style.display = "none";
+            if (formaPagamento === "Pix Parcelado") {
+                pixParceladoDetails.style.display = "flex";
+                datasPagamentos.style.display = "block";
+                dataPagamento.style.display = "none";
 
-            labelDatasPagamentos.style.display = "none";
-        } else {
-            pixParceladoDetails.style.display = "none";
-            datasPagamentos.style.display = "none";
-            dataPagamento.style.display = "block"; // Mostra o campo único de data de pagamento
+                labelDatasPagamentos.style.display = "none";
+            } else {
+                pixParceladoDetails.style.display = "none";
+                datasPagamentos.style.display = "none";
+                dataPagamento.style.display = "block"; // Mostra o campo único de data de pagamento
 
-            labelDatasPagamentos.style.display = "block";
+                labelDatasPagamentos.style.display = "block";
 
-            document.getElementById("numParcelas").value = ""; // Limpa o campo ao mudar de opção
-            document.getElementById("paymentDatesContainer").innerHTML = ""; // Limpa as datas de pagamento
+                document.getElementById("numParcelas").value = ""; // Limpa o campo ao mudar de opção
+                document.getElementById("paymentDatesContainer").innerHTML = ""; // Limpa as datas de pagamento
+            }
         }
-    }
 
-    function updatePaymentDates() {
-        const numParcelas = document.getElementById("numParcelas").value;
-        const paymentDatesContainer = document.getElementById("paymentDatesContainer");
+        function updatePaymentDates() {
+            const numParcelas = document.getElementById("numParcelas").value;
+            const paymentDatesContainer = document.getElementById("paymentDatesContainer");
 
-        // Limpa as datas de pagamento antes de preencher
-        paymentDatesContainer.innerHTML = "";
+            // Limpa as datas de pagamento antes de preencher
+            paymentDatesContainer.innerHTML = "";
 
-        // Adiciona campos para as datas de pagamento
-        for (let i = 1; i <= numParcelas; i++) {
-            // Cria um input de data e insere diretamente dentro do col-sm-8
-            const input = document.createElement("input");
-            input.type = "date";
-            input.className = "form-control mb-2"; // Estilo do Bootstrap para alinhar corretamente
+            // Adiciona campos para as datas de pagamento
+            for (let i = 1; i <= numParcelas; i++) {
+                // Cria um input de data e insere diretamente dentro do col-sm-8
+                const input = document.createElement("input");
+                input.type = "date";
+                input.className = "form-control mb-2"; // Estilo do Bootstrap para alinhar corretamente
 
-            paymentDatesContainer.appendChild(input);
+                paymentDatesContainer.appendChild(input);
+            }
         }
-    }
 
         // Validação do formulário
         document.getElementById('formContrato').addEventListener('submit', function (event) {
@@ -357,26 +366,29 @@
         }
 
         // Carregar a lista de produtos
-async function carregarListaDeProdutos(produtoSelecionado) {
-    try {
-        const response = await fetch('/auth/produtosDisponiveis'); // Altere a URL para a sua API de produtos
-        const produtos = await response.json();
-        
-        console.log(produtos); // Adicione isso para verificar a estrutura dos dados
+        async function carregarListaDeProdutos(produtoSelecionado) {
+            try {
+                const form = document.getElementById('formContrato');
+                const formData = new FormData(form);
 
-        // Limpa as opções existentes no select
-        produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>';
+                const response = await fetch(`/auth/produtosDisponiveis/${formData.get('dataEvento')}`); // Altere a URL para a sua API de produtos
+                const produtos = await response.json();
 
-        produtos.forEach((produto) => {
-            const option = document.createElement('option');
-            option.value = produto.id; // Supondo que o ID do produto é 'id'
-            option.textContent = produto.nome; // Supondo que o nome do produto é 'nomeProduto'
-            produtoSelecionado.appendChild(option);
-        });
-    } catch (error) {
-        console.error('Erro ao carregar produtos:', error);
-    }
-}
+                console.log(produtos); // Adicione isso para verificar a estrutura dos dados
+
+                // Limpa as opções existentes no select
+                produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>';
+
+                produtos.forEach((produto) => {
+                    const option = document.createElement('option');
+                    option.value = produto.id; // Supondo que o ID do produto é 'id'
+                    option.textContent = produto.nome; // Supondo que o nome do produto é 'nomeProduto'
+                    produtoSelecionado.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
             carregarListaDeProdutos();

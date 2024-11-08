@@ -6,6 +6,7 @@ const operadorController = require("../controllers/operadorController");
 const clienteController = require("../controllers/clienteController");
 const contratoController = require("../controllers/contratoController");
 const produtoController = require("../controllers/produtoController");
+const comissaoController = require("../controllers/comissaoController");
 
 router.post("/registrar", authController.registrar); //Cadastro de usuários no sistema
 
@@ -24,7 +25,7 @@ router.post("/registrarContrato", contratoController.registrarContrato); //Cadas
 router.post("/registrarProduto", produtoController.upload.single('imagem'), produtoController.registrarProduto);
 
 router.get('/produtos', produtoController.buscarProdutos); //Retorna todos os produtos em uma lista
-router.get('/produtosDisponiveis', produtoController.buscarProdutosDisponiveis);
+router.get('/produtosDisponiveis/:dataEvento', produtoController.buscarProdutosDisponiveis);
 router.get("/produtos/:id", produtoController.buscarProdutoPorId); //Busca um produto específico
 router.put("/produtos/:id", produtoController.upload.single('imagem'), produtoController.editarProduto); //Edita um produto
 router.delete("/produtos/:id", produtoController.deletarProduto); //Deleta um produto
@@ -33,5 +34,6 @@ router.get('/contratos', contratoController.buscarContratos); //Retorna todos os
 router.get('/contratosGeral', contratoController.buscarContratosGeral);
 
 router.get("/download/:idDocumento", contratoController.baixarContrato); //Realiza o download de um contrato do Drive
+router.get("/calcularComissao/:operador/:mes/:ano", comissaoController.calcularComissao);
 
 module.exports = router;

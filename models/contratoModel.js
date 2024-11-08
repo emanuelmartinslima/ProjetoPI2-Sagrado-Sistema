@@ -36,6 +36,9 @@ const Contratos = db.sequelize.define("contratos", {
     },
     idDocumento: {
         type: db.Sequelize.STRING
+    },
+    nomeDocumento: {
+        type: db.Sequelize.STRING
     }
 });
 

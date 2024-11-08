@@ -91,8 +91,8 @@ exports.registrarContrato = async (req, res) => {
         dataPagamento: dataPagamento,
         numeroParcelas: numeroParcelas
     })
-        
-    if(!contrato){
+
+    if (!contrato) {
         console.log("Erro: ", error);
         return;
     }
@@ -141,10 +141,12 @@ async function criarDocumentoContrato(contrato, lista) {
     const dataEventoArray = contrato.dataEvento.split("-");
     const dataEvento = `${dataEventoArray[2]}/${dataEventoArray[1]}/${dataEventoArray[0]}`;
 
+    const nomeDocumento = `${contrato.id}-Contrato ${dataFormatada}${contrato.id} ${cliente.nome}`;
+
     const copiaDocumento = await drive.files.copy({
         fileId: '1yYsbk87kuPZlaYT5t2pWT6L8ArvcYiZBESNZtOhMksg',
         requestBody: {
-            name: `${contrato.id}-Contrato ${dataFormatada}${contrato.id} ${cliente.nome}`,
+            name: nomeDocumento,
         }
     });
 
@@ -268,14 +270,14 @@ async function criarDocumentoContrato(contrato, lista) {
         }
     ];
 
-    const documentoAtualizado = await docs.documents.batchUpdate({
+    await docs.documents.batchUpdate({
         documentId: (await copiaDocumento).data.id,
         requestBody: {
             requests: request
         }
     });
 
-    await contrato.update({ idDocumento: copiaDocumento.data.id });
+    await contrato.update({ idDocumento: copiaDocumento.data.id, nomeDocumento: nomeDocumento });
 }
 
 function mesParaString(mes) {
@@ -301,9 +303,11 @@ exports.baixarContrato = async (req, res) => {
             mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         }, { responseType: 'stream' });
 
+        const contrato = await Contrato.findOne({ where: { idDocumento: idDocumento } });
+
         res.set({
             'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'Content-Disposition': `attachment; filename="${idDocumento}.docx"`,
+            'Content-Disposition': `attachment; filename="${contrato.nomeDocumento || idDocumento}.docx"`,
         });
 
         file.data.on('end', () => {
