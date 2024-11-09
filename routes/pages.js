@@ -118,7 +118,7 @@ router.get("/visualizarContratos", autenticar.autenticarToken, (req, res) => {
 router.get("/relatorioComissoes", autenticar.autenticarToken, (req, res) => {
     const usuarioCargo = req.user.cargo;
     if(usuarioCargo !== 'gerente'){
-        res.render("relatorioComissoesOp");
+        res.render("relatoriosComissoesOp");
     } else {
         res.render("relatorioComissoes");
     }
