@@ -258,7 +258,11 @@
 
         async function carregarListaDeProdutos(produtoSelecionado) {
             try {
-                const response = await fetch('/auth/produtosDisponiveis');
+                event.preventDefault();
+                const form = document.getElementById('formContrato');
+                const formData = new FormData(form);
+
+                const response = await fetch(`/auth/produtosDisponiveis/${formData.get('dataEvento')}`);
                 const produtos = await response.json();
                 console.log(produtos);
                 produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>';
