@@ -29,9 +29,8 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="cadastro">Cadastrar Usuário</a></li>
                             <li><a class="dropdown-item" href="gerarRelatorios">Gerar Relatórios</a></li>
-                            <li><a class="dropdown-item" href="cadastrarClienteGerente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="produtos">Produtos</a></li>
                             <li><a class="dropdown-item" href="/">Sair</a></li>
@@ -75,35 +74,57 @@
     </footer>
 
     <script>
-        async function fetchContractData() {
-            try {
-                const response = await fetch('/getContracts');
-                if (!response.ok) throw new Error('Erro ao carregar dados dos contratos.');
-                const contracts = await response.json();
-                const commissionTableBody = document.getElementById('commissionTableBody');
-                let totalCommission = 0;
-
-                contracts.forEach(contract => {
-                    const commission = (contract.valorTotal * 0.02).toFixed(2);
-                    totalCommission += parseFloat(commission);
-                    const commissionRow = document.createElement('tr');
-                    commissionRow.innerHTML = `
-                        <td>${contract.dataVenda}</td>
-                        <td>${contract.numeroContrato}</td>
-                        <td>${contract.nomeContratante}</td>
-                        <td>${contract.itensEscolhidos}</td>
-                        <td>${contract.valorTotal}</td>
-                        <td>R$ ${commission}</td>
-                    `;
-                    commissionTableBody.appendChild(commissionRow);
-                });
-                document.getElementById('totalCommission').innerHTML = `R$ ${totalCommission.toFixed(2)}`;
-            } catch (error) {
-                console.error(error);
-                alert("Erro ao carregar dados dos contratos.");
+        document.addEventListener("DOMContentLoaded", async function () {
+            const contractTableBody = document.getElementById("commissionTableBody");
+            const totalCommissionElement = document.getElementById("totalCommission");
+            const mesSelecionado = localStorage.getItem('mes');
+            const anoSelecionado = localStorage.getItem('ano');
+            if (!mesSelecionado || !anoSelecionado) {
+                contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Dados de mês e ano não fornecidos.</td></tr>";
+                return;
             }
-        }
-        fetchContractData();
+            document.title = `Comissão - Mês: ${mesSelecionado}, Ano: ${anoSelecionado}`;
+            try {
+                const response = await fetch('/auth/relatorioVendas');
+                const contratos = await response.json();
+                if (!contratos.length) {
+                    contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Você não registrou nenhum contrato.</td></tr>";
+                } else {
+                    const contratosFiltrados = contratos.filter(contrato => {
+                        const dataVenda = new Date(contrato.dataVenda);
+                        const mesVenda = dataVenda.getMonth() + 1;
+                        const anoVenda = dataVenda.getFullYear();
+                        return mesVenda == mesSelecionado && anoVenda == anoSelecionado;
+                    });
+                    if (contratosFiltrados.length === 0) {
+                        contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Nenhum contrato encontrado para o mês e ano selecionados.</td></tr>";
+                    } else {
+                        let totalComissao = 0;
+                        contratosFiltrados.forEach(contrato => {
+                            const contractRow = document.createElement("tr");
+                            const produtos = contrato.produtos && contrato.produtos.length > 0
+                                ? contrato.produtos.map(produto => `${produto.nomeProduto}`)
+                                : "Sem itens";
+                            const comissao = contrato.comissao || 0;
+                            totalComissao += comissao;
+                            contractRow.innerHTML = `
+                        <td>${contrato.dataVenda}</td>
+                        <td>${contrato.id || "Não disponível"}</td>
+                        <td>${contrato.nomeCliente || "Não encontrado"}</td>
+                        <td>${produtos}</td>
+                        <td>R$ ${contrato.valorTotal.toFixed(2) || "Indefinido"}</td>
+                        <td>R$ ${comissao.toFixed(2) || "Não informada"}</td>
+                    `;
+                            contractTableBody.appendChild(contractRow);
+                        });
+                        totalCommissionElement.innerHTML = `R$ ${totalComissao.toFixed(2)}`;
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao carregar contratos:", error);
+                contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Erro ao carregar contratos.</td></tr>";
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

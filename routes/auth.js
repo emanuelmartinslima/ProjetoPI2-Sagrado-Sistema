@@ -34,4 +34,8 @@ router.get('/contratosGeral', contratoController.buscarContratosGeral);
 
 router.get("/download/:idDocumento", contratoController.baixarContrato); //Realiza o download de um contrato do Drive
 
+router.get('/relatorioVendas', contratoController.buscarVendas);
+router.get('/buscarVendas/:cpfOperador/:mes/:ano', contratoController.buscarVendasEspecifico); //Busca vendas de um operador específico
+router.get('/buscarVendasGeral', contratoController.buscarVendasGeral);
+
 module.exports = router;
