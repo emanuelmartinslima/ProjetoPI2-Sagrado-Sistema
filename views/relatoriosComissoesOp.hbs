@@ -47,17 +47,12 @@
                 <div class="col-lg-6 col-md-8">
                     <div class="form-container">
                         <h1 class="text-center title">Relatório de Comissões</h1>
-                        <form id="comissaoForm" onsubmit="return calcularComissao(event)" action="/calcularComissao"
-                            method="POST">
+                        <form id="comissaoForm" onsubmit="return calcularComissao(event)">
                             <div class="mb-3 row">
-                                <label for="operador" class="col-sm-4 col-form-label">Operador:</label>
+                                <label for="cpfOperador" class="col-sm-4 col-form-label">CPF do Operador:</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" id="operador" name="operador" required>
-                                        <option value="">Selecione o operador</option>
-                                        <option value="operador1">Operador 1</option>
-                                        <option value="operador2">Operador 2</option>
-                                        <option value="operador3">Operador 3</option>
-                                    </select>
+                                    <input type="text" class="form-control" id="cpfOperador" name="cpfOperador" required
+                                        placeholder="Digite o CPF do operador">
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -110,13 +105,18 @@
         function calcularComissao(event) {
             event.preventDefault();
             const form = document.getElementById('comissaoForm');
-            const formData = new FormData(form);
+            const cpfOperador = form.cpfOperador.value;
+            const mes = form.mes.value;
+            const ano = form.ano.value;
+            if (!cpfOperador || !mes || !ano) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+            localStorage.setItem('cpfOperador', cpfOperador);
+            localStorage.setItem('mes', mes);
+            localStorage.setItem('ano', ano);
 
-            const response = await fetch(`/auth/calcularComissao/${formData.get('operador')}/${formData.get('mes')}/${formData.get('ano')}`);
-
-            const comissao = await response.json();
-            
-            alert(`Calculando comissão para o operador ${formData.get('operador')} no mês ${formData.get('mes')}, ano ${formData.get('ano')}.\nComissão calculada: R$ ${comissao}`);
+            window.location.href = '/vizualizarRelatoriosDeComissao';
         }
     </script>
 

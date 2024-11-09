@@ -29,9 +29,8 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="cadastro">Cadastrar Usuário</a></li>
                             <li><a class="dropdown-item" href="gerarRelatorios">Gerar Relatórios</a></li>
-                            <li><a class="dropdown-item" href="cadastrarClienteGerente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
                             <li><a class="dropdown-item" href="produtos">Produtos</a></li>
                             <li><a class="dropdown-item" href="/">Sair</a></li>
@@ -70,32 +69,55 @@
     </footer>
 
     <script>
-        async function fetchContractData() {
-            try {
-                const response = await fetch('/getContracts');
-                if (!response.ok) throw new Error('Erro ao carregar dados dos contratos.');
-                const contracts = await response.json();
-                const tableBody = document.getElementById('contractTableBody');
-
-                contracts.forEach(contract => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${contract.dataVenda}</td>
-                        <td>${contract.numeroContrato}</td>
-                        <td>${contract.nomeContratante}</td>
-                        <td>${contract.itensEscolhidos}</td>
-                        <td>${contract.dataEvento}</td>
-                        <td>${contract.valorTotal}</td>
-                        <td>${contract.formaPagamento}</td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error(error);
-                alert("Erro ao carregar dados dos contratos.");
+        document.addEventListener("DOMContentLoaded", async function () {
+            const contractTableBody = document.getElementById("contractTableBody");
+            const dataInicio = localStorage.getItem('dataInicio');
+            const dataTermino = localStorage.getItem('dataTermino');
+            if (!dataInicio || !dataTermino) {
+                contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Datas não fornecidas.</td></tr>";
+                return;
             }
-        }
-        fetchContractData();
+            const dataInicioFormatada = new Date(dataInicio);
+            const dataTerminoFormatada = new Date(dataTermino);
+            dataInicioFormatada.setHours(0, 0, 0, 0);
+            dataTerminoFormatada.setHours(23, 59, 59, 999);
+            try {
+                const response = await fetch('/auth/relatorioVendas'); // Altere esta URL para corresponder à sua API
+                const contratos = await response.json();
+                if (!contratos.length) {
+                    contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Você não registrou nenhum contrato.</td></tr>";
+                } else {
+                    const contratosFiltrados = contratos.filter(contrato => {
+                        const dataVenda = new Date(contrato.dataVenda);
+                        dataVenda.setHours(0, 0, 0, 0);
+                        return dataVenda >= dataInicioFormatada && dataVenda <= dataTerminoFormatada;
+                    });
+                    if (contratosFiltrados.length === 0) {
+                        contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Nenhum contrato encontrado para o período selecionado.</td></tr>";
+                    } else {
+                        contratosFiltrados.forEach(contrato => {
+                            const contractRow = document.createElement("tr");
+                            const produtos = contrato.produtos && contrato.produtos.length > 0
+                                ? contrato.produtos.map(produto => `${produto.nomeProduto}`)
+                                : "Sem itens";
+                            contractRow.innerHTML = `
+                        <td>${contrato.dataVenda}</td>
+                        <td>${contrato.id || "Não disponível"}</td>
+                        <td>${contrato.nomeCliente || "Não encontrado"}</td>
+                        <td>${produtos}</td>
+                        <td>${contrato.dataEvento || "Não disponível"}</td>
+                        <td>R$ ${contrato.valorTotal.toFixed(2) || "Indefinido"}</td>
+                        <td>${contrato.formaPagamento || "Não informada"}</td>
+                    `;
+                            contractTableBody.appendChild(contractRow);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao carregar contratos:", error);
+                contractTableBody.innerHTML = "<tr><td colspan='7' class='text-center'>Erro ao carregar contratos.</td></tr>";
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

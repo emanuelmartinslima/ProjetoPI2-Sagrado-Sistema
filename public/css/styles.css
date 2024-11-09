@@ -15,6 +15,11 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+    height: 100%;
+}
+
+html {
+    height: 100%;
 }
 
 .navbar {

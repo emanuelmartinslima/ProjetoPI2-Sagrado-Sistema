@@ -50,15 +50,18 @@
                         <h1 class="text-center title">Relatório de Comissões</h1>
                         <form id="comissaoForm" onsubmit="return calcularComissao(event)" action="auth/calcularComissao"
                             method="POST">
-                            <div class="mb-3 row">
-                                <label for="operador" class="col-sm-4 col-form-label">Operador:</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" id="operador" name="operador" required>
-                                        <option value="">Selecione o operador</option>
-                                        <option value="operador1">Operador 1</option>
-                                        <option value="operador2">Operador 2</option>
-                                        <option value="operador3">Operador 3</option>
-                                    </select>
+                            <div class="mb-3">
+                                <label for="validationCPF" class="form-label" style="color: var(--text-color);">Digite o
+                                    CPF do Operador</label>
+                                <div class="input-group has-validation">
+                                    <input type="text" class="form-control" id="validationCPF" name="cpf">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="validationNome" class="form-label" style="color: var(--text-color);">Nome do
+                                    Funcionário</label>
+                                <div class="input-group has-validation">
+                                    <input type="text" class="form-control" id="validationNome" name="nome" disabled>
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -111,14 +114,39 @@
         async function calcularComissao(event) {
             event.preventDefault();
             const form = document.getElementById('comissaoForm');
-            const formData = new FormData(form);
+            const mes = form.mes.value;
+            const ano = form.ano.value;
+            const cpf = form.cpf.value;
+            if (!mes || !ano || !cpf) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+            localStorage.setItem('mes', mes);
+            localStorage.setItem('ano', ano);
+            localStorage.setItem('cpf', cpf);
 
-            const response = await fetch(`/auth/calcularComissao/${formData.get('operador')}/${formData.get('mes')}/${formData.get('ano')}`);
-
-            const comissao = await response.json();
-            
-            alert(`Calculando comissão para o operador ${formData.get('operador')} no mês ${formData.get('mes')}, ano ${formData.get('ano')}.\nComissão calculada: R$ ${comissao}`);
+            window.location.href = '/vizualizarRelatoriosDeComissao';
         }
+
+        document.getElementById('validationCPF').addEventListener('input', async function () {
+            const cpf = this.value;
+            if (cpf.length >= 11) {
+                try {
+                    const response = await fetch(`/api/usuarios/${cpf}`);
+                    if (response.ok) {
+                        const usuario = await response.json();
+                        document.getElementById('validationNome').value = usuario.nome || '';
+                    } else {
+                        console.log("Usuário não encontrado");
+                        document.getElementById('validationNome').value = '';
+                    }
+                } catch (error) {
+                    console.error("Erro ao buscar o usuário:", error);
+                }
+            } else {
+                document.getElementById('validationNome').value = '';
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -8,6 +8,183 @@ const Items = require("../models/itemModel");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const { google } = require("googleapis");
+const { Op } = require('sequelize'); 
+
+exports.buscarVendasEspecifico = async (req, res) => {
+    console.log(`isso é um teste`);
+
+    try {
+        // Pegue os parâmetros da URL
+        const { cpfOperador, mes, ano } = req.params;
+
+        if (!cpfOperador || !mes || !ano) {
+            console.log(`Erro: Parâmetros insuficientes!`);
+            return res.status(400).json({ message: "CPF do operador, mês ou ano não fornecidos." });
+        }
+
+        // Verificando os parâmetros
+        console.log(`Buscando vendas do operador com CPF ${cpfOperador} para o mês ${mes} e ano ${ano}`);
+
+        // Buscar o operador pelo CPF
+        const operador = await Usuario.findOne({
+            where: { cpf: cpfOperador }  // Buscar pelo CPF do operador
+        });
+
+        if (!operador) {
+            console.log(`Erro: Operador não encontrado!`);
+            return res.status(404).json({ message: "Operador não encontrado." });
+        }
+
+        // Agora que temos o idOperador, vamos buscar os contratos
+        const contratosList = await Contrato.findAll({
+            where: {
+                idOperador: operador.id,  // Usar o idOperador encontrado
+                createdAt: {
+                    [Op.gte]: new Date(`${ano}-${mes}-01`),  // Início do mês
+                    [Op.lt]: new Date(`${ano}-${parseInt(mes) + 1}-01`),  // Início do próximo mês
+                }
+            }
+        });
+
+        if (contratosList.length === 0) {
+            console.log(`Nenhum contrato encontrado para este operador no período.`);
+            return res.status(404).json({ message: "Nenhum contrato encontrado para o operador neste período." });
+        }
+
+        const contratosComNomeCliente = await Promise.all(contratosList.map(async (contrato) => {
+            // Buscar dados do cliente associado ao contrato
+            const cliente = await Cliente.findByPk(contrato.idCliente);
+
+            // Buscar lista de produtos associada ao contrato
+            const listaProdutos = await ListaProdutos.findOne({
+                where: { id: contrato.id }
+            });
+
+            const valorTotalContrato = listaProdutos ? listaProdutos.valorTotal : 0;
+
+            // Buscar os itens (produtos) associados à lista de produtos
+            const itens = await Items.findAll({
+                where: { lista: listaProdutos ? listaProdutos.id : null }
+            });
+
+            // Obter detalhes dos produtos
+            const produtos = await Promise.all(itens.map(async (item) => {
+                const produto = await Produto.findByPk(item.produtoId);
+                return {
+                    nomeProduto: produto ? produto.nome : "Produto não encontrado",
+                };
+            }));
+
+            // Formatando a data da venda
+            const dataVenda = contrato.createdAt.toISOString().split('T')[0];
+
+            return {
+                ...contrato.toJSON(),
+                nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
+                valorTotal: valorTotalContrato,
+                dataVenda: dataVenda,
+                produtos: produtos,
+                comissao: (valorTotalContrato * 2) / 100
+            };
+        }));
+
+        console.log("Contratos encontrados:", contratosComNomeCliente);
+        res.json(contratosComNomeCliente);
+
+    } catch (error) {
+        console.error("Erro ao buscar contratos:", error);
+        res.status(500).json({ message: "Erro ao buscar contratos." });
+    }
+};
+
+exports.buscarVendasGeral = async (req, res) => {
+
+    try {
+        const contratosList = await Contrato.findAll({});
+
+        const contratosComNomeCliente = await Promise.all(contratosList.map(async (contrato) => {
+            const cliente = await Cliente.findByPk(contrato.idCliente);
+            
+            const listaProdutos = await ListaProdutos.findOne({
+                where: { id: contrato.id }
+            });
+
+            const valorTotalContrato = listaProdutos ? listaProdutos.valorTotal : 0;
+
+            const itens = await Items.findAll({
+                where: { lista: listaProdutos ? listaProdutos.id : null }
+            });
+            const produtos = await Promise.all(itens.map(async (item) => {
+                const produto = await Produto.findByPk(item.produtoId);
+                return {
+                    nomeProduto: produto ? produto.nome : "Produto não encontrado",
+                };
+            }));
+            const dataVenda = contrato.createdAt.toISOString().split('T')[0];
+
+            return {
+                ...contrato.toJSON(),
+                nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
+                valorTotal: valorTotalContrato,
+                dataVenda: dataVenda,
+                produtos: produtos,
+                comissao: (valorTotalContrato * 2) / 100
+            };
+        }));
+        console.log("Contratos com nome do cliente, valor total e produtos:", contratosComNomeCliente);
+        res.json(contratosComNomeCliente);
+    } catch (error) {
+        console.error("Erro ao buscar contratos:", error);
+        res.status(500).json({ message: "Erro ao buscar contratos." });
+    }
+};
+
+exports.buscarVendas = async (req, res) => {
+    const token = req.cookies.token;
+    const secret = process.env.SECRET;
+    const payloadToken = jwt.verify(token, secret);
+
+    try {
+        const contratosList = await Contrato.findAll({
+            where: { idOperador: payloadToken.id }
+        });
+
+        const contratosComNomeCliente = await Promise.all(contratosList.map(async (contrato) => {
+            const cliente = await Cliente.findByPk(contrato.idCliente);
+            
+            const listaProdutos = await ListaProdutos.findOne({
+                where: { id: contrato.id }
+            });
+
+            const valorTotalContrato = listaProdutos ? listaProdutos.valorTotal : 0;
+
+            const itens = await Items.findAll({
+                where: { lista: listaProdutos ? listaProdutos.id : null }
+            });
+            const produtos = await Promise.all(itens.map(async (item) => {
+                const produto = await Produto.findByPk(item.produtoId);
+                return {
+                    nomeProduto: produto ? produto.nome : "Produto não encontrado",
+                };
+            }));
+            const dataVenda = contrato.createdAt.toISOString().split('T')[0];
+
+            return {
+                ...contrato.toJSON(),
+                nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
+                valorTotal: valorTotalContrato,
+                dataVenda: dataVenda,
+                produtos: produtos,
+                comissao: (valorTotalContrato * 2) / 100
+            };
+        }));
+        console.log("Contratos com nome do cliente, valor total e produtos:", contratosComNomeCliente);
+        res.json(contratosComNomeCliente);
+    } catch (error) {
+        console.error("Erro ao buscar contratos:", error);
+        res.status(500).json({ message: "Erro ao buscar contratos." });
+    }
+};
 
 exports.buscarContratos = async (req, res) => {
     const token = req.cookies.token;
@@ -91,7 +268,11 @@ exports.registrarContrato = async (req, res) => {
         dataPagamento: dataPagamento,
         numeroParcelas: numeroParcelas,
         lista: lista.id
+        numeroParcelas: numeroParcelas,
+        lista: lista.id
     })
+
+    if (!contrato) {
 
     if (!contrato) {
         console.log("Erro: ", error);
@@ -144,9 +325,12 @@ async function criarDocumentoContrato(contrato, lista) {
 
     const nomeDocumento = `${contrato.id}-Contrato ${dataFormatada}${contrato.id} ${cliente.nome}`;
 
+    const nomeDocumento = `${contrato.id}-Contrato ${dataFormatada}${contrato.id} ${cliente.nome}`;
+
     const copiaDocumento = await drive.files.copy({
         fileId: '1yYsbk87kuPZlaYT5t2pWT6L8ArvcYiZBESNZtOhMksg',
         requestBody: {
+            name: nomeDocumento,
             name: nomeDocumento,
         }
     });
@@ -272,12 +456,14 @@ async function criarDocumentoContrato(contrato, lista) {
     ];
 
     await docs.documents.batchUpdate({
+    await docs.documents.batchUpdate({
         documentId: (await copiaDocumento).data.id,
         requestBody: {
             requests: request
         }
     });
 
+    await contrato.update({ idDocumento: copiaDocumento.data.id, nomeDocumento: nomeDocumento });
     await contrato.update({ idDocumento: copiaDocumento.data.id, nomeDocumento: nomeDocumento });
 }
 
@@ -303,6 +489,8 @@ exports.baixarContrato = async (req, res) => {
             fileId: idDocumento,
             mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         }, { responseType: 'stream' });
+
+        const contrato = await Contrato.findOne({ where: { idDocumento: idDocumento } });
 
         const contrato = await Contrato.findOne({ where: { idDocumento: idDocumento } });
 
