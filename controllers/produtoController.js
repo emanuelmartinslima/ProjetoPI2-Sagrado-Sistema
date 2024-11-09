@@ -61,39 +61,63 @@ exports.buscarProdutosDisponiveis = async (req, res) => {
             }
         });
 
-        const mapProdutos = new Map();
-        const mapProdutosIndisponiveis = new Map();
-
-        contratos.forEach(async (contrato) => {
-            console.log("Contratos na busca de produtos disponíveis: " + contrato.id);
-            const lista = await ListaProdutos.findByPk(contrato.lista);
-            console.log("Lista associada ao contrato: " + lista.id);
-            const items = await Item.findAll({ where: { lista: lista.id } });
-            items.forEach(async (item) => {
-                const produtos = await produto.findByPk(item.produtoId);
-                console.log(`Item associados a lista de produtos do contrato n° ${contrato.id}: ${item.id}\nProduto: ${produtos.nome}`);
-
-                const mapTemProduto = mapProdutos.has(produtos.id);
-                console.log("Mapa já tem esse produto: " + mapTemProduto);
-
-                if (mapTemProduto) {
-                    mapProdutos.set(produtos.id, mapProdutos.get(produtos.id) - 1);
-                    console.log("Tentando controlar a quantidade de produtos dentro do map\n" + mapProdutos.get(produtos.id) + `\nProduto: ${produtos.id} e quantidade ${produtos.quantidadeEstoque}`);
-
-                    mapProdutos.forEach((value, key, map)=>{
-                        console.log("Tentando colocar algum produto no map de produtos indisponíveis");
-                        if(value <= 0){
-                            mapProdutosIndisponiveis.set(key, key);
-                            console.log("Map de produtos indisponíveis: " + key + " " + mapProdutosIndisponiveis.get(key));
-                        }
-                    })
-                } else {
-                    mapProdutos.set(produtos.id, produtos.quantidadeEstoque);
-                    console.log("Tentando adicionar produto ao map\n" + mapProdutos.get(produtos.id) + `\nProduto: ${produtos.id} e quantidade ${produtos.quantidadeEstoque}`);
+        if(contratos){
+            const mapProdutos = new Map();
+            const mapProdutosIndisponiveis = new Map();
+    
+            for(let contrato of contratos){
+                console.log("Contratos na busca de produtos disponíveis: " + contrato.id);
+                const lista = await ListaProdutos.findByPk(contrato.lista);
+                console.log("Lista associada ao contrato: " + lista.id);
+                const items = await Item.findAll({ where: { lista: lista.id } });
+                for(let item of items){
+                    const produtos = await produto.findByPk(item.produtoId);
+                    console.log(`Item associados a lista de produtos do contrato n° ${contrato.id}: ${item.id}\nProduto: ${produtos.nome}`);
+    
+                    let mapTemProduto = mapProdutos.has(produtos.id);
+                    console.log("Mapa já tem esse produto: " + mapTemProduto);
+    
+                    if(!mapTemProduto) {
+                        mapProdutos.set(produtos.id, produtos.quantidadeEstoque);
+                        console.log("Tentando adicionar produto ao map\n" + mapProdutos.get(produtos.id) + `\nProduto: ${produtos.id} e quantidade ${produtos.quantidadeEstoque}`);
+                    }
+    
+                    mapTemProduto = mapProdutos.has(produtos.id);
+                    console.log("Mapa já tem esse produto: " + mapTemProduto);
+    
+                    if (mapTemProduto) {
+                        mapProdutos.set(produtos.id, mapProdutos.get(produtos.id) - 1);
+                        console.log("Tentando controlar a quantidade de produtos dentro do map\n" + mapProdutos.get(produtos.id) + `\nProduto: ${produtos.id} e quantidade ${produtos.quantidadeEstoque}`);
+    
+                        mapProdutos.forEach((value, key, map)=>{
+                            console.log("Tentando colocar algum produto no map de produtos indisponíveis");
+                            if(value <= 0){
+                                mapProdutosIndisponiveis.set(key, key);
+                                console.log("Map de produtos indisponíveis: " + key + " " + mapProdutosIndisponiveis.get(key));
+                            }
+                        })
+                    } 
+                };
+            };
+    
+            const chavesProdutosIndisponiveis = Array.from(mapProdutosIndisponiveis.keys());
+            console.log("Operação efetuada" + chavesProdutosIndisponiveis);
+    
+            const listaProdutos = await produto.findAll({
+                where: {
+                    id: {
+                        [Op.notIn]: chavesProdutosIndisponiveis
+                    }
                 }
             });
-        });
 
+            console.log(listaProdutos);
+            res.json(listaProdutos);
+        } else {
+            const listaProdutos = await produto.findAll();
+            console.log(listaProdutos);
+            res.json(listaProdutos);
+        }
         // mapProdutos.forEach((valor, chave) => {
         //     console.log("Tentando colocar os produtos indisponíveis no map de produtos indisponíveis");
         //     if(valor <= 0){
@@ -103,7 +127,7 @@ exports.buscarProdutosDisponiveis = async (req, res) => {
 
         // const produtosList = await produto.findAll({ where: { disponibilidade: 1 } });
         // console.log("Produtos retornados:", produtosList);
-        res.json(mapProdutosIndisponiveis);
+        
     } catch (error) {
         console.error("Erro ao buscar produtos:", error);
         res.status(500).json({ message: "Erro ao buscar produtos." });

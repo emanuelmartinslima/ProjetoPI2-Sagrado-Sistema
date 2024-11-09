@@ -264,7 +264,7 @@
 
                 const response = await fetch(`/auth/produtosDisponiveis/${formData.get('dataEvento')}`);
                 const produtos = await response.json();
-                //console.log(produtos);
+                console.log(produtos);
                 produtoSelecionado.innerHTML = '<option value="" disabled selected>Selecione um produto</option>';
 
                 produtos.forEach((produto) => {
