@@ -268,11 +268,7 @@ exports.registrarContrato = async (req, res) => {
         dataPagamento: dataPagamento,
         numeroParcelas: numeroParcelas,
         lista: lista.id
-        numeroParcelas: numeroParcelas,
-        lista: lista.id
     })
-
-    if (!contrato) {
 
     if (!contrato) {
         console.log("Erro: ", error);
@@ -322,8 +318,6 @@ async function criarDocumentoContrato(contrato, lista) {
     const dataFormatada = `${dia}${mes}`;
     const dataEventoArray = contrato.dataEvento.split("-");
     const dataEvento = `${dataEventoArray[2]}/${dataEventoArray[1]}/${dataEventoArray[0]}`;
-
-    const nomeDocumento = `${contrato.id}-Contrato ${dataFormatada}${contrato.id} ${cliente.nome}`;
 
     const nomeDocumento = `${contrato.id}-Contrato ${dataFormatada}${contrato.id} ${cliente.nome}`;
 
@@ -456,14 +450,12 @@ async function criarDocumentoContrato(contrato, lista) {
     ];
 
     await docs.documents.batchUpdate({
-    await docs.documents.batchUpdate({
         documentId: (await copiaDocumento).data.id,
         requestBody: {
             requests: request
         }
     });
 
-    await contrato.update({ idDocumento: copiaDocumento.data.id, nomeDocumento: nomeDocumento });
     await contrato.update({ idDocumento: copiaDocumento.data.id, nomeDocumento: nomeDocumento });
 }
 
@@ -492,8 +484,6 @@ exports.baixarContrato = async (req, res) => {
 
         const contrato = await Contrato.findOne({ where: { idDocumento: idDocumento } });
 
-        const contrato = await Contrato.findOne({ where: { idDocumento: idDocumento } });
-
         res.set({
             'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             'Content-Disposition': `attachment; filename="${contrato.nomeDocumento || idDocumento}.word"`,
@@ -513,4 +503,3 @@ exports.baixarContrato = async (req, res) => {
         res.status(500).send('Erro ao baixar o contrato.');
     }
 };
-
