@@ -302,11 +302,7 @@ async function criarDocumentoContrato(contrato, lista) {
     let paragrafoProdutos = "";
     for (const item of items) {
         const produtoItem = await Produto.findOne({ where: { id: item.produtoId } });
-        paragrafoProdutos += `
-        Item Escolhido: ${produtoItem.nome}
-        Dimensões Aproximadas: ${produtoItem.dimensoes}
-        Obs:
-        `;
+        paragrafoProdutos += `Item Escolhido: ${produtoItem.nome}\nDimensões Aproximadas: ${produtoItem.dimensoes}\nObs:\n`;
     }
 
     const data = new Date();
