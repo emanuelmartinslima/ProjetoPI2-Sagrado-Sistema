@@ -40,4 +40,6 @@ router.get('/relatorioVendas', contratoController.buscarVendas);
 router.get('/buscarVendas/:cpfOperador/:mes/:ano', contratoController.buscarVendasEspecifico); //Busca vendas de um operador específico
 router.get('/buscarVendasGeral', contratoController.buscarVendasGeral);
 
+router.get('/api/usuarios/operadores', operadorController.buscarOperadores);
+
 module.exports = router;

@@ -157,7 +157,8 @@ exports.buscarPorCPF = async (req, res) => {
         if (usuario) {
             res.json({
                 nome: usuario.nome,
-                email: usuario.email
+                email: usuario.email,
+                cpf: usuario.cpf
             });
         } else {
             res.status(404).json({ message: "Usuário não encontrado" });
@@ -165,5 +166,21 @@ exports.buscarPorCPF = async (req, res) => {
     } catch (error) {
         console.error("Erro ao buscar usuário:", error);
         res.status(500).json({ message: "Erro no servidor" });
+    }
+};
+
+// Método para buscar todos os operadores
+exports.buscarOperadores = async (req, res) => {
+    try {
+        const operadores = await Usuario.findAll({
+            where: {
+                cargo: ['operador', 'gerente']
+            },
+            attributes: ['id', 'nome', 'cpf']  // Garantir que 'cpf' e 'nome' sejam retornados
+        });
+        res.json(operadores);
+    } catch (error) {
+        console.error("Erro ao buscar operadores:", error);
+        res.status(500).json({ message: "Erro ao buscar operadores" });
     }
 };

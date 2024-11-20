@@ -49,13 +49,6 @@
                         <h1 class="text-center title">Relatório de Comissões</h1>
                         <form id="comissaoForm" onsubmit="return calcularComissao(event)">
                             <div class="mb-3 row">
-                                <label for="cpfOperador" class="col-sm-4 col-form-label">CPF do Operador:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="cpfOperador" name="cpfOperador" required
-                                        placeholder="Digite o CPF do operador">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
                                 <label for="mes" class="col-sm-4 col-form-label">Mês:</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" id="mes" name="mes" required>
@@ -105,14 +98,12 @@
         function calcularComissao(event) {
             event.preventDefault();
             const form = document.getElementById('comissaoForm');
-            const cpfOperador = form.cpfOperador.value;
             const mes = form.mes.value;
             const ano = form.ano.value;
-            if (!cpfOperador || !mes || !ano) {
+            if (!mes || !ano) {
                 alert("Por favor, preencha todos os campos.");
                 return;
             }
-            localStorage.setItem('cpfOperador', cpfOperador);
             localStorage.setItem('mes', mes);
             localStorage.setItem('ano', ano);
 

@@ -50,20 +50,31 @@
                         <h1 class="text-center title">Relatório de Comissões</h1>
                         <form id="comissaoForm" onsubmit="return calcularComissao(event)" action="auth/calcularComissao"
                             method="POST">
+
+                            <!-- Select para escolher o operador -->
                             <div class="mb-3">
-                                <label for="validationCPF" class="form-label" style="color: var(--text-color);">Digite o
-                                    CPF do Operador</label>
+                                <label for="operadorSelect" class="form-label"
+                                    style="color: var(--text-color);">Selecione o Operador</label>
+                                <select id="operadorSelect" class="form-control" name="operador" required>
+                                    <option value="">Selecione um operador</option>
+                                </select>
+                            </div>
+
+                            <!-- Campos para CPF e Nome -->
+                            <div class="mb-3">
                                 <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationCPF" name="cpf">
+                                    <input type="text" class="form-control" id="validationCPF" name="cpf" disabled
+                                        hidden>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="validationNome" class="form-label" style="color: var(--text-color);">Nome do
-                                    Funcionário</label>
                                 <div class="input-group has-validation">
-                                    <input type="text" class="form-control" id="validationNome" name="nome" disabled>
+                                    <input type="text" class="form-control" id="validationNome" name="nome" disabled
+                                        hidden>
                                 </div>
                             </div>
+
+                            <!-- Campos de Mês e Ano -->
                             <div class="mb-3 row">
                                 <label for="mes" class="col-sm-4 col-form-label">Mês:</label>
                                 <div class="col-sm-8">
@@ -95,6 +106,7 @@
                                     </select>
                                 </div>
                             </div>
+
                             <div class="text-center">
                                 <br>
                                 <button type="submit" class="btn btn-primary">Gerar Relatório</button>
@@ -128,25 +140,50 @@
             window.location.href = '/vizualizarRelatoriosDeComissao';
         }
 
-        document.getElementById('validationCPF').addEventListener('input', async function () {
-            const cpf = this.value;
-            if (cpf.length >= 11) {
+        // Carregar operadores no select com o CPF
+        async function carregarOperadores() {
+            try {
+                const response = await fetch('/auth/api/usuarios/operadores');
+                if (response.ok) {
+                    const operadores = await response.json();
+                    const select = document.getElementById('operadorSelect');
+                    operadores.forEach(operador => {
+                        const option = document.createElement('option');
+                        option.value = operador.cpf;  // Use o CPF como valor
+                        option.textContent = operador.nome;
+                        select.appendChild(option);
+                    });
+                } else {
+                    console.error("Erro ao carregar operadores");
+                }
+            } catch (error) {
+                console.error("Erro ao carregar operadores:", error);
+            }
+        }
+
+        // Preencher CPF e Nome ao selecionar um operador
+        document.getElementById('operadorSelect').addEventListener('change', async function () {
+            const operadorCpf = this.value;  // Aqui usamos o CPF ao invés do ID
+            if (operadorCpf) {
                 try {
-                    const response = await fetch(`/api/usuarios/${cpf}`);
+                    const response = await fetch(`/api/usuarios/${operadorCpf}`);  // Alterado para buscar pelo CPF
                     if (response.ok) {
-                        const usuario = await response.json();
-                        document.getElementById('validationNome').value = usuario.nome || '';
+                        const operador = await response.json();
+                        console.log(operador); // Verifique o que está sendo retornado pela API
+                        console.log('Operador selecionado:', operador);  // Verifique o que está sendo retornado
+                        document.getElementById('validationCPF').value = operador.cpf || '';  // Preenche o CPF
+                        document.getElementById('validationNome').value = operador.nome || '';  // Preenche o Nome
                     } else {
-                        console.log("Usuário não encontrado");
-                        document.getElementById('validationNome').value = '';
+                        console.error("Operador não encontrado");
                     }
                 } catch (error) {
-                    console.error("Erro ao buscar o usuário:", error);
+                    console.error("Erro ao buscar operador:", error);
                 }
-            } else {
-                document.getElementById('validationNome').value = '';
             }
         });
+
+        // Carregar os operadores ao carregar a página
+        document.addEventListener('DOMContentLoaded', carregarOperadores);
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
