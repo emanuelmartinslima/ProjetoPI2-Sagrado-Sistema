@@ -43,54 +43,69 @@
         </div>
     </nav>
 
-    <div class="container-wrapper" style="background-color: --background-color;">
-        <div class="container mt-4 container-spacing">
-            <div class="cards-wrapper text-center">
-                <div class="card card-custom">
+    <!-- Adicionamos mt-4 para margem no topo em dispositivos móveis -->
+    <div class="container d-flex align-items-center justify-content-center flex-grow-1 mt-4">
+        <div class="row justify-content-center">
+            <!-- Card 1 -->
+            <div class="col-12 col-md-6 col-lg-2 d-flex mb-4">
+                <div class="card text-center w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-person-plus-fill card-icon"></i>
+                        <i class="bi bi-person-plus-fill card-icon mb-3" style="font-size: 2rem;"></i>
                         <h5 class="card-title">Adicionar Usuário</h5>
-                        <p class="card-text text-white text-center">Adicionar novos usuários ao sistema.</p>
-                        <a href="cadastro" class="btn btn-light">Acessar</a>
+                        <p class="card-text text-white">Adicionar novos usuários ao sistema.</p>
+                        <a href="cadastro" class="btn btn-light mt-auto w-100">Acessar</a>
                     </div>
                 </div>
-                <div class="card card-custom">
+            </div>
+            <!-- Card 2 -->
+            <div class="col-12 col-md-6 col-lg-2 d-flex mb-4">
+                <div class="card text-center w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-graph-up card-icon"></i>
+                        <i class="bi bi-graph-up card-icon mb-3" style="font-size: 2rem;"></i>
                         <h5 class="card-title">Gerar Relatórios</h5>
-                        <p class="card-text text-white text-center">Visualizar e gerar relatórios de vendas.</p>
-                        <a href="gerarRelatorios" class="btn btn-light">Acessar</a>
+                        <p class="card-text text-white">Visualizar e gerar relatórios.</p>
+                        <a href="gerarRelatorios" class="btn btn-light mt-auto w-100">Acessar</a>
                     </div>
                 </div>
-                <div class="card card-custom">
+            </div>
+            <!-- Card 3 -->
+            <div class="col-12 col-md-6 col-lg-2 d-flex mb-4">
+                <div class="card text-center w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-file-earmark-text-fill card-icon"></i>
+                        <i class="bi bi-file-earmark-text-fill card-icon mb-3" style="font-size: 2rem;"></i>
                         <h5 class="card-title">Gerar Contrato</h5>
-                        <p class="card-text text-white text-center">Criar contratos para eventos.</p>
-                        <a href="cadastrarCliente" class="btn btn-light">Acessar</a>
+                        <p class="card-text text-white">Criar contratos para eventos.</p>
+                        <a href="cadastrarCliente" class="btn btn-light mt-auto w-100">Acessar</a>
                     </div>
                 </div>
-                <div class="card card-custom">
+            </div>
+            <!-- Card 4 -->
+            <div class="col-12 col-md-6 col-lg-2 d-flex mb-4">
+                <div class="card text-center w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-pencil-square card-icon"></i>
+                        <i class="bi bi-pencil-square card-icon mb-3" style="font-size: 2rem;"></i>
                         <h5 class="card-title">Editar Dados</h5>
-                        <p class="card-text text-white text-center">Atualizar informações pessoais.</p>
-                        <a href="editarDados" class="btn btn-light">Acessar</a>
+                        <p class="card-text text-white">Atualizar informações pessoais.</p>
+                        <a href="editarDados" class="btn btn-light mt-auto w-100">Acessar</a>
                     </div>
                 </div>
-                <div class="card card-custom">
+            </div>
+            <!-- Card 5 -->
+            <div class="col-12 col-md-6 col-lg-2 d-flex mb-4">
+                <div class="card text-center w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-box-seam card-icon"></i>
+                        <i class="bi bi-box-seam card-icon mb-3" style="font-size: 2rem;"></i>
                         <h5 class="card-title">Produtos</h5>
-                        <p class="card-text text-white text-center">Gerenciar produtos do sistema.</p>
-                        <a href="produtos" class="btn btn-light">Acessar</a>
+                        <p class="card-text text-white">Gerenciar produtos do sistema.</p>
+                        <a href="produtos" class="btn btn-light mt-auto w-100">Acessar</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="text-light text-center py-3">
+    <!-- Footer -->
+    <footer class="text-light text-center py-3 mt-auto">
         Todos os direitos reservados
     </footer>
 
