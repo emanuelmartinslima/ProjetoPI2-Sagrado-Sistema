@@ -83,7 +83,7 @@
         <span>Código: ${Contrato.id}</span>
         <span>Operador: ${Contrato.nomeOperador || "Não registrado"} </span>
         <span>Cliente: ${Contrato.nomeCliente || "Não registrado"}</span>
-        <span>Valor: ${Contrato.valor || "Indefinido"}</span>
+        <span>Valor: R$${Contrato.valor || "Indefinido"}</span>
         <a href="/auth/download/${Contrato.idDocumento}" class="btn btn-primary">Baixar Contrato</a>
         <a href="https://docs.google.com/document/d/${Contrato.idDocumento}/edit" target="_blank" class="btn btn-secondary">Editar no Google Docs</a>
     `;

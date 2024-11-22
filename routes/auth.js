@@ -33,6 +33,9 @@ router.delete("/produtos/:id", produtoController.deletarProduto); //Deleta um pr
 router.get('/contratos', contratoController.buscarContratos); //Retorna todos os contratos que o operador logado realizou
 router.get('/contratosGeral', contratoController.buscarContratosGeral);
 
+router.get('/contratosPagamentos', contratoController.buscarContratosPagamentos);
+router.put('/atualizarPagamentos', contratoController.atualizarPagamentos);
+
 router.get("/download/:idDocumento", contratoController.baixarContrato); //Realiza o download de um contrato do Drive
 router.get("/calcularComissao/:operador/:mes/:ano", comissaoController.calcularComissao);
 

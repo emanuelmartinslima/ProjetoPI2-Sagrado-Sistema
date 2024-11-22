@@ -173,4 +173,8 @@ router.get('/vizualizarRelatorioDeComissaoOp', autenticar.autenticarToken, (req,
     res.render('vizualizarRelatorioDeComissaoOp ');
 });
 
+router.get('/visualizarClientesPendentes', autenticar.autenticarToken, (req, res) => {
+    res.render('visualizarClientesPendentes');
+})
+
 module.exports = router;

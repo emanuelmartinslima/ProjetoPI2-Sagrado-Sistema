@@ -42,8 +42,16 @@ const Contratos = db.sequelize.define("contratos", {
     },
     lista: {
         type: db.Sequelize.INTEGER
+    },
+    pago: {
+        type: db.Sequelize.BOOLEAN
     }
 });
+
+const Parcela = require("./parcelaModel.js"); // Importando a model Parcela
+
+Contratos.hasMany(Parcela, { foreignKey: "contratoId" });
+Parcela.belongsTo(Contratos, { foreignKey: "id" });
 
 // Contratos.sync({alter: true});
 

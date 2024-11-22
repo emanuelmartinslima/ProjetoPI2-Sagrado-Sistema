@@ -202,37 +202,54 @@
             }
         }
 
-        document.getElementById('formContrato').addEventListener('submit', function (event) {
-            let isValid = true;
-            const fields = [
-                'dataEvento',
-                'horarioMontagem',
-                'enderecoEvento',
-                'valorTotal'
-            ];
-            let emptyFields = false;
+document.getElementById('formContrato').addEventListener('submit', function (event) {
+    const formaPagamento = document.getElementById("formaPagamento").value;
+    const paymentDatesContainer = document.querySelector("#paymentDatesContainer");
+    const requiredFields = ['dataEvento', 'horarioMontagem', 'enderecoEvento', 'valorTotal'];
 
-            fields.forEach(id => {
-                const input = document.getElementById(id);
-                if (!input.value.trim()) {
-                    input.classList.add('is-invalid');
-                    emptyFields = true;
-                } else {
-                    input.classList.remove('is-invalid');
-                }
-            });
+    let isValid = true;
 
-            if (emptyFields) {
-                alert('Por favor, preencha os campos obrigatórios.');
-                isValid = false;
-            }
-            if (!isValid) {
-                event.preventDefault();
-            }
-            if (isValid) {
-                window.location.href = "telaInicial";
+    // Validação dos campos obrigatórios
+    requiredFields.forEach(id => {
+        const input = document.getElementById(id);
+        if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            input.classList.remove('is-invalid');
+        }
+    });
+
+    // Lógica adicional para Pix Parcelado
+    if (formaPagamento === "Pix Parcelado") {
+        const paymentDates = [];
+        const paymentInputs = paymentDatesContainer.querySelectorAll("input[type='date']");
+        
+        paymentInputs.forEach(input => {
+            if (input.value) {
+                paymentDates.push(input.value);
             }
         });
+
+        if (paymentDates.length === 0) {
+            alert("Por favor, preencha as datas de pagamento para Pix Parcelado.");
+            isValid = false;
+        }
+
+        if (isValid) {
+            // Adiciona as datas de Pix Parcelado ao formulário
+            const paymentDatesField = document.createElement("input");
+            paymentDatesField.type = "hidden";
+            paymentDatesField.name = "pixParceladoDatas";
+            paymentDatesField.value = JSON.stringify(paymentDates);
+            this.appendChild(paymentDatesField);
+        }
+    }
+
+    if (!isValid) {
+        event.preventDefault(); // Cancela o envio do formulário em caso de erro
+    }
+});
 
         function showProductSelection() {
             const quantidadeProdutos = document.getElementById("quantidadeProdutos").value;

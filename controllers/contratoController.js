@@ -5,10 +5,114 @@ const Usuario = require("../models/usuarioModel")
 const ListaProdutos = require("../models/listaProdutos");
 const Produto = require("../models/produtoModel");
 const Items = require("../models/itemModel");
+const Parcela = require("../models/parcelaModel");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const { google } = require("googleapis");
 const { Op } = require('sequelize'); 
+
+exports.atualizarPagamentos = async (req, res) => {
+    const { contratos, parcelas } = req.body;  // Recebendo contratos e parcelas
+
+    // Verifica se os dados são válidos
+    if ((!contratos || !Array.isArray(contratos)) && (!parcelas || !Array.isArray(parcelas))) {
+        return res.status(400).json({ message: "Dados inválidos." });
+    }
+
+    try {
+        // Atualizar contratos
+        const atualizacoesContratos = contratos.map(async (contrato) => {
+            // Atualiza o campo 'pago' do contrato
+            await Contrato.update(
+                { pago: contrato.pago },
+                { where: { id: contrato.id } }
+            );
+
+            // Se o contrato estiver marcado como pago, marca as parcelas também
+            if (contrato.pago) {
+                const parcelasDoContrato = await Parcela.findAll({ where: { contratoId: contrato.id } });
+                const atualizacoesParcelas = parcelasDoContrato.map(async (parcela) => {
+                    await Parcela.update(
+                        { pago: true },
+                        { where: { id: parcela.id } }
+                    );
+                });
+                await Promise.all(atualizacoesParcelas);
+            }
+        });
+
+        // Atualizar parcelas separadas
+        const atualizacoesParcelas = parcelas.map(async (parcela) => {
+            await Parcela.update(
+                { pago: parcela.pago },
+                { where: { id: parcela.id } }
+            );
+        });
+
+        // Aguarda todas as atualizações de contratos e parcelas
+        await Promise.all([...atualizacoesContratos, ...atualizacoesParcelas]);
+
+        // Agora, verificamos se todas as parcelas de cada contrato estão pagas
+        const contratosParaAtualizar = await Contrato.findAll({
+            where: { id: { [Op.in]: contratos.map(c => c.id) } },
+            include: [{
+                model: Parcela,
+                required: true,
+                where: { pago: false }, // Verifica se há parcelas não pagas
+            }]
+        });
+
+        // Para cada contrato, vamos verificar se todas as suas parcelas estão pagas
+        for (const contrato of contratosParaAtualizar) {
+            const parcelasDoContrato = await Parcela.findAll({ where: { contratoId: contrato.id } });
+
+            // Se todas as parcelas estão pagas, atualiza o contrato
+            const todasParcelasPagas = parcelasDoContrato.every(parcela => parcela.pago);
+
+            if (todasParcelasPagas) {
+                await Contrato.update({ pago: true }, { where: { id: contrato.id } });
+            }
+        }
+
+        res.json({ message: "Pagamentos de contratos e parcelas atualizados com sucesso." });
+    } catch (error) {
+        console.error("Erro ao atualizar pagamentos:", error);
+        res.status(500).json({ message: "Erro ao atualizar pagamentos." });
+    }
+};
+
+exports.buscarContratosPagamentos = async (req, res) => {
+    const token = req.cookies.token;
+    const secret = process.env.SECRET;
+    const payloadToken = jwt.verify(token, secret);
+
+    try {
+        const contratosList = await Contrato.findAll({
+            where: { idOperador: payloadToken.id, pago: false },
+            include: {
+                model: Parcela,
+                where: { pago: false }, // Exibe apenas parcelas não pagas
+                required: false, // Permite contratos sem parcelas
+            }
+        });
+
+        const contratosComDetalhes = await Promise.all(contratosList.map(async (contrato) => {
+            const cliente = await Cliente.findByPk(contrato.idCliente);
+            return {
+                ...contrato.toJSON(),
+                nomeCliente: cliente ? cliente.nome : "Cliente não encontrado",
+                contatoCLiente: cliente ? cliente.contato : "Contato não encontrado",
+                parcelas: contrato.parcelas // Inclui as parcelas
+            };
+        }));
+
+        console.log("Contratos com parcelas e nome do cliente:", contratosComDetalhes);
+        res.json(contratosComDetalhes);
+    } catch (error) {
+        console.error("Erro ao buscar contratos:", error);
+        res.status(500).json({ message: "Erro ao buscar contratos." });
+    }
+};
 
 exports.buscarVendasEspecifico = async (req, res) => {
     console.log(`isso é um teste`);
@@ -234,9 +338,21 @@ exports.buscarContratosGeral = async (req, res) => {
 };
 
 exports.registrarContrato = async (req, res) => {
-    const { cpfCnpj, dataEvento, horarioMontagem, horarioEncerramento, enderecoEvento, quantidadeProdutos, formaPagamento, dataPagamento, numeroParcelas, valorTotal } = req.body;
-    const cliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
+    const { 
+        cpfCnpj, 
+        dataEvento, 
+        horarioMontagem, 
+        horarioEncerramento, 
+        enderecoEvento, 
+        quantidadeProdutos, 
+        formaPagamento, 
+        dataPagamento, 
+        numeroParcelas, 
+        valorTotal, 
+        pixParceladoDatas 
+    } = req.body;
 
+    const cliente = await Cliente.findOne({ where: { cpfCnpj: cpfCnpj } });
     const token = req.cookies.token;
     const secret = process.env.SECRET;
     const payloadToken = jwt.verify(token, secret);
@@ -244,6 +360,7 @@ exports.registrarContrato = async (req, res) => {
     const lista = await ListaProdutos.create({
         valorTotal: valorTotal
     });
+
     const produtos = req.body.produtos;
 
     for (const produto of produtos) {
@@ -267,8 +384,20 @@ exports.registrarContrato = async (req, res) => {
         formaPagamento: formaPagamento,
         dataPagamento: dataPagamento,
         numeroParcelas: numeroParcelas,
-        lista: lista.id
-    })
+        lista: lista.id,
+        pago: false
+    });
+
+    if (formaPagamento === "Pix Parcelado" && pixParceladoDatas) {
+        const datasParcelas = JSON.parse(pixParceladoDatas);
+        for (const data of datasParcelas) {
+            await Parcela.create({
+                contratoId: contrato.id,
+                dataPagamento: data,
+                valorParcela: valorTotal / datasParcelas.length
+            });
+        }
+    }
 
     if (!contrato) {
         console.log("Erro: ", error);
@@ -280,7 +409,8 @@ exports.registrarContrato = async (req, res) => {
     calendarioController.gerarEventoContrato(contrato, lista);
 
     res.redirect("/telaInicial");
-}
+};
+
 
 const oauth2Client = new google.auth.OAuth2({
     clientId: process.env.CLIENT_ID,
