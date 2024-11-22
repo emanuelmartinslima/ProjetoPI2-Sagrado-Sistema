@@ -12,16 +12,19 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+    
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
+           <a href="telaInicial">
             <img src="/Logoextendido.png" width="150" height="40" alt="Logo">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <div class="dropdown">
+                    <div class="dropdown mt-3">
                         <button id="toggleTheme" class="btn btn-light btn-dark-mode">
                             <i class="bi bi-moon-fill"></i>
                         </button>
@@ -29,13 +32,12 @@
                             aria-expanded="false">
                             Menu
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="vizualizarProdutos">Visualizar Produtos</a></li>
-                            <li><a class="dropdown-item" href="formCadastrarProdutos">Cadastrar Produto</a></li>
-                            <li><a class="dropdown-item" href="formEditarProdutos">Editar Produto</a></li>
-                            <li><a class="dropdown-item" href="formDeletarProdutos">Deletar Produto</a></li>
-                            <li><a class="dropdown-item" href="telaInicial">Tela Inicial</a></li>
-                            <li><a class="dropdown-item" href="/">Sair</a></li>
+                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="gerarRelatorios">Gerar Relatórios</a></li>
+                            <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
+                            <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
+                            <li><a class="dropdown-item" href="produtos">Produtos</a></li>
+                            <li><a class="dropdown-item" href="sair">Sair</a></li>
                         </ul>
                     </div>
                 </ul>
@@ -43,46 +45,60 @@
         </div>
     </nav>
 
-    <div class="container-wrapper">
-        <div class="container mt-4 container-spacing">
-            <div class="cards-wrapper text-center">
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-eye-fill card-icon"></i>
-                        <h5 class="card-title">Visualizar Produtos</h5>
-                        <p class="card-text text-white text-center">Consulte todos os produtos disponíveis.</p>
-                        <a href="/vizualizarProdutos" class="btn btn-light">Acessar</a>
+    
+    <main class="flex-grow-1 d-flex align-items-center">
+        <div class="container mt-4">
+            <div class="row g-4 justify-content-center">
+               
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-eye-fill card-icon" style="font-size: 2rem;"></i>
+                            <h5 class="card-title">Visualizar Produtos</h5>
+                            <p class="card-text text-white">Consulte os produtos disponíveis.</p>
+                            <a href="/vizualizarProdutos" class="btn btn-light">Acessar</a>
+                        </div>
                     </div>
                 </div>
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-plus-square-fill card-icon"></i>
-                        <h5 class="card-title">Cadastrar Produto</h5>
-                        <p class="card-text text-white text-center">Adicione novos produtos ao sistema.</p>
-                        <a href="/formCadastrarProdutos" class="btn btn-light">Acessar</a>
+                
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-plus-square-fill card-icon" style="font-size: 2rem;"></i>
+                            <h5 class="card-title">Cadastrar Produto</h5>
+                            <p class="card-text text-white">Adicione novos produtos ao sistema.</p>
+                            <a href="/formCadastrarProdutos" class="btn btn-light">Acessar</a>
+                        </div>
                     </div>
                 </div>
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-pencil-fill card-icon"></i>
-                        <h5 class="card-title">Editar Produto</h5>
-                        <p class="card-text text-white text-center">Atualize informações de produtos.</p>
-                        <a href="/formEditarProdutos" class="btn btn-light">Acessar</a>
+                <!-- Card 3: Editar Produto -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-pencil-fill card-icon" style="font-size: 2rem;"></i>
+                            <h5 class="card-title">Editar Produto</h5>
+                            <p class="card-text text-white">Atualize informações de produtos.</p>
+                            <a href="/formEditarProdutos" class="btn btn-light">Acessar</a>
+                        </div>
                     </div>
                 </div>
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-trash-fill card-icon"></i>
-                        <h5 class="card-title">Deletar Produto</h5>
-                        <p class="card-text text-white text-center">Remova produtos do sistema.</p>
-                        <a href="/formDeletarProdutos" class="btn btn-light">Acessar</a>
+                <!-- Card 4: Deletar Produto -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <i class="bi bi-trash-fill card-icon" style="font-size: 2rem;"></i>
+                            <h5 class="card-title">Deletar Produto</h5>
+                            <p class="card-text text-white">Delete produtos do sistema.</p>
+                            <a href="/formDeletarProdutos" class="btn btn-light">Acessar</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <footer class="text-light text-center py-3">
+    </main>
+    <br>
+    <!-- Rodapé -->
+    <footer class="text-light text-center py-3 mt-auto">
         Todos os direitos reservados
     </footer>
 

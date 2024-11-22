@@ -14,15 +14,17 @@
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
+            <a href="telaInicial">
             <img src="/Logoextendido.png" width="150" height="40" alt="Logo">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <div class="dropdown">
-                        <button id="toggleTheme" class="btn btn-light btn-dark-mode">
+                    <div class="dropdown mt-3">
+                        <button class="btn btn-light btn-dark-mode" id="toggleTheme">
                             <i class="bi bi-moon-fill"></i>
                         </button>
                         <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -30,7 +32,7 @@
                             Menu
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="cadastro">Cadastrar Usuário</a></li>
+                            <li><a class="dropdown-item" href="cadastro">Adicionar Usuário</a></li>
                             <li><a class="dropdown-item" href="gerarRelatorios">Gerar Relatórios</a></li>
                             <li><a class="dropdown-item" href="cadastrarCliente">Gerar Contratos</a></li>
                             <li><a class="dropdown-item" href="editarDados">Editar Dados</a></li>
@@ -43,56 +45,80 @@
         </div>
     </nav>
 
-    <div class="container-wrapper" style="background-color: --background-color;">
-        <div class="container mt-4 container-spacing">
-            <div class="cards-wrapper text-center">
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-person-plus-fill card-icon"></i>
-                        <h5 class="card-title">Adicionar Usuário</h5>
-                        <p class="card-text text-white text-center">Adicionar novos usuários ao sistema.</p>
-                        <a href="cadastro" class="btn btn-light">Acessar</a>
-                    </div>
+<div class="container d-flex flex-column justify-content-center align-items-center flex-grow-1 py-4">
+    <!-- Cards Row Centered -->
+    <div class="row justify-content-center text-center g-3">
+        <!-- Card 1 -->
+        <div class="col-12 col-md-6 col-lg-2">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="bi bi-person-plus-fill card-icon mb-3" style="font-size: 2rem;"></i>
+                    <h5 class="card-title">Adicionar Usuário</h5>
+                    <p class="card-text text-white">Adicionar novos usuários ao sistema.</p>
+                    <a href="cadastro" class="btn btn-light mt-auto w-100">Acessar</a>
                 </div>
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-graph-up card-icon"></i>
-                        <h5 class="card-title">Gerar Relatórios</h5>
-                        <p class="card-text text-white text-center">Visualizar e gerar relatórios de vendas.</p>
-                        <a href="gerarRelatorios" class="btn btn-light">Acessar</a>
-                    </div>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="col-12 col-md-6 col-lg-2">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="bi bi-graph-up card-icon mb-3" style="font-size: 2rem;"></i>
+                    <h5 class="card-title">Gerar Relatórios</h5>
+                    <p class="card-text text-white">Visualizar e gerar relatórios de vendas.</p>
+                    <a href="gerarRelatorios" class="btn btn-light mt-auto w-100">Acessar</a>
                 </div>
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-file-earmark-text-fill card-icon"></i>
-                        <h5 class="card-title">Gerar Contrato</h5>
-                        <p class="card-text text-white text-center">Criar contratos para eventos.</p>
-                        <a href="cadastrarCliente" class="btn btn-light">Acessar</a>
-                    </div>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="col-12 col-md-6 col-lg-2">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="bi bi-file-earmark-text-fill card-icon mb-3" style="font-size: 2rem;"></i>
+                    <h5 class="card-title">Gerar Contrato</h5>
+                    <p class="card-text text-white">Criar contratos para eventos.</p>
+                    <a href="cadastrarCliente" class="btn btn-light mt-auto w-100">Acessar</a>
                 </div>
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-pencil-square card-icon"></i>
-                        <h5 class="card-title">Editar Dados</h5>
-                        <p class="card-text text-white text-center">Atualizar informações pessoais.</p>
-                        <a href="editarDados" class="btn btn-light">Acessar</a>
-                    </div>
+            </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="col-12 col-md-6 col-lg-2">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="bi bi-pencil-square card-icon mb-3" style="font-size: 2rem;"></i>
+                    <h5 class="card-title">Editar Dados</h5>
+                    <p class="card-text text-white">Atualizar informações pessoais.</p>
+                    <a href="atualizarOperador" class="btn btn-light mt-auto w-100">Acessar</a>
                 </div>
-                <div class="card card-custom">
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <i class="bi bi-box-seam card-icon"></i>
-                        <h5 class="card-title">Produtos</h5>
-                        <p class="card-text text-white text-center">Gerenciar produtos do sistema.</p>
-                        <a href="produtos" class="btn btn-light">Acessar</a>
-                    </div>
+            </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="col-12 col-md-6 col-lg-2">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex flex-column align-items-center justify-content-between">
+                    <i class="bi bi-box-seam card-icon mb-3" style="font-size: 2rem;"></i>
+                    <h5 class="card-title">Cadastrar Produtos</h5>
+                    <p class="card-text text-white">Adicionar novos produtos ao sistema.</p>
+                    <a href="produtos" class="btn btn-light mt-auto w-100">Acessar</a>
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="text-light text-center py-3">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+
+
+    <!-- Footer -->
+    <footer class="text-light text-center py-3 mt-auto">
         Todos os direitos reservados
-    </footer>
+    </footer>   
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

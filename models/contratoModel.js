@@ -45,6 +45,6 @@ const Contratos = db.sequelize.define("contratos", {
     }
 });
 
-// Contratos.sync({alter: true});
+//Contratos.sync({alter: true});
 
 module.exports = Contratos;
