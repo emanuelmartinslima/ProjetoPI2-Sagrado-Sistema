@@ -12,10 +12,11 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a href="telaInicial">
-            <img src="/Logoextendido.png" width="150" height="40" alt="Logo">
+                <img src="/Logoextendido.png" width="150" height="40" alt="Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,30 +45,38 @@
         </div>
     </nav>
 
-    <div class="container-wrapper" style="background-color: --background-color;">
-        <div class="container mt-4 container-spacing">
-            <div class="cards-wrapper text-center">
-                <div class="card card-custom">
+    <!-- Conteúdo -->
+    <div class="container mt-4 d-flex flex-column justify-content-center align-items-center flex-grow-1">
+        <div class="row justify-content-center w-100">
+            <!-- Card 1 -->
+            <div class="col-12 col-md-3 d-flex justify-content-center mb-4">
+                <div class="card card-custom text-center p-3 w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
                         <i class="bi bi-calculator card-icon"></i>
                         <h5 class="card-title">Relatório de Comissões</h5>
-                        <p class="card-text text-white text-center">Relatório de Comissões do operador.</p>
+                        <p class="card-text">Relatório de Comissões do operador.</p>
                         <a href="/relatorioComissoes" class="btn btn-light">Acessar</a>
                     </div>
                 </div>
-                <div class="card card-custom">
+            </div>
+            <!-- Card 2 -->
+            <div class="col-12 col-md-3 d-flex justify-content-center mb-4">
+                <div class="card card-custom text-center p-3 w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
                         <i class="bi bi-cart card-icon"></i>
                         <h5 class="card-title">Relatório de Vendas</h5>
-                        <p class="card-text text-white text-center">Relatório das Minhas Vendas.</p>
+                        <p class="card-text">Relatório das Minhas Vendas.</p>
                         <a href="/relatorioVendas" class="btn btn-light">Acessar</a>
                     </div>
                 </div>
-                <div class="card card-custom">
+            </div>
+            <!-- Card 3 -->
+            <div class="col-12 col-md-3 d-flex justify-content-center mb-4">
+                <div class="card card-custom text-center p-3 w-100">
                     <div class="card-body d-flex flex-column align-items-center justify-content-center">
                         <i class="bi bi-card-list card-icon"></i>
                         <h5 class="card-title">Acessar Contratos</h5>
-                        <p class="card-text text-white text-center">Acessar contratos da Empresa.</p>
+                        <p class="card-text">Acessar contratos da Empresa.</p>
                         <a href="/visualizarContratos" class="btn btn-light">Acessar</a>
                     </div>
                 </div>
@@ -75,7 +84,8 @@
         </div>
     </div>
 
-    <footer class="text-light text-center py-3">
+    <!-- Rodapé fixado no final da página -->
+    <footer class="text-light text-center py-3" style="background-color: rgb(49, 04, 59);">
         Todos os direitos reservados
     </footer>
 
