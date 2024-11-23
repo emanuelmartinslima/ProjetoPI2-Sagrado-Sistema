@@ -6,6 +6,6 @@ const ListaProdutos = db.sequelize.define("listaProdutos", {
     }
 });
 
-// ListaProdutos.sync({force: true});
+ //ListaProdutos.sync({force: true});
 
 module.exports = ListaProdutos;

@@ -53,6 +53,11 @@ const Parcela = require("./parcelaModel.js"); // Importando a model Parcela
 Contratos.hasMany(Parcela, { foreignKey: "contratoId" });
 Parcela.belongsTo(Contratos, { foreignKey: "id" });
 
-// Contratos.sync({alter: true});
+const Parcela = require("./parcelaModel.js"); // Importando a model Parcela
+
+Contratos.hasMany(Parcela, { foreignKey: "contratoId" });
+Parcela.belongsTo(Contratos, { foreignKey: "id" });
+
+//Contratos.sync({alter: true});
 
 module.exports = Contratos;

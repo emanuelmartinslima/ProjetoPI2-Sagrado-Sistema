@@ -15,6 +15,6 @@ const Items = db.sequelize.define("items", {
     }
 });
 
-// Items.sync({force: true});
+//Items.sync({force: true});
 
 module.exports = Items;
