@@ -107,7 +107,8 @@ exports.buscarProdutosDisponiveis = async (req, res) => {
                 where: {
                     id: {
                         [Op.notIn]: chavesProdutosIndisponiveis
-                    }
+                    },
+                    disponibilidade: 1
                 }
             });
 
